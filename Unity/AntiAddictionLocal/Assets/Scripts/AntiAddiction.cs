@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using AOT;
 
 /*
-	version 1.0.0
+	version 1.0.3
  */
 namespace AntiAddiction.StandAlone
 {

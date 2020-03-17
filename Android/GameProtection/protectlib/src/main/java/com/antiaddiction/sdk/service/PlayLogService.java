@@ -35,7 +35,7 @@ public class PlayLogService {
             if(user.getAccountType() != AntiAddictionKit.USER_TYPE_ADULT){
                 int toNightTime = TimeUtil.getTimeToNightStrict();
                 int toLimitTime = TimeUtil.getTimeToStrict(user);
-                if(user.getAccountType() == AntiAddictionKit.USER_TYPE_UNKNOWN){
+                if(user.getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
                     remainTime = toLimitTime;
                     restrictType = 2;
                 }else {
@@ -44,7 +44,7 @@ public class PlayLogService {
                 }
                 if(restrictType == 2){
                     title = "健康游戏提示";
-                    if(user.getAccountType() == AntiAddictionKit.USER_TYPE_UNKNOWN){
+                    if(user.getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
                         if((!isLogin && remainTime <= 3 * 60) || remainTime <= 0 ) {
                             description = "您的游戏体验时长已达 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟。" +
                                     "登记实名信息后可深度体验。";
