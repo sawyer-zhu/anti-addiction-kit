@@ -207,7 +207,7 @@ public class RealNameAndPhoneDialog extends BaseDialog {
                     return;
                 }
                 if(!RexCheckUtil.checkIdentify(identify) && !RexCheckUtil.checkShareCode(identify)){
-                    Toast.makeText(getContext(),"请输入有效身份证或邀请码信息！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"请输入有效身份证信息！",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 onSubmit(name,phone,identify);

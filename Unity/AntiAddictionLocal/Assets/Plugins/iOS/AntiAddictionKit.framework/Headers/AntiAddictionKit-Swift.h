@@ -235,12 +235,18 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param delegate 接受回调的对象
 ///
 + (void)init:(id <AntiAddictionCallback> _Nonnull)delegate SWIFT_METHOD_FAMILY(none);
-/// 登录用户，当 userId 为空时即退出当前用户
-/// \param userId 用户 id
+/// 登录用户
+/// \param userId 用户 id，不能为空
 ///
 /// \param userType 用户类型
 ///
-+ (void)setUser:(NSString * _Nonnull)userId :(NSInteger)userType;
++ (void)login:(NSString * _Nonnull)userId :(NSInteger)userType;
+/// 更新当前用户信息
+/// \param userType 用户类型
+///
++ (void)updateUserType:(NSInteger)userType;
+/// 退出用户登录
++ (void)logout;
 /// 获取用户类型
 /// \param userId 用户 id
 ///
@@ -253,15 +259,14 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param amount 支付金额，单位分
 ///
 + (void)paySuccess:(NSInteger)amount;
-/// 查询当前用户能否聊天
-+ (void)checkChatLimit;
-/// 打开实名窗口，实名结果通过回调接受
-+ (void)openRealName;
 /// 查询能否支付，直接返回支付限制相关回调类型 raw value
 /// \param amount 支付金额，单位分
 ///
 + (NSInteger)checkCurrentPayLimit:(NSInteger)amount SWIFT_WARN_UNUSED_RESULT;
-/// 生成身份证兑换码（有效期从生成起6个小时整以内）
+/// 查询当前用户能否聊天
++ (void)checkChatLimit;
+/// 打开实名窗口，实名结果通过回调接受
++ (void)openRealName;
 + (NSString * _Nonnull)generateIDCode SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
@@ -297,7 +302,7 @@ SWIFT_CLASS_NAMED("Configuration")
 @property (nonatomic) NSInteger mouthTotalPaymentAmountLimitJunior;
 /// 16-17岁单笔付费额度限制，单位分（默认10000分）
 @property (nonatomic) NSInteger singlePaymentAmountLimitSenior;
-/// 8-15岁每月总付费额度限制，单位分（默认40000分）
+/// 16-17岁每月总付费额度限制，单位分（默认40000分）
 @property (nonatomic) NSInteger mouthTotalPaymentAmountLimitSenior;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
@@ -558,12 +563,18 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param delegate 接受回调的对象
 ///
 + (void)init:(id <AntiAddictionCallback> _Nonnull)delegate SWIFT_METHOD_FAMILY(none);
-/// 登录用户，当 userId 为空时即退出当前用户
-/// \param userId 用户 id
+/// 登录用户
+/// \param userId 用户 id，不能为空
 ///
 /// \param userType 用户类型
 ///
-+ (void)setUser:(NSString * _Nonnull)userId :(NSInteger)userType;
++ (void)login:(NSString * _Nonnull)userId :(NSInteger)userType;
+/// 更新当前用户信息
+/// \param userType 用户类型
+///
++ (void)updateUserType:(NSInteger)userType;
+/// 退出用户登录
++ (void)logout;
 /// 获取用户类型
 /// \param userId 用户 id
 ///
@@ -576,15 +587,14 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param amount 支付金额，单位分
 ///
 + (void)paySuccess:(NSInteger)amount;
-/// 查询当前用户能否聊天
-+ (void)checkChatLimit;
-/// 打开实名窗口，实名结果通过回调接受
-+ (void)openRealName;
 /// 查询能否支付，直接返回支付限制相关回调类型 raw value
 /// \param amount 支付金额，单位分
 ///
 + (NSInteger)checkCurrentPayLimit:(NSInteger)amount SWIFT_WARN_UNUSED_RESULT;
-/// 生成身份证兑换码（有效期从生成起6个小时整以内）
+/// 查询当前用户能否聊天
++ (void)checkChatLimit;
+/// 打开实名窗口，实名结果通过回调接受
++ (void)openRealName;
 + (NSString * _Nonnull)generateIDCode SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
@@ -620,7 +630,7 @@ SWIFT_CLASS_NAMED("Configuration")
 @property (nonatomic) NSInteger mouthTotalPaymentAmountLimitJunior;
 /// 16-17岁单笔付费额度限制，单位分（默认10000分）
 @property (nonatomic) NSInteger singlePaymentAmountLimitSenior;
-/// 8-15岁每月总付费额度限制，单位分（默认40000分）
+/// 16-17岁每月总付费额度限制，单位分（默认40000分）
 @property (nonatomic) NSInteger mouthTotalPaymentAmountLimitSenior;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
