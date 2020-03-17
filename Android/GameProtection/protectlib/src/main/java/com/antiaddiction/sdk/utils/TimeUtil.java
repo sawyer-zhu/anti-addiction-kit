@@ -40,11 +40,11 @@ public class TimeUtil {
     }
 
     public static boolean isHoliday(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
-            return true;
-        }
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
+//        if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+//            return true;
+//        }
         long currentTime = new Date().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("MM:dd");
         String dateString = formatter.format(currentTime);

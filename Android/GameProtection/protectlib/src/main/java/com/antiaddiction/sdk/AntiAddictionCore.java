@@ -224,7 +224,7 @@ public class AntiAddictionCore {
         }
         LogUtil.logd("checkPayLimit");
         if(getCurrentUser() != null){
-            if(getCurrentUser().getAccountType() == AntiAddictionKit.USER_TYPE_UNKNOWN){
+            if(getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
                 if(AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
                     RealNameAndPhoneDialog.openRealNameAndPhoneDialog(2, new OnResultListener() {
                         @Override
@@ -253,7 +253,7 @@ public class AntiAddictionCore {
             return AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT;
         }else{
             if(getCurrentUser() != null) {
-                if (getCurrentUser().getAccountType() == AntiAddictionKit.USER_TYPE_UNKNOWN) {
+                if (getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN) {
                     return AntiAddictionKit.CALLBACK_CODE_PAY_LIMIT;
                 }else{
                     JSONObject response = PayStrictService.checkPayLimit(num, getCurrentUser());
@@ -388,7 +388,7 @@ public class AntiAddictionCore {
     }
 
     static String getSdkVersion(){
-        return "1.0.2.2";
+        return "1.0.3";
     }
 
     /**

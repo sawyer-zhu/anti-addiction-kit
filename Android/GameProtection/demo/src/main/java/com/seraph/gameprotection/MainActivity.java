@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
        AntiAddictionKit.getCommonConfig()
-               .gusterTime( 30)
+               .gusterTime(5 * 60)
                .childCommonTime(20 * 60)
                .youngMonthPayLimit(200 * 100)
                .teenMonthPayLimit(150 * 100)
-               .dialogBackground("#00ff00");
+               .dialogBackground("#fffff0");
 
        AntiAddictionKit.getFunctionConfig()
                .showSwitchAccountButton(false)

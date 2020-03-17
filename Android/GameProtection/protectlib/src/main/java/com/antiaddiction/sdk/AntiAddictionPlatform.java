@@ -86,7 +86,7 @@ public class AntiAddictionPlatform {
             try {
                 if (strict == 2) {
                     //游客
-                    if (AntiAddictionCore.getCurrentUser().getAccountType() == AntiAddictionKit.USER_TYPE_UNKNOWN){
+                    if (AntiAddictionCore.getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
                         if (seconds > 60) { //15min提示
                             showDesc = "您的游戏体验时间还剩余 15 分钟，登记实名信息后可深度体验。";
                         } else { //60倒计时

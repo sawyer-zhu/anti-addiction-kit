@@ -66,6 +66,9 @@ public class AntiAddictionKit {
     }
 
     public static void updateUserType(int userType){
+        if(userType < USER_TYPE_UNKNOWN){
+            userType = USER_TYPE_UNKNOWN;
+        }
         AntiAddictionCore.updateUserType(userType);
     }
 
@@ -80,6 +83,10 @@ public class AntiAddictionKit {
      */
     private static void setUser(String userId, int userType){
         if(userId != null && userId.length() > 0) {
+            if(userType < USER_TYPE_UNKNOWN){
+                LogUtil.logd("用户类型非法，自动设置为游客");
+                userType = USER_TYPE_UNKNOWN;
+            }
             AntiAddictionCore.setCurrentUser(userId, userType);
         }else{
             AntiAddictionCore.logout();
@@ -91,6 +98,10 @@ public class AntiAddictionKit {
      * @param num 金额 单位分
      */
     public static void checkPayLimit(int num){
+        if(num < 0){
+            LogUtil.logd("金额不能小于 0");
+            return;
+        }
         AntiAddictionCore.checkPayLimit(num);
     }
 
@@ -99,6 +110,10 @@ public class AntiAddictionKit {
      * @param num 金额，单位分
      */
     public static void paySuccess(int num){
+        if(num < 0){
+            LogUtil.logd("金额不能小于 0");
+            return;
+        }
         AntiAddictionCore.onPaySuccess(num);
     }
 
