@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using AOT;
 
 /*
-	version 1.0.3
+	version 1.0.4
  */
 namespace AntiAddiction.StandAlone
 {
@@ -30,12 +30,16 @@ namespace AntiAddiction.StandAlone
 			CALLBACK_CODE_OPEN_REAL_NAME = 1060,			// 打开实名窗口，需要游戏通过其他方式完成用户实名时触发
 			CALLBACK_CODE_CHAT_NO_LIMIT = 1080,				// 聊天无限制，用户已通过实名，可进行聊天
 			CALLBACK_CODE_CHAT_LIMIT = 1090,				// 聊天限制，用户未通过实名，不可进行聊天
+			CALLBACK_CODE_USER_TYPE_CHANGED,				// 用户类型变更，通过SDK完成实名会触发
 			CALLBACK_CODE_AAT_WINDOW_SHOWN = 2000,			// 额外弹窗显示，当用户操作触发额外窗口显示时通知游戏
+			CALLBACK_CODE_AAK_WINDOW_DISMISS = 2500,		// 额外弹窗显示，额外窗口消失时通知游戏
+
 		};
 
 	public class AntiAddiction:MonoBehaviour {
 
 		private static AndroidJavaClass AntiAddictionClass;
+		private static bool sdkInited = false;
 		private delegate void AntiAddictionDelegate(int resultCode,string message);
 		private static Action<int,string> antiAddictionResult;
 		[AOT.MonoPInvokeCallbackAttribute(typeof(AntiAddictionDelegate))]
@@ -48,6 +52,7 @@ namespace AntiAddiction.StandAlone
 			onAntiAddictionResult:接收回调
 		 */
 		public static void init(Action<int,string> onAntiAddictionResult) {
+			sdkInited = true;
 			#if UNITY_IOS && !UNITY_EDITOR
 				antiAddictionResult = onAntiAddictionResult;
 				AntiAddictionInit(antiAddictionCallback);
@@ -58,6 +63,7 @@ namespace AntiAddiction.StandAlone
 				AntiAddictionClass.CallStatic ("init", activityObject, new AntiAddictionHandler(onAntiAddictionResult));
 			#else
 			#endif
+
 		}
 
 		/*
@@ -83,7 +89,7 @@ namespace AntiAddiction.StandAlone
 			#if UNITY_IOS && !UNITY_EDITOR
 				AntiAddictionFunctionConfig(config.useSdkRealName,config.useSdkPaymentLimit,config.useSdkOnlineTimeLimit,config.showSwitchAccountButton);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-				if (AndroidJavaClass == null)
+				if (sdkInited == false)
 				{
 					AntiAddictionClass = new AndroidJavaClass ("com.antiaddiction.sdk.AntiAddictionKit");
 				}
@@ -97,15 +103,40 @@ namespace AntiAddiction.StandAlone
 		}
 		
 		/*
-			配置用户信息，登录登出或用户信息改变时调用
+			配置用户信息，登录时调用
 			userId：用户ID
 			userType：用户类型，见枚举
 		 */
-		public static void setUser(string userId,int userType) {
+		public static void login(string userId,int userType) {
 			#if UNITY_IOS && !UNITY_EDITOR
-				AntiAddictionSetUser(userId,userType);
+				AntiAddictionLogin(userId,userType);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-				AntiAddictionClass.CallStatic ("setUser", userId, userType);
+				AntiAddictionClass.CallStatic ("login", userId, userType);
+			#else
+			#endif
+		}
+
+		/*
+			更新当前用户信息
+			userType：用户类型，见枚举
+		 */
+		public static void updateUserType(int userType) {
+			#if UNITY_IOS && !UNITY_EDITOR
+				AntiAddictionUpdateUserType(userType);
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+				AntiAddictionClass.CallStatic ("updateUserType",userType);
+			#else
+			#endif
+		}
+
+		/*
+			登出当前用户
+		 */
+		public static void logout() {
+			#if UNITY_IOS && !UNITY_EDITOR
+				AntiAddictionLogout();
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+				AntiAddictionClass.CallStatic ("logout");
 			#else
 			#endif
 		}
@@ -175,12 +206,12 @@ namespace AntiAddiction.StandAlone
 		}
 
 		/*
-			检查是否能支付,结果同步返回，可能会阻塞线程
+			检查是否能支付,结果同步返回，可能会阻塞线程.不建议使用
 			price：商品价格，单位分
 		 */
 		public static int checkPayLimitSync(int price) {
 			#if UNITY_IOS && !UNITY_EDITOR
-				return 1020;
+				return AntiAddictionCheckCurrentPayLimit(price);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
 				return AntiAddictionClass.CallStatic<int> ("checkCurrentPayLimit", price);
 			#else
@@ -191,7 +222,7 @@ namespace AntiAddiction.StandAlone
 		public static void onResume() {
 			#if UNITY_IOS && !UNITY_EDITOR
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-				if (AndroidJavaClass)
+				if (sdkInited)
 				{
 					AntiAddictionClass.CallStatic ("onResume");
 				}
@@ -202,7 +233,7 @@ namespace AntiAddiction.StandAlone
 		public static void onStop() {
 			#if UNITY_IOS && !UNITY_EDITOR
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-				if (AndroidJavaClass == null)
+				if (sdkInited)
 				{
 					AntiAddictionClass.CallStatic ("onStop");
 				}
@@ -218,13 +249,22 @@ namespace AntiAddiction.StandAlone
         private static extern void AntiAddictionFunctionConfig(bool useSdkRealName,bool useSdkPaymentLimit,bool useSdkOnlineTimeLimit,bool showSwitchAccountButton);
 
         [DllImport("__Internal")]
-        private static extern void AntiAddictionSetUser(string userId,int userType);
+        private static extern void AntiAddictionLogin(string userId,int userType);
+
+		[DllImport("__Internal")]
+        private static extern void AntiAddictionUpdateUserType(int userType);
+
+		[DllImport("__Internal")]
+        private static extern void AntiAddictionLogout();
 
 		[DllImport("__Internal")]
         private static extern int AntiAddictionGetUserType(string userId);
 
 		[DllImport("__Internal")]
         private static extern void AntiAddictionCheckPayLimit(int amount);
+		
+		[DllImport("__Internal")]
+        private static extern int AntiAddictionCheckCurrentPayLimit(int amount);
 
 		[DllImport("__Internal")]
         private static extern void AntiAddictionPaySuccess(int amount);

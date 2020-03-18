@@ -54,7 +54,7 @@
 		305A383023BCEEAF006AD644 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305A382F23BCEEAF006AD644 /* Defaults.swift */; };
 		30B43FFB23BBD2240014336A /* AntiAddictionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 30B43FFA23BBD2240014336A /* AntiAddictionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30C4FDE923BCFAEF00060CE7 /* AntiAddictionKit+Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FDE823BCFAEF00060CE7 /* AntiAddictionKit+Private.swift */; };
-		30E9A81923BBD7F200718506 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E9A81823BBD7F200718506 /* Log.swift */; };
+		30E9A81923BBD7F200718506 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E9A81823BBD7F200718506 /* Logger.swift */; };
 		30E9A81C23BBDA5300718506 /* AATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E9A81B23BBDA5300718506 /* AATextField.swift */; };
 		30EB508123BC79AC007B817F /* CGRect+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30EB508023BC79AC007B817F /* CGRect+.swift */; };
 		30EB508323BC81BB007B817F /* AuthTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30EB508223BC81BB007B817F /* AuthTip.swift */; };
@@ -118,7 +118,7 @@
 		305A382F23BCEEAF006AD644 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		30B43FFA23BBD2240014336A /* AntiAddictionKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AntiAddictionKit.h; sourceTree = "<group>"; };
 		30C4FDE823BCFAEF00060CE7 /* AntiAddictionKit+Private.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AntiAddictionKit+Private.swift"; sourceTree = "<group>"; };
-		30E9A81823BBD7F200718506 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		30E9A81823BBD7F200718506 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		30E9A81B23BBDA5300718506 /* AATextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AATextField.swift; sourceTree = "<group>"; };
 		30EB508023BC79AC007B817F /* CGRect+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+.swift"; sourceTree = "<group>"; };
 		30EB508223BC81BB007B817F /* AuthTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTip.swift; sourceTree = "<group>"; };
@@ -325,7 +325,7 @@
 		30E9A81723BBD7E600718506 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				30E9A81823BBD7F200718506 /* Log.swift */,
+				30E9A81823BBD7F200718506 /* Logger.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -512,7 +512,7 @@
 				30EB508123BC79AC007B817F /* CGRect+.swift in Sources */,
 				30F022B523BBC49900DEB3BE /* AntiAddictionKit.swift in Sources */,
 				0058C82923BB2B0100491E6D /* Appearance.swift in Sources */,
-				30E9A81923BBD7F200718506 /* Log.swift in Sources */,
+				30E9A81923BBD7F200718506 /* Logger.swift in Sources */,
 				0058C83423BB3DED00491E6D /* Container.swift in Sources */,
 				0032996323C59320004EF389 /* UIApplication+.swift in Sources */,
 				0058C83023BB2EA000491E6D /* UIView+Constraints.swift in Sources */,
@@ -590,6 +590,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -641,6 +642,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-fembed-bitcode";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -653,6 +655,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -697,6 +700,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = "-fembed-bitcode";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
