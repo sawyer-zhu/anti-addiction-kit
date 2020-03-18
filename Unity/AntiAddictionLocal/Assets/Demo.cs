@@ -6,7 +6,7 @@ using AntiAddiction.StandAlone;
 using System;
 
 /*
-	version 1.0.0
+	version 1.0.1
  */
 
 public class Demo : MonoBehaviour {
@@ -47,33 +47,49 @@ public class Demo : MonoBehaviour {
 
 		GUI.depth = 0;
 
-		if (GUI.Button(new Rect(50, 200, 300, 80), "init", myButtonStyle))
+		if (GUI.Button(new Rect(50, 200, 300, 60), "初始化", myButtonStyle))
 		{
 			onAntiAddictionResult += onAntiAddictionHandler;
 			AntiAddiction.StandAlone.AntiAddiction.init(onAntiAddictionResult);
 		}
 
-		if (GUI.Button(new Rect(50, 330, 300, 80), "setUser", myButtonStyle))
+		if (GUI.Button(new Rect(50, 300, 300, 60), "登录", myButtonStyle))
 		{
-			AntiAddiction.StandAlone.AntiAddiction.setUser("123456",0);
+			AntiAddiction.StandAlone.AntiAddiction.login("1234567",0);
 		}
 
-		if (GUI.Button(new Rect(50, 460, 380, 80), "checkPayLimit", myButtonStyle))
+		if (GUI.Button(new Rect(50, 380, 380, 60), "更新用户信息", myButtonStyle))
 		{
-			AntiAddiction.StandAlone.AntiAddiction.checkPayLimit(100);
+			AntiAddiction.StandAlone.AntiAddiction.updateUserType(4);
 		}
 
-		if (GUI.Button(new Rect(50, 590, 300, 80), "paySuccess", myButtonStyle))
+		if (GUI.Button(new Rect(50, 460, 300, 60), "登出", myButtonStyle))
+		{
+			AntiAddiction.StandAlone.AntiAddiction.logout();
+		}
+
+		if (GUI.Button(new Rect(50, 540, 380, 60), "检查付费限制", myButtonStyle))
+		{
+			AntiAddiction.StandAlone.AntiAddiction.checkPayLimit(200);
+		}
+
+		if (GUI.Button(new Rect(50, 610, 300, 60), "付费成功", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.paySuccess(100);
 		}
 
-		if (GUI.Button(new Rect(50, 700, 380, 80), "checkChatLimit", myButtonStyle))
+		// if (GUI.Button(new Rect(50, 690, 460, 60), "同步检查付费限制", myButtonStyle))
+		// {
+		// 	int result = AntiAddiction.StandAlone.AntiAddiction.checkPayLimitSync(200);
+		// 	Debug.Log("checkPayLimitSync" + result);
+		// }
+
+		if (GUI.Button(new Rect(50, 770, 380, 60), "检查聊天限制", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.checkChatLimit();
 		}
 
-		if (GUI.Button(new Rect(50, 820, 300, 80), "config", myButtonStyle))
+		if (GUI.Button(new Rect(50, 850, 300, 60), "配置SDK", myButtonStyle))
 		{
 			AntiAddictionConfig config = new AntiAddictionConfig.Builder ()
 			.UseSdkRealName (true)
@@ -86,21 +102,15 @@ public class Demo : MonoBehaviour {
 			// AntiAddiction.StandAlone.AntiAddiction.fuctionConfig(false,true,true);
 		}
 
-		if (GUI.Button(new Rect(50, 930, 300, 80), "getUserType", myButtonStyle))
+		if (GUI.Button(new Rect(50, 930, 330, 60), "获取用户类型", myButtonStyle))
 		{
 			int userType = AntiAddiction.StandAlone.AntiAddiction.getUserType("12345");
 			Debug.Log("getUserType" + userType);
 		}
 
-		if (GUI.Button(new Rect(50, 1050, 380, 80), "openRealName", myButtonStyle))
+		if (GUI.Button(new Rect(50, 1010, 330, 60), "打开实名", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.openRealName();
-		}
-
-		if (GUI.Button(new Rect(50, 1150, 380, 80), "checkPayLimitSync", myButtonStyle))
-		{
-			int result = AntiAddiction.StandAlone.AntiAddiction.checkPayLimitSync(100);
-			Debug.Log("checkPayLimitSync" + result);
 		}
 	}
 
