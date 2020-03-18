@@ -5,10 +5,12 @@ AntiAddictionKit 是为了应对最新防沉迷政策而编写的一个集实名
 说明：AntiAddictionKit iOS 源码由 Swift 编写，但接口同时支持 Swift 或 Objective-C 使用，文档中代码示例同时包含 Swift 与  Objective-C 两种代码使用，可根据自身项目需要选择。
 
 ### 手动引入动态库文件
-1. 打开`AntiAddictionKit.xcodeproj`,选中`Target`为`UniversalFramework`工程得到 `AntiAddictionKit.Framework` 完整架构的动态库，引入现有游戏的 Xcode 工程.
-2. 修改 Xcode 工程的 `BuildSettings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即`始终引入 Swift 标准库`，避免 App 启动时报错（无法找到 Swift标准库之类）。
-3. 添加依赖库libc++.tbd
-4. 代码引用
+1. 打开`AntiAddictionKit.xcodeproj`,选中`Target`为`UniversalFramework`工程得到 `AntiAddictionKit.Framework` 完整架构的动态库。如果未修改代码，也可以直接通过下载最新的 Release 中的 `AntiAddictionKitiOS.zip`文件解压得到`AntiAddictionKit.Framework`。
+2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Sign`。
+3. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译。
+4. 修改 Xcode 工程的 `BuildSettings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即`始终引入 Swift 标准库`，避免 App 启动时报错（无法找到 Swift标准库之类）。
+5. 添加依赖库libc++.tbd
+6. 代码引用
  
 
 ```swift
