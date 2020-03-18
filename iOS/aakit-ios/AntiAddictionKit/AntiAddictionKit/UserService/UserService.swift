@@ -122,11 +122,11 @@ extension UserService {
                 let minutes = guestTotalTime / kSecondsPerMinute
                 content = AlertType.TimeLimitAlertContent.guestGameOver(minutes: minutes)
             } else {
+                DebugLog("游客用户，还有时间，弹窗")
                 let minutes = Int(ceilf(Float(guestTotalTime / kSecondsPerMinute)))
                 content = AlertType.TimeLimitAlertContent.guestLogin(minutes: minutes, isFirstLogin: isFirstLogin)
             }
 
-            DebugLog("游客用户，还有时间，弹窗")
             Router.openAlertController(AlertData(type: .timeLimitAlert,
                                                  title: content.title,
                                                  body: content.body,
