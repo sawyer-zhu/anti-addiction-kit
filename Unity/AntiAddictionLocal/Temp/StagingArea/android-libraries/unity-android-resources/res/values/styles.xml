@@ -1,5 +1,5 @@
 <resources>
-    <style name="dialog">
+    <style name="tipDialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
