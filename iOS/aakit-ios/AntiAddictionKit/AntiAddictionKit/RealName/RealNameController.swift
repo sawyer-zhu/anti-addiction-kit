@@ -253,7 +253,7 @@ extension RealNameController {
                 User.shared?.updateUserRealName(name: name.encrypt(),
                                                 idCardNumber: idCard.encrypt(),
                                                 phone: phone.encrypt())
-                
+                UserService.saveCurrentUserInfo()
                 authSucceed()
                 
                 return
@@ -263,7 +263,7 @@ extension RealNameController {
                 if isGeneratedCode {
                     //如果兑换码有效,更新用户为成人
                     User.shared?.updateUserType(.adult)
-                    
+                    UserService.saveCurrentUserInfo()
                     authSucceed()
                     
                     return
