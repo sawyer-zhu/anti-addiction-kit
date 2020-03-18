@@ -30,7 +30,7 @@ namespace AntiAddiction.StandAlone
 			CALLBACK_CODE_OPEN_REAL_NAME = 1060,			// 打开实名窗口，需要游戏通过其他方式完成用户实名时触发
 			CALLBACK_CODE_CHAT_NO_LIMIT = 1080,				// 聊天无限制，用户已通过实名，可进行聊天
 			CALLBACK_CODE_CHAT_LIMIT = 1090,				// 聊天限制，用户未通过实名，不可进行聊天
-			CALLBACK_CODE_USER_TYPE_CHANGED,				// 用户类型变更，通过SDK完成实名会触发
+			CALLBACK_CODE_USER_TYPE_CHANGED = 1500,			// 用户类型变更，通过SDK完成实名会触发
 			CALLBACK_CODE_AAT_WINDOW_SHOWN = 2000,			// 额外弹窗显示，当用户操作触发额外窗口显示时通知游戏
 			CALLBACK_CODE_AAK_WINDOW_DISMISS = 2500,		// 额外弹窗显示，额外窗口消失时通知游戏
 
