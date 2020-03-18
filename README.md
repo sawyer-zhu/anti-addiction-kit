@@ -5,7 +5,7 @@ AntiAddictionKit 是为了遵循最新防沉迷政策而编写的一个集实名
 
 ## 流程图
 
-![流程图](/flow.jpg)
+![流程图](./flow.jpg)
 
 ## 下载
 
