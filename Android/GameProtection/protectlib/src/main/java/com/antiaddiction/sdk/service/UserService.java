@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class UserService {
 
-    //根据日期充值用户相关信息
+    //根据日期重置用户相关信息
     public static User resetUserState(User user){
         long saveTimeStamp = user.getSaveTimeStamp();
         int onlineTime = user.getOnlineTime();

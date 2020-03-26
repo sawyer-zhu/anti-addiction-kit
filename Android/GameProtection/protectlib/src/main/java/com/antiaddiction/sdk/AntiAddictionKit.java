@@ -184,6 +184,8 @@ public class AntiAddictionKit {
         private boolean useSdkPaymentLimit = true;
         private boolean useSdkOnlineTimeLimit = true;
         private boolean showSwitchAccountButton = true;
+        private boolean supportSumbitToServer = false;
+        private String server_dns=null;
         private FunctionConfig(){}
         private static FunctionConfig getInstance(){
             return INSTANCE;
@@ -209,6 +211,15 @@ public class AntiAddictionKit {
             return INSTANCE;
         }
 
+        public FunctionConfig supportSumbitToServer(boolean support,String dns){
+            if(support && (dns == null || dns.length() == 0)){
+                throw new RuntimeException("invalid dns");
+            }
+            INSTANCE.supportSumbitToServer = support;
+            INSTANCE.server_dns = dns;
+            return INSTANCE;
+        }
+
         public boolean getUseSdkOnlineTimeLimit(){
             return INSTANCE.useSdkOnlineTimeLimit;
         }
@@ -222,6 +233,10 @@ public class AntiAddictionKit {
 
         public boolean getShowSwitchAccountButton(){
             return INSTANCE.showSwitchAccountButton;
+        }
+
+        public boolean getSupportSubmitToServer(){
+            return INSTANCE.supportSumbitToServer;
         }
     }
    
