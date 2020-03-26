@@ -1,11 +1,33 @@
 
 import Foundation
 
+struct Logger {
+    
+    static func debug(_ items: Any...) {
+        #if DEBUG
+        let s = items.reduce("") { result, next in
+            return result + String(describing: next)
+        }
+        Swift.print("[Debug] \(s)")
+        #endif
+    }
+    
+    static func info(_ items: Any...) {
+        #if DEBUG
+        let s = items.reduce("") { result, next in
+            return result + String(describing: next)
+        }
+        Swift.print("[AntiAddictionAKit] \(s)")
+        #endif
+    }
+    
+}
+
 /// 宿主 App 能看到的 Log
 /// - Parameter text: log
 func Log(_ text: String) {
     #if DEBUG
-    print("[AntiAddictionAKit]: \(text)")
+    print("[AntiAddictionAKit] \(text)")
     #endif
 }
 

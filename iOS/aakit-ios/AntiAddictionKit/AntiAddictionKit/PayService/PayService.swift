@@ -43,6 +43,14 @@ final class PayService {
     /// 查询能否购买道具，通过回调通知调用方
     /// - Parameter price: 道具价格
     public class func canPurchase(_ price: Int) {
+        
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            let limitType = PayLimitType.unlimited
+            limitType.notify()
+            return
+        }
+        
         if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
             let limitType = PayLimitType.unlimited
             limitType.notify()
