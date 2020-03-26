@@ -1,14 +1,29 @@
 package com.antiaddiction.sdk.service;
 
 import com.antiaddiction.sdk.AntiAddictionKit;
+import com.antiaddiction.sdk.Callback;
 import com.antiaddiction.sdk.entity.User;
+import com.antiaddiction.sdk.net.HttpUtil;
+import com.antiaddiction.sdk.net.NetUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PayStrictService {
 
-    public static JSONObject checkPayLimit(int num, User user){
+    public static void checkPayLimit(int num,User user,Callback callback){
+        if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+            checkPayLimitByServer(num,user,callback);
+        }else{
+            callback.onSuccess(checkPayLimitByLocale(num,user));
+        }
+    }
+    //兼容老接口同步获取付费限制
+    public static JSONObject checkPayLimitSync(int num,User user){
+        return checkPayLimitByLocale(num,user);
+    }
+
+    private static JSONObject checkPayLimitByLocale(int num, User user){
         int strictType = 0; // 1限制 2提示
         String title = "健康消费提示";
         String desc = "";
@@ -59,6 +74,20 @@ public class PayStrictService {
         } catch (JSONException e) {
             return null;
         }
-        return response;
+       return response;
+    }
+
+    private static void checkPayLimitByServer(int num, User user, final Callback callback){
+        HttpUtil.postAsync("", "", new NetUtil.NetCallback() {
+            @Override
+            public void onSuccess(String response) {
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onFail(int code, String message) {
+
+            }
+        });
     }
 }
