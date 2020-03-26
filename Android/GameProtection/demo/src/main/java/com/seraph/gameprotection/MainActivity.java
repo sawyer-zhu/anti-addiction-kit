@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         AntiAddictionKit.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter("time.click"));
+        registerReceiver(broadcastReceiver,new IntentFilter("antisdk.time.click"));
 
     }
 
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         AntiAddictionKit.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -156,10 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         switch (id){
             case R.id.pay:
-                payNum = 200 * 100;
-                //AntiAddictionKit.checkPayLimit(30 * 100);
-                int result = AntiAddictionKit.checkCurrentPayLimit(payNum);
-               Toast.makeText(this, " result = " + result, Toast.LENGTH_LONG).show();
+                payNum = 30 * 100;
+                AntiAddictionKit.checkPayLimit(30 * 100);
                 break;
             case R.id.pay2:
                 payNum = 120 * 100;
