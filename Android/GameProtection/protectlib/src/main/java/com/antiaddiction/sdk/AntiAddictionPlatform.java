@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -37,27 +36,30 @@ import com.antiaddiction.sdk.view.RealNameAndPhoneDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 public class AntiAddictionPlatform {
-    public static final int SHOW_COUNT_TIME_POP = 100105;
-    public static final int DISMISS_COUNT_TIME_POP = 100106;
-    public static final int CHANGE_COUNT_TIME_POP = 100107;
-    public static final int DISMISS_COUNT_TIME_POP_SIMPLE = 100108;
+    private static final int SHOW_COUNT_TIME_POP = 100105;
+    private static final int DISMISS_COUNT_TIME_POP = 100106;
+    private static final int CHANGE_COUNT_TIME_POP = 100107;
+    private static final int DISMISS_COUNT_TIME_POP_SIMPLE = 100108;
 
     //游戏内防沉迷时间倒计时提醒
     private static PopupWindow mCountTimePop;
     private static Timer countTimeTimer;
     private static volatile int currentTimerTime = 0;
-    private static Activity activity;
+    private static WeakReference<Activity> activityWeakReference;
+    private static WeakReference<AccountLimitTip> accountLimitTipWeakReference;
+    private static WeakReference<RealNameAndPhoneDialog> realNameAndPhoneDialogWeakReference;
 
-    public static void setActivity(Activity activity){
-        AntiAddictionPlatform.activity = activity;
+    static void setActivity(Activity activity){
+        AntiAddictionPlatform.activityWeakReference = new WeakReference<>(activity);
     }
     public static Activity getActivity(){
-        return activity;
+        return activityWeakReference.get();
     }
 
 
@@ -170,10 +172,10 @@ public class AntiAddictionPlatform {
     private static void initCountTimePop(final String title, String content, int seconds, final String fianlDesc){
         if( null == mCountTimePop){
             mCountTimePop = new PopupWindow();
-            View view = LayoutInflater.from(activity).inflate(Res.layout(getActivity(),"pop_count_time_tip"),null);
+            View view = LayoutInflater.from(getActivity()).inflate(Res.layout(getActivity(),"pop_count_time_tip"),null);
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.setColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getPopBackground()));
-            if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 gradientDrawable.setCornerRadius(UnitUtils.dpToPx(getActivity(),8));
             }else{
                 gradientDrawable.setCornerRadius(UnitUtils.dpToPx(getActivity(),16));
@@ -181,12 +183,12 @@ public class AntiAddictionPlatform {
             view.setBackground(gradientDrawable);
             mCountTimePop.setContentView(view);
             mCountTimePop.setOutsideTouchable(false);
-            if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-                mCountTimePop.setWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,350,activity.getResources().getDisplayMetrics()));
-                mCountTimePop.setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,65,activity.getResources().getDisplayMetrics()));
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                mCountTimePop.setWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,350,getActivity().getResources().getDisplayMetrics()));
+                mCountTimePop.setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,65,getActivity().getResources().getDisplayMetrics()));
             }else {
-                mCountTimePop.setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,41,activity.getResources().getDisplayMetrics()));
-                mCountTimePop.setWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 520, activity.getResources().getDisplayMetrics()));
+                mCountTimePop.setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,41,getActivity().getResources().getDisplayMetrics()));
+                mCountTimePop.setWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 520, getActivity().getResources().getDisplayMetrics()));
             }
         }else{
             if(mCountTimePop.isShowing()){
@@ -195,10 +197,10 @@ public class AntiAddictionPlatform {
         }
         currentTimerTime = seconds;
         View view = mCountTimePop.getContentView();
-        final TextView tv_content = (TextView) view.findViewById(Res.id(activity,"tv_pop_count_content"));
+        final TextView tv_content = (TextView) view.findViewById(Res.id(getActivity(),"tv_pop_count_content"));
         tv_content.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getPopTextColor()));
         tv_content.setMovementMethod(LinkMovementMethod.getInstance());
-        ImageButton ib_close = (ImageButton) view.findViewById(Res.id(activity,"ib_pop_count_close"));
+        ImageButton ib_close = (ImageButton) view.findViewById(Res.id(getActivity(),"ib_pop_count_close"));
         ib_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,13 +341,7 @@ public class AntiAddictionPlatform {
                         boolean isLogout = msg.arg2 > 0;
                         boolean isBind = msg.arg1 > 0;
                         if(isBind){
-                            try{
-                                Intent intent = new Intent("xd.dismiss.account.limit");
-                                intent.putExtra("state",AccountLimitTip.STATE_QUIT_TIP);
-                                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+                            AccountLimitTip.forceClose();
                         }
                             //将60s倒计时结果发送给后端
                             CountTimeService.sendGameEndTimeToServer(currentTimerTime, isBind, isLogout);
@@ -400,9 +396,7 @@ public class AntiAddictionPlatform {
                                         });
                                     }
                                 } else {
-                                    //通知实名认证页面禁用返回和关闭按钮
-                                    Intent intent = new Intent("real_name.close_unable");
-                                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                                    RealNameAndPhoneDialog.setDialogForceShow();
                                 }
                             }
                         }catch (Exception e){
@@ -429,9 +423,10 @@ public class AntiAddictionPlatform {
         }
     };
 
-    /**
-     * @brief 退出登陆
-     */
+
+        /**
+         * @brief 退出登陆
+         */
     public void logout() {
         AntiAddictionPlatform.dismissCountTimePop(true);
     }

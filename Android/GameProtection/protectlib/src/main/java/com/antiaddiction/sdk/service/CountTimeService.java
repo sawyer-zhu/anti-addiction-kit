@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.antiaddiction.sdk.AntiAddictionCore;
 import com.antiaddiction.sdk.AntiAddictionPlatform;
+import com.antiaddiction.sdk.Callback;
 import com.antiaddiction.sdk.entity.User;
 import com.antiaddiction.sdk.utils.LogUtil;
 
@@ -204,34 +205,43 @@ public class CountTimeService {
      * @param startTime
      * @param endTime
      */
-    private static void sendGameTimeToServer(final Long startTime, final Long endTime,boolean isLogout) {
+    private static void sendGameTimeToServer(final Long startTime, final Long endTime, final boolean isLogout) {
         logInfo(" start sendGameTimeToServer startTime = " + startTime + " endTime = " + endTime);
         User user = AntiAddictionCore.getCurrentUser();
         if (user == null) {
             return;
         }
-        JSONObject response = PlayLogService.handlePlayLog(startTime, endTime, user);
-        if (null != response && response.has("remainTime") && !isLogout) {
-            try {
-                //1 宵禁 2 在线时长限制
-                int restrictType = response.getInt("restrictType");
-                String description = response.getString("description");
-                int remainTime = response.getInt("remainTime");
-                String title = response.getString("title");
-                limit_strict = restrictType;
-                if (restrictType > 0) {
-                    tipTitle = title;
-                    tipContent = description;
+       PlayLogService.handlePlayLog(startTime, endTime, user, new Callback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                if (null != response && response.has("remainTime") && !isLogout) {
+                    try {
+                        //1 宵禁 2 在线时长限制
+                        int restrictType = response.getInt("restrictType");
+                        String description = response.getString("description");
+                        int remainTime = response.getInt("remainTime");
+                        String title = response.getString("title");
+                        limit_strict = restrictType;
+                        if (restrictType > 0) {
+                            tipTitle = title;
+                            tipContent = description;
 //                                        if (restrictType == 1) {
 //                                            XDPlatform.showCountTimePop(description, title, remainTime, 1);
 //                                        } else {
-                    setTimerForTip(remainTime);
+                            setTimerForTip(remainTime);
 //                                        }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-        }
+
+            @Override
+            public void onFail() {
+
+            }
+        });
 }
 
 

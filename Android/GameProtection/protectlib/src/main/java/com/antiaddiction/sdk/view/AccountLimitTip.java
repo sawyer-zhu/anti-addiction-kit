@@ -1,27 +1,18 @@
 package com.antiaddiction.sdk.view;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 
 import com.antiaddiction.sdk.AntiAddictionPlatform;
@@ -30,6 +21,7 @@ import com.antiaddiction.sdk.OnResultListener;
 import com.antiaddiction.sdk.utils.Res;
 import com.antiaddiction.sdk.utils.UnitUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.regex.Pattern;
 
 public class AccountLimitTip extends BaseDialog implements View.OnClickListener {
@@ -54,12 +46,10 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
     //身份信息无效，且没有游戏时间
     public final static int STATE_INVALID_IDENTIFY_LIMIT = 9;
 
-    private static boolean IS_SHOWING = false;
-
     private Button bt_real;
     private Button bt_quit;
     private Button bt_enter;
-    private LinearLayout ll_container,ll_switch;
+    private LinearLayout ll_container, ll_switch;
 
     private TextView tv_content;
     private TextView tv_title;
@@ -72,48 +62,27 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
     private boolean needShowRealName = true;
     //付费实名认证回调
     private OnResultListener onResultListener;
-    //通过其他窗口请求关闭
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int cancelState = intent.getIntExtra("state",AccountLimitTip.STATE_CHILD_ENTER_STRICT);
-            if(state == cancelState && isShowing()) {
-                dismiss();
-            }
-        }
-    };
-    public AccountLimitTip(Context context, int state,  String title, String content, int strict, OnResultListener onResultListener) {
+
+    private static WeakReference<AccountLimitTip> accountLimitTipWeakReference;
+
+    private AccountLimitTip(Context context, int state, String title, String content, int strict, OnResultListener onResultListener) {
         super(context);
         this.state = state;
         this.content = content == null ? "" : content;
         this.strict = strict;
         this.title = title;
         this.onResultListener = onResultListener;
-        setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                IS_SHOWING = true;
-                LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("xd.dismiss.account.limit"));
-            }
-        });
-        setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                IS_SHOWING = false;
-                LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
-            }
-        });
     }
 
-    public AccountLimitTip(Context context, int state, String title, String content, OnResultListener onResultListener, int strict,boolean needShowRealName) {
-        this(context, state, title, content, strict,onResultListener);
+    private AccountLimitTip(Context context, int state, String title, String content, OnResultListener onResultListener, int strict, boolean needShowRealName) {
+        this(context, state, title, content, strict, onResultListener);
         this.needShowRealName = needShowRealName;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(Res.layout(getContext(),"dialog_limit_tip"));
+        setContentView(Res.layout(getContext(), "dialog_limit_tip"));
         setCancelable(false);
 
         //getWindow().setWindowAnimations(Res.style("dialogWindowAnim"));
@@ -140,42 +109,42 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         tv_title.setText(title == null ? "健康游戏提示" : title);
         tv_content.setText(convertString(this.content));
 
-        if(state == STATE_ENTER_LIMIT){
+        if (state == STATE_ENTER_LIMIT) {
             //   bt_quit.setVisibility(View.GONE);
             bt_enter.setVisibility(View.GONE);
-        }else if(state == STATE_ENTER_NO_LIMIT){
+        } else if (state == STATE_ENTER_NO_LIMIT) {
             bt_quit.setVisibility(View.GONE);
-          //  ll_switch.setVisibility(View.GONE);
-        }else if(state == STATE_QUIT_TIP){
-          //  ll_switch.setVisibility(View.GONE);
+            //  ll_switch.setVisibility(View.GONE);
+        } else if (state == STATE_QUIT_TIP) {
+            //  ll_switch.setVisibility(View.GONE);
             bt_enter.setVisibility(View.GONE);
-        }else if(state == STATE_PAY_TIP){
+        } else if (state == STATE_PAY_TIP) {
             // tv_title.setText("健康消费提醒");
             ll_switch.setVisibility(View.GONE);
             bt_quit.setVisibility(View.GONE);
-        }else if(state == STATE_CHILD_ENTER_STRICT){
+        } else if (state == STATE_CHILD_ENTER_STRICT) {
             bt_real.setVisibility(View.GONE);
             bt_enter.setVisibility(View.GONE);
-        }else if(state == STATE_CHILD_QUIT_TIP){
+        } else if (state == STATE_CHILD_QUIT_TIP) {
             bt_real.setVisibility(View.GONE);
-         //   ll_switch.setVisibility(View.GONE);
+            //   ll_switch.setVisibility(View.GONE);
             bt_enter.setVisibility(View.GONE);
-        }else if(state == STATE_PAY_LIMIT){
+        } else if (state == STATE_PAY_LIMIT) {
             bt_enter.setText("返回游戏");
             bt_real.setVisibility(View.GONE);
             ll_switch.setVisibility(View.GONE);
             bt_quit.setVisibility(View.GONE);
-        }else if(state == STATE_CHILD_ENTER_NO_LIMIT){
+        } else if (state == STATE_CHILD_ENTER_NO_LIMIT) {
             ll_switch.setVisibility(View.GONE);
             bt_quit.setVisibility(View.GONE);
             bt_real.setVisibility(View.GONE);
-        }else if(state == STATE_INVALID_IDENTIFY_NO_LIMIT){
+        } else if (state == STATE_INVALID_IDENTIFY_NO_LIMIT) {
             bt_quit.setVisibility(View.GONE);
             ll_switch.setVisibility(View.GONE);
-        }else if(state == STATE_INVALID_IDENTIFY_LIMIT){
+        } else if (state == STATE_INVALID_IDENTIFY_LIMIT) {
             bt_enter.setVisibility(View.GONE);
         }
-        if(!AntiAddictionKit.getFunctionConfig().getShowSwitchAccountButton()){
+        if (!AntiAddictionKit.getFunctionConfig().getShowSwitchAccountButton()) {
             ll_switch.setVisibility(View.GONE);
         }
 
@@ -188,29 +157,17 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         });
     }
 
-    private void resetLayoutParams(int state){
-        int buttonNum = 0;
-        if(state != STATE_CHILD_QUIT_TIP && state != STATE_PAY_LIMIT && state != STATE_CHILD_ENTER_NO_LIMIT){
-            buttonNum = 1;
-        }
-        ViewGroup.LayoutParams layoutParams = tv_content.getLayoutParams();
-        layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                130 - buttonNum * 32,getContext().getResources().getDisplayMetrics());
-        tv_content.setLayoutParams(layoutParams);
-        tv_content.requestLayout();
-    }
-
-    private void resetDialogStyle(){
+    private void resetDialogStyle() {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogBackground()));
-        gradientDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(),8));
+        gradientDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(), 8));
         ll_container.setBackground(gradientDrawable);
 
         tv_title.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogTitleTextColor()));
         tv_content.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogContentTextColor()));
 
         GradientDrawable buttonDrawable = new GradientDrawable();
-        buttonDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(),17));
+        buttonDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(), 17));
         buttonDrawable.setColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonBackground()));
         bt_real.setBackground(buttonDrawable);
         bt_real.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonTextColor()));
@@ -218,8 +175,8 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         bt_enter.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonTextColor()));
 
         GradientDrawable quitDrawable = new GradientDrawable();
-        quitDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(),17));
-        quitDrawable.setStroke(UnitUtils.dpToPx(getContext(),1),Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonBackground()));
+        quitDrawable.setCornerRadius(UnitUtils.dpToPx(getContext(), 17));
+        quitDrawable.setStroke(UnitUtils.dpToPx(getContext(), 1), Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonBackground()));
         quitDrawable.setColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonTextColor()));
         bt_quit.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getDialogButtonBackground()));
         bt_quit.setBackground(quitDrawable);
@@ -229,81 +186,81 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if( id == Res.id(getContext(),"bt_guest_tip_real")){
+        if (id == Res.id(getContext(), "bt_guest_tip_real")) {
             //通知游戏，打开渠道实名认证页面
-            if(!needShowRealName){
+            if (!needShowRealName) {
                 String type = AntiAddictionKit.TIP_OPEN_BY_ENTER_NO_LIMIT;
-                if(state == STATE_ENTER_LIMIT){
-                    type =AntiAddictionKit.TIP_OPEN_BY_ENTER_LIMIT;
-                }else if(state == STATE_QUIT_TIP){
+                if (state == STATE_ENTER_LIMIT) {
+                    type = AntiAddictionKit.TIP_OPEN_BY_ENTER_LIMIT;
+                } else if (state == STATE_QUIT_TIP) {
                     type = AntiAddictionKit.TIP_OPEN_BY_TIME_LIMIT;
                 }
-               callResultListener(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME,type);
+                callResultListener(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, type);
                 dismiss();
                 return;
             }
-            if(state != STATE_QUIT_TIP && state != STATE_CHILD_QUIT_TIP) {
+            if (state != STATE_QUIT_TIP && state != STATE_CHILD_QUIT_TIP) {
                 RealNameAndPhoneDialog.openRealNameAndPhoneDialog(new OnResultListener() {
                     @Override
                     public void onResult(int code, String desc) {
                         //实名认证结果回调
-                      callResultListener(code,desc);
+                        callResultListener(code, desc);
                     }
                 }, strict, new RealNameAndPhoneDialog.BackPressListener() {
                     @Override
                     public void onBack() {
                         if (onResultListener != null) {
-                            showAccountLimitTip(state, title, content, onResultListener, strict,needShowRealName);
+                            showAccountLimitTip(state, title, content, strict, onResultListener, needShowRealName);
                         } else {
-                            showAccountLimitTip(state, title, content, strict,null);
+                            showAccountLimitTip(state, title, content, strict, null);
                         }
                     }
                 });
-            }else{
+            } else {
                 //游客在游戏过程中时长额度用完，进入实名认证不显示关闭和返回
-                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(3,new OnResultListener() {
+                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(3, new OnResultListener() {
                     @Override
                     public void onResult(int code, String desc) {
-                       callResultListener(code, desc);
+                        callResultListener(code, desc);
                     }
                 });
             }
             dismiss();
-        }else if( id == Res.id(getContext(),"ll_guest_tip_switch")){
-            callResultListener(AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT,"");
+        } else if (id == Res.id(getContext(), "ll_guest_tip_switch")) {
+            callResultListener(AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT, "");
             dismiss();
-        }else if( id == Res.id(getContext(),"bt_guest_tip_quit")){
+        } else if (id == Res.id(getContext(), "bt_guest_tip_quit")) {
             System.exit(0);
-        }else if( id == Res.id(getContext(),"bt_guest_tip_enter")){
+        } else if (id == Res.id(getContext(), "bt_guest_tip_enter")) {
             //if( null != onResultListener) {
-                //游客登录时，游戏时间额度未用完
-                if(state == STATE_ENTER_NO_LIMIT || state == STATE_CHILD_ENTER_NO_LIMIT) {
-                    callResultListener(0,"");
-                }else if(state == STATE_PAY_LIMIT || state == STATE_PAY_TIP){//未成年人付费限制
-                    callResultListener(AntiAddictionKit.CALLBACK_CODE_PAY_LIMIT,"");
-                }
-          //  }
+            //游客登录时，游戏时间额度未用完
+            if (state == STATE_ENTER_NO_LIMIT || state == STATE_CHILD_ENTER_NO_LIMIT) {
+                callResultListener(0, "");
+            } else if (state == STATE_PAY_LIMIT || state == STATE_PAY_TIP) {//未成年人付费限制
+                callResultListener(AntiAddictionKit.CALLBACK_CODE_PAY_LIMIT, "");
+            }
+            //  }
             dismiss();
         }
     }
 
-    private SpannableStringBuilder convertString(String content){
-        if(content == null || content.length() == 0){
+    private SpannableStringBuilder convertString(String content) {
+        if (content == null || content.length() == 0) {
             return new SpannableStringBuilder("");
-        }else if(content.contains("#")){
+        } else if (content.contains("#")) {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             String[] strArray = content.split("#");
             int length = strArray.length;
             int currentLength = 0;
             int hightlightIndex = 1;
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#f14939"));
-            for(int i = 0; i< length; i++){
+            for (int i = 0; i < length; i++) {
                 String str = strArray[i];
                 spannableStringBuilder.append(str);
-                if(hightlightIndex == i ){
+                if (hightlightIndex == i) {
                     hightlightIndex += 2;
-                    spannableStringBuilder.setSpan(CharacterStyle.wrap(foregroundColorSpan),currentLength,
-                            currentLength + str.length(),Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    spannableStringBuilder.setSpan(CharacterStyle.wrap(foregroundColorSpan), currentLength,
+                            currentLength + str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
                 currentLength += str.length();
             }
@@ -317,64 +274,82 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#f14939"));
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         int strLength = strArray.length;
-        for( int i = 0; i < strLength; i++){
+        for (int i = 0; i < strLength; i++) {
             int sublength = strArray[i].length();
             spannableStringBuilder.append(strArray[i]);
-            if(numArray.length > i + 1) {
+            if (numArray.length > i + 1) {
                 int numLength = numArray[i + 1].length();
                 spannableStringBuilder.append(numArray[i + 1]);
                 spannableStringBuilder.setSpan(CharacterStyle.wrap(foregroundColorSpan), length + sublength,
                         length + sublength + numLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 length += sublength + numLength;
-            }else{
+            } else {
                 length += sublength;
             }
         }
         return spannableStringBuilder;
     }
 
-    private void callResultListener(int code,String msg){
-        if(onResultListener != null){
-            onResultListener.onResult(code,msg);
+    private void callResultListener(int code, String msg) {
+        if (onResultListener != null) {
+            onResultListener.onResult(code, msg);
         }
     }
 
-    public static void showAccountLimitTip(final int state, final String title, final String content, final int strict, final OnResultListener onResultListener){
-        if(!AccountLimitTip.IS_SHOWING || state == STATE_QUIT_TIP || state == STATE_CHILD_QUIT_TIP) {
-            if(AccountLimitTip.IS_SHOWING){
-                Intent intent = new Intent("xd.dismiss.account.limit");
-                intent.putExtra("state",AccountLimitTip.STATE_PAY_LIMIT);
-                LocalBroadcastManager.getInstance(AntiAddictionPlatform.getActivity()).sendBroadcast(intent);
+
+    public static void showAccountLimitTip(final int state, final String title, final String content, final int strict, final OnResultListener onResultListener, final boolean needShowRealName) {
+        AntiAddictionPlatform.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //需要弹出提示框时，如果当前正在显示强制限制的框，直接返回
+                if (accountLimitTipWeakReference != null && accountLimitTipWeakReference.get() != null) {
+                    AccountLimitTip accountLimitTip = accountLimitTipWeakReference.get();
+                    if (accountLimitTip.isShowing()) {
+                       if(accountLimitTip.isForceShow()){
+                           return;
+                       }
+                       accountLimitTip.dismiss();
+                    }
+                }
+                AccountLimitTip accountLimitTip = new AccountLimitTip(AntiAddictionPlatform.getActivity(),
+                        state, title, content, onResultListener, strict, needShowRealName);
+                if (accountLimitTipWeakReference != null) {
+                    accountLimitTipWeakReference.clear();
+                }
+                accountLimitTipWeakReference = new WeakReference<>(accountLimitTip);
+                accountLimitTip.show();
             }
-           AntiAddictionPlatform.getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        AccountLimitTip accountLimitTip = new AccountLimitTip(AntiAddictionPlatform.getActivity(),
-                                state, title, content, strict,onResultListener);
-                        accountLimitTip.show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+        });
+
+    }
+
+    public static void showAccountLimitTip(final int state, final String title, final String content, final int strict, final OnResultListener onResultListener) {
+        showAccountLimitTip(state, title, content, strict, onResultListener, true);
+    }
+
+    /**
+     * 当前提示框是否是限制性提示
+     */
+    private boolean isForceShow() {
+        switch (state) {
+            case STATE_ENTER_LIMIT:
+            case STATE_QUIT_TIP:
+            case STATE_CHILD_ENTER_STRICT:
+            case STATE_CHILD_QUIT_TIP:
+            case STATE_INVALID_IDENTIFY_LIMIT:
+                return true;
+            default:
+                return false;
         }
     }
 
-    public static void showAccountLimitTip(final int state, final String title, final String content, final OnResultListener onResultListener, final int strict, final boolean needShowRealName){
-        if(!AccountLimitTip.IS_SHOWING) {
-            AntiAddictionPlatform.getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        AccountLimitTip accountLimitTip = new AccountLimitTip(AntiAddictionPlatform.getActivity(),
-                                state, title, content, onResultListener, strict,needShowRealName);
-                        accountLimitTip.show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+    public static void forceClose(){
+        if( null != accountLimitTipWeakReference){
+            AccountLimitTip accountLimitTip = accountLimitTipWeakReference.get();
+            if(accountLimitTip != null && accountLimitTip.isShowing()){
+                accountLimitTip.dismiss();
+            }
         }
     }
+
 }
