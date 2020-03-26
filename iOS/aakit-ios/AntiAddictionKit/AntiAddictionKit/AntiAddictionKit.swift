@@ -41,6 +41,11 @@ public final class AntiAddictionKit: NSObject {
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
             Log("初始化成功！")
+            
+            // 检测是否大陆用户
+            if !RegionDetector.isDetected {
+                RegionDetector.detect()
+            }
         }
     }
     

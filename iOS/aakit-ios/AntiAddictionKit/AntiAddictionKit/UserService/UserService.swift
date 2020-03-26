@@ -76,6 +76,12 @@ extension UserService {
         // 更新当前用户
         User.shared = theUser
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
+            return
+        }
+        
         // 如果在线时长控制未开启，则直接登录成功
         if !AntiAddictionKit.configuration.useSdkOnlineTimeLimit {
             DebugLog("游戏未开启防沉迷时长统计")

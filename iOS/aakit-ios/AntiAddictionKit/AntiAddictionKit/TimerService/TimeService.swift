@@ -11,6 +11,11 @@ final class TimeService {
     
     /// 开始防沉迷时长统计服务
     class func start() {
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            return
+        }
+        
         if AntiAddictionKit.configuration.useSdkOnlineTimeLimit == false {
             DebugLog("游戏未开启防沉迷时长统计")
             return
