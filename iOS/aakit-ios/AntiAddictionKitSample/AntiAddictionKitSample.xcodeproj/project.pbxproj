@@ -473,10 +473,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
-				DEVELOPMENT_TEAM = 8FQ66DQ8TZ;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 80;
+				DEVELOPMENT_TEAM = UE5H8B62F9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/AntiAddictionKitSample/*.framework",
@@ -493,10 +493,10 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.0.4;
-				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo.jinya;
+				MARKETING_VERSION = 2020.3.26;
+				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo;
 				PRODUCT_NAME = "防沉迷单机版";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Everything;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
@@ -506,10 +506,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
-				DEVELOPMENT_TEAM = 8FQ66DQ8TZ;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 80;
+				DEVELOPMENT_TEAM = UE5H8B62F9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/AntiAddictionKitSample/*.framework",
@@ -526,10 +526,10 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.0.4;
-				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo.jinya;
+				MARKETING_VERSION = 2020.3.26;
+				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo;
 				PRODUCT_NAME = "防沉迷单机版";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Everything;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
