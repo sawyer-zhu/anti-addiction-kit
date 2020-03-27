@@ -77,8 +77,8 @@ class NoticeViewPresenter: NSObject {
             self.dismiss()
             
             if AntiAddictionKit.configuration.useSdkRealName {
-                AntiAddictionKit.sendCallback(result: .gamePause, message: "即将打开实名认证页面")
-                Router.openRealNameController(backButtonEnabled: false, forceOpen: true, cancelled: {
+                AntiAddictionKit.sendCallback(result: .gamePause, message: "即将打开实名登记页面")
+                Router.openRealNameController(backButtonEnabled: false, userOpen: true, forceOpen: true, cancelled: {
                     //右上角有x按钮
                 }, succeed: nil)
             } else {

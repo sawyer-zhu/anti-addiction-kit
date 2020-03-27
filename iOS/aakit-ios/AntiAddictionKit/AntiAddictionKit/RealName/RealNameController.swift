@@ -4,15 +4,19 @@ import UIKit
 class RealNameController: BaseController {
     
     // MARK: - Public
-    public convenience init(backButtonEnabled flag: Bool, cancelled: (() -> Void)? = nil, succeed: (() -> Void)? = nil) {
+    public convenience init(backButtonEnabled flag: Bool, userOpen: Bool = false,  cancelled: (() -> Void)? = nil, succeed: (() -> Void)? = nil) {
         self.init()
         self.backButtonEnabled = flag
+        
+        self.userOpen = userOpen
         
         self.realnameCancelledClosure = cancelled
         self.realnameSucceedClosure = succeed
     }
     
     private var backButtonEnabled: Bool = false
+    
+    private var userOpen: Bool = false
     
     private var realnameCancelledClosure: (() -> Void)?
     private var realnameSucceedClosure: (() -> Void)?
@@ -292,6 +296,10 @@ extension RealNameController {
             Router.closeContainer()
             
             AntiAddictionKit.sendCallback(result: .realNameAuthSucceed, message: "用户实名登记成功！")
+            
+            if self.userOpen {
+                AntiAddictionKit.sendCallback(result: .gameResume, message: "实名登记页面关闭")
+            }
             
             self.realnameSucceedClosure?()
             

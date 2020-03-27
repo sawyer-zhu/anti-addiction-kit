@@ -20,7 +20,7 @@ enum AntiAddictionResult: Int {
     case hasChatLimit = 1090 //用户未实名，无法聊天
     
     case gamePause = 2000 //sdk页面打开，游戏暂停
-    case gameResume = 2500 //sdkd页面关闭，游戏恢复
+    case gameResume = 2500 //sdk页面关闭，游戏恢复
     
     
     func intValue() -> Int {
