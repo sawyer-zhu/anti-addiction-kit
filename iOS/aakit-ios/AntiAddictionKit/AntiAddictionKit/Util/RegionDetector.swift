@@ -21,6 +21,15 @@ class RegionDetector {
     public static func detect() {
         var isMainlandUser: Bool = false
         
+        // 检测结果保存在本地，保证最后执行
+        defer {
+            let userKey = Key<Bool>(self.mainlandUserKey)
+            Defaults.shared.set(isMainlandUser, for: userKey)
+            
+            let markKey = Key<Bool>(self.detectMarkKey)
+            Defaults.shared.set(true, for: markKey)
+        }
+        
         if isMainlandCarrier() {
             isMainlandUser = true
         } else {
@@ -32,13 +41,6 @@ class RegionDetector {
                 }
             }
         }
-        
-        // 检测结果保存在本地
-        let userKey = Key<Bool>(self.mainlandUserKey)
-        Defaults.shared.set(isMainlandUser, for: userKey)
-        
-        let markKey = Key<Bool>(self.detectMarkKey)
-        Defaults.shared.set(true, for: markKey)
         
     }
     

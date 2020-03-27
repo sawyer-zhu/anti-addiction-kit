@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AhC-LL-3R1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AhC-LL-3R1">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -34,8 +34,8 @@
                                     <segue destination="W3K-H5-4gw" kind="presentation" id="TAu-D7-94Z"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="防沉迷单机版 DEMO 1.0(1)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYn-bI-Oxt">
-                                <rect key="frame" x="20" y="20" width="203" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="单机版 DEMO 1.0(1)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYn-bI-Oxt">
+                                <rect key="frame" x="20" y="20" width="151" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Xz9-bK-Usx"/>
                                 </constraints>
@@ -61,11 +61,20 @@
                                 <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GUr-rr-7DF">
+                                <rect key="frame" x="185" y="16" width="100" height="32"/>
+                                <segments>
+                                    <segment title="大陆"/>
+                                    <segment title="非大陆"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="GUr-rr-7DF" firstAttribute="centerY" secondItem="zxy-0R-i8v" secondAttribute="centerY" id="2RV-6J-bEx"/>
                             <constraint firstItem="PYn-bI-Oxt" firstAttribute="top" secondItem="wAU-rc-mQF" secondAttribute="bottom" constant="20" id="4DX-Kz-1Zr"/>
                             <constraint firstItem="PYn-bI-Oxt" firstAttribute="leading" secondItem="40Q-wA-NaP" secondAttribute="leading" constant="20" id="7Do-Z6-Nsm"/>
+                            <constraint firstItem="zxy-0R-i8v" firstAttribute="leading" secondItem="GUr-rr-7DF" secondAttribute="trailing" constant="4" id="P38-df-R1P"/>
                             <constraint firstAttribute="trailing" secondItem="Wwf-up-h7q" secondAttribute="trailing" id="RPj-Vu-ghU"/>
                             <constraint firstItem="dtd-N2-aEJ" firstAttribute="top" secondItem="FSR-zu-UDi" secondAttribute="bottom" id="iJf-nI-KaS"/>
                             <constraint firstAttribute="trailing" secondItem="zxy-0R-i8v" secondAttribute="trailing" constant="20" id="mOZ-Ow-Qm4"/>
@@ -81,6 +90,7 @@
                         <outlet property="guideButton" destination="zxy-0R-i8v" id="4HP-fl-HrT"/>
                         <outlet property="nameLabel" destination="PYn-bI-Oxt" id="g1g-cm-T2l"/>
                         <outlet property="timeLabel" destination="Wwf-up-h7q" id="dmb-9m-LfU"/>
+                        <outlet property="userSegment" destination="GUr-rr-7DF" id="ife-lH-7wg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8D5-dq-jog" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
