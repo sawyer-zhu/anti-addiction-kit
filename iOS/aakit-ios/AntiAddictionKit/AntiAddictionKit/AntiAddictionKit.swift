@@ -35,17 +35,17 @@ public final class AntiAddictionKit: NSObject {
     /// AAKit 初始化方法
     /// - Parameter delegate: 接受回调的对象
     public class func `init`(_ delegate: AntiAddictionCallback) {
+        // 检测是否大陆用户
+        if !RegionDetector.isDetected {
+            RegionDetector.detect()
+        }
+        
         if (AntiAddictionKit.sharedDelegate != nil) {
             Log("请勿重复初始化！")
         } else {
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
             Log("初始化成功！")
-            
-            // 检测是否大陆用户
-            if !RegionDetector.isDetected {
-                RegionDetector.detect()
-            }
         }
     }
     
@@ -131,23 +131,6 @@ public final class AntiAddictionKit: NSObject {
     
     
     // MARK: - Private
-    
-    /// 登录用户，当 userId 为空时即退出当前用户
-    /// - Parameters:
-    ///   - userId: 用户 id
-    ///   - userType: 用户类型
-//    @available(*, deprecated, message: "use login(), logout() or updateUserType() instead")
-//    private class func setUser(_ userId: String, _ userType: Int) {
-//        if !self.isKitInstalled() { return }
-//
-//        if (userId.isEmpty) {
-//            UserService.logout()
-//        } else {
-//            let user = User(id: userId, type: UserType.typeByRawValue(userType))
-//            UserService.login(user)
-//        }
-//    }
-    
     
     //禁用初始化方法
     @available(*, unavailable)

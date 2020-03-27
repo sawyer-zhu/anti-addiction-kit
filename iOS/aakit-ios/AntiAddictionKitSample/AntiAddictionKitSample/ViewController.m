@@ -19,6 +19,9 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 
 @property (assign, nonatomic) BOOL isSdkInitialized;
 
+@property (assign, nonatomic) BOOL isMainlandUser;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *userSegment;
+
 @end
 
 @implementation ViewController
@@ -39,10 +42,29 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     
     //显示切换账号按钮
     AntiAddictionKit.configuration.showSwitchAccountButton = YES;
+    
+    //监听地区
+    self.isMainlandUser = [[NSUserDefaults standardUserDefaults] boolForKey:@"isMainlandUser"];
+    self.userSegment.selectedSegmentIndex = self.isMainlandUser ? 0 : 1;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+    selector:@selector(defaultsChanged:)
+        name:NSUserDefaultsDidChangeNotification
+      object:nil];
+    
+    
+}
+
+- (void)defaultsChanged:(NSNotification *)notification {
+    NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
+    self.isMainlandUser = [defaults boolForKey:@"isMainlandUser"];
+    self.userSegment.selectedSegmentIndex = self.isMainlandUser ? 0 : 1;
 }
 
 - (void)dealloc {
     [NSNotificationCenter.defaultCenter removeObserver:self name:onlineTimeNotificationName object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupUI {
@@ -63,7 +85,7 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
     // NSString *appBuildVersion = [infoDic objectForKey:@"CFBundleVersion"];
-    _nameLabel.text = [NSString stringWithFormat:@"防沉迷单机版演示应用 %@", appVersion];
+    _nameLabel.text = [NSString stringWithFormat:@"防沉迷DEMO %@", appVersion];
 }
 
 - (CGRect)actionsViewRect {
