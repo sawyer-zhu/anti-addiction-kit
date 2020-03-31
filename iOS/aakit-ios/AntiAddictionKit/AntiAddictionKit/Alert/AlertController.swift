@@ -193,12 +193,33 @@ extension AlertController {
     }
     
     @objc func quitButtonTapped() {
-        guard let appDelegate = UIApplication.shared.delegate, let window = appDelegate.window as? UIWindow else { return }
-        UIView.animate(withDuration: 0.3, animations: {
-            window.alpha = 0
-        }) { (_) in
-            exit(0)
+        
+        func suicide(_ window: UIWindow) {
+            UIView.animate(withDuration: 0.3, animations: {
+                window.alpha = 0
+            }) { (_) in
+                exit(0)
+            }
         }
+        
+        if #available(iOS 13.0, *) {
+            if let appDelegate = UIApplication.shared.delegate, let window = appDelegate.window as? UIWindow {
+                suicide(window)
+                return
+            }
+            if let window = UIApplication.shared.windows.first {
+                suicide(window)
+                return
+            }
+        } else {
+            if let keyWindow = UIApplication.shared.keyWindow {
+                suicide(keyWindow)
+                return
+            }
+        }
+        
+        // 找不到 window 直接执行
+        exit(0)
     }
     
     @objc func backGameButtonTapped() {
