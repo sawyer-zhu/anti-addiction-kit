@@ -41,28 +41,12 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     self.isSdkInitialized = NO;
     
     //显示切换账号按钮
-    AntiAddictionKit.configuration.showSwitchAccountButton = YES;
+//    AntiAddictionKit.configuration.showSwitchAccountButton = NO;
     
-    //监听地区
-    self.isMainlandUser = [[NSUserDefaults standardUserDefaults] boolForKey:@"isMainlandUser"];
-    self.userSegment.selectedSegmentIndex = self.isMainlandUser ? 0 : 1;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-    selector:@selector(defaultsChanged:)
-        name:NSUserDefaultsDidChangeNotification
-      object:nil];
-    
-    
-}
-
-- (void)defaultsChanged:(NSNotification *)notification {
-    NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
-    self.isMainlandUser = [defaults boolForKey:@"isMainlandUser"];
-    self.userSegment.selectedSegmentIndex = self.isMainlandUser ? 0 : 1;
 }
 
 - (void)dealloc {
-    [NSNotificationCenter.defaultCenter removeObserver:self name:onlineTimeNotificationName object:nil];
+//    [NSNotificationCenter.defaultCenter removeObserver:self name:onlineTimeNotificationName object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

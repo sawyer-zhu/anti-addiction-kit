@@ -20,9 +20,9 @@ final class PayService {
             //未实名，有限制，打开实名窗口
             if AntiAddictionKit.configuration.useSdkRealName {
                 Router.openRealNameController(backButtonEnabled: false, forceOpen: false, cancelled: {
-                    DebugLog("用户取消实名")
+                    Logger.info("用户取消实名")
                 }) {
-                    DebugLog("用户实名成功")
+                    Logger.info("用户实名成功")
                 }
             } else {
                 AntiAddictionKit.sendCallback(result: .realNameRequest, message: "用户支付，请求实名")
@@ -43,13 +43,6 @@ final class PayService {
     /// 查询能否购买道具，通过回调通知调用方
     /// - Parameter price: 道具价格
     public class func canPurchase(_ price: Int) {
-        
-        // 非大陆用户，不开启防沉迷系统
-        if !RegionDetector.isMainlandUser {
-            let limitType = PayLimitType.unlimited
-            limitType.notify()
-            return
-        }
         
         if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
             let limitType = PayLimitType.unlimited
@@ -73,7 +66,7 @@ extension PayService {
     // MARK: - Private
     private class func getPayLimitType(_ price: Int) -> PayLimitType {
         guard let user = User.shared else {
-            Log("当前无已登录用户！")
+            Logger.info("当前无已登录用户！")
             return .unAuthed(price)
         }
         switch user.type {
@@ -117,19 +110,19 @@ fileprivate enum PayLimitType {
     func paymentLimitAlertBody() -> String {
         switch self {
         case .unAuthed(_):
-            DebugLog("用户没实名登记，无法充值")
+            Logger.info("用户没实名登记，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .tooYoung:
-            DebugLog("用户低于8岁，无法充值")
+            Logger.info("用户低于8岁，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .singleAmountLimit:
-            DebugLog("超过单价限制，无法充值")
+            Logger.info("超过单价限制，无法充值")
             return "根据国家相关规定，您本次付费金额超过规定上限，无法购买。请适度娱乐，理性消费。"
         case .monthTotalAmountLimit:
-             DebugLog("超过总额限制，无法充值")
+             Logger.info("超过总额限制，无法充值")
             return "根据国家相关规定，您当月的剩余可用充值额度不足，无法购买此商品。请适度娱乐，理性消费。"
         case .unlimited:
-             DebugLog("充值没限制")
+             Logger.info("充值没限制")
             return "请适度娱乐，理性消费。"
         }
     }

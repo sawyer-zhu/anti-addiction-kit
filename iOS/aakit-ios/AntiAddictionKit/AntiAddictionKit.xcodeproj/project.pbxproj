@@ -49,7 +49,6 @@
 		007622AB23BDADC400DC3AF8 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AA23BDADC400DC3AF8 /* Date+.swift */; };
 		007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AC23BDB22A00DC3AF8 /* DateHelper.swift */; };
 		007622B523BF6F9E00DC3AF8 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622B423BF6F9E00DC3AF8 /* NoticeView.swift */; };
-		00D229DF2429BDB20009EB1E /* RegionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D229DE2429BDB20009EB1E /* RegionDetector.swift */; };
 		00E3AA4B23D012D400B6F39E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00E3AA4A23D012D400B6F39E /* Assets.xcassets */; };
 		305A382B23BCE942006AD644 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305A382A23BCE942006AD644 /* UserService.swift */; };
 		305A382D23BCE949006AD644 /* UserType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305A382C23BCE949006AD644 /* UserType.swift */; };
@@ -115,7 +114,6 @@
 		007622AA23BDADC400DC3AF8 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		007622AC23BDB22A00DC3AF8 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		007622B423BF6F9E00DC3AF8 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
-		00D229DE2429BDB20009EB1E /* RegionDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetector.swift; sourceTree = "<group>"; };
 		00E3AA4A23D012D400B6F39E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		305A382A23BCE942006AD644 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		305A382C23BCE949006AD644 /* UserType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserType.swift; sourceTree = "<group>"; };
@@ -189,16 +187,16 @@
 		0058C80C23BB29C100491E6D /* AntiAddictionKit */ = {
 			isa = PBXGroup;
 			children = (
-				00048BA0242CADC600813723 /* Just */,
 				C161D08C23D0688F005B43F4 /* UnityWrapper */,
+				00048BA0242CADC600813723 /* Just */,
 				305A383723BCF344006AD644 /* Constants */,
 				305A383623BCF33A006AD644 /* Theme */,
 				305A383523BCF30B006AD644 /* ResourceLoading */,
-				305A382E23BCEE91006AD644 /* Store */,
+				305A382E23BCEE91006AD644 /* UserDefaults */,
 				305A382923BCE92A006AD644 /* UserService */,
 				30FE578D23BCC06500E1E5B4 /* TimerService */,
 				0058C82523BB29F000491E6D /* PayService */,
-				30E9A81723BBD7E600718506 /* Util */,
+				30E9A81723BBD7E600718506 /* Logger */,
 				0058C84523BB4CF800491E6D /* Crypto */,
 				0058C82A23BB2B5600491E6D /* Extensions */,
 				30E9A81A23BBDA0C00718506 /* CustomViews */,
@@ -281,12 +279,12 @@
 			path = UserService;
 			sourceTree = "<group>";
 		};
-		305A382E23BCEE91006AD644 /* Store */ = {
+		305A382E23BCEE91006AD644 /* UserDefaults */ = {
 			isa = PBXGroup;
 			children = (
 				305A382F23BCEEAF006AD644 /* Defaults.swift */,
 			);
-			path = Store;
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		305A383323BCF2D0006AD644 /* Alert */ = {
@@ -335,13 +333,12 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
-		30E9A81723BBD7E600718506 /* Util */ = {
+		30E9A81723BBD7E600718506 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
 				30E9A81823BBD7F200718506 /* Logger.swift */,
-				00D229DE2429BDB20009EB1E /* RegionDetector.swift */,
 			);
-			path = Util;
+			path = Logger;
 			sourceTree = "<group>";
 		};
 		30E9A81A23BBDA0C00718506 /* CustomViews */ = {
@@ -531,7 +528,6 @@
 				0032996323C59320004EF389 /* UIApplication+.swift in Sources */,
 				0058C83023BB2EA000491E6D /* UIView+Constraints.swift in Sources */,
 				C161D09923D06E83005B43F4 /* AntiAddictioniOSWrapper.mm in Sources */,
-				00D229DF2429BDB20009EB1E /* RegionDetector.swift in Sources */,
 				0058C83623BB3DF900491E6D /* Navigator.swift in Sources */,
 				0032999123C5D0F6004EF389 /* Crypto.swift in Sources */,
 				00347EBD23CC6F4200F00192 /* UserModel.swift in Sources */,
@@ -590,7 +586,9 @@
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_MODULE_NAME = AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -606,7 +604,9 @@
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_MODULE_NAME = AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -62,11 +62,9 @@ extension DateHelper {
             let start = AntiAddictionKit.configuration.curfewHourStart
             let end = AntiAddictionKit.configuration.curfewHourEnd
             if (start <= hour || hour < end) {
-                DebugLog("宵禁时间！")
                 return true
             }
         }
-        DebugLog("非宵禁时间！")
         return false
     }
     
@@ -82,14 +80,14 @@ extension DateHelper {
     /// 是否节假日
     class func isHoliday(_ date: Date) -> Bool {
         
-        // 审核时，周末!=节假日
         // 是否周末
+        // 审核时判定周末!=节假日，因此注释周末判断逻辑
 //        if date.compare(.isWeekend) {
 //            return true
 //        }
         
         // 是否节日
-        // 目前只能确定 2020 年法定节假日，之后时间需及时更新
+        // TODO: 目前只能确定 2020 年法定节假日，之后时间需及时更新
         let yyyy = date.toString(format: .isoYear)
         let MMdd = date.toString(format: .custom("MMdd"))
         let holiday2020: [String] = ["0101", //元旦1天
@@ -100,12 +98,10 @@ extension DateHelper {
                                     "1001", "1002", "1003", "1004", "1005", "1006", "1007", "1008" //国庆中秋 8天
         ]
         if yyyy == "2020" && holiday2020.contains(MMdd) {
-            DebugLog("当前是节日！")
             return true
         }
         
         // 剩余情况
-        DebugLog("当前非节日！")
         return false
     }
 

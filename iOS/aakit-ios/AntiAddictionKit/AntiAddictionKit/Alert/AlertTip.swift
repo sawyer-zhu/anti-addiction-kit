@@ -70,16 +70,15 @@ final class AlertTip {
         switch type {
         case .lessThan60seconds(_, _, isCurfew: _):
             if userTappedToDismiss {
-                DebugLog("用户手动关闭过60s浮窗，因此不再显示倒计时浮窗")
+                Logger.info("用户手动关闭过60s浮窗，因此不再显示倒计时浮窗")
                 return
             }
         default:
             break
         }
         
-        DebugLog("展示防沉迷浮窗")
+        Logger.info("展示防沉迷浮窗")
         let attStr = type.attributedString
-        DebugLog(attStr.string)
         DispatchQueue.main.async {
             NoticeViewPresenter.show(attStr)
         }

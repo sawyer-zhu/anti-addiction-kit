@@ -35,17 +35,13 @@ public final class AntiAddictionKit: NSObject {
     /// AAKit 初始化方法
     /// - Parameter delegate: 接受回调的对象
     public class func `init`(_ delegate: AntiAddictionCallback) {
-        // 检测是否大陆用户
-        if !RegionDetector.isDetected {
-            RegionDetector.detect()
-        }
         
         if (AntiAddictionKit.sharedDelegate != nil) {
-            Log("请勿重复初始化！")
+            Logger.info("请勿重复初始化！")
         } else {
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
-            Log("初始化成功！")
+            Logger.info("初始化成功！")
         }
     }
     

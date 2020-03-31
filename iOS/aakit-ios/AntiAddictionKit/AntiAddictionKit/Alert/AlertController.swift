@@ -175,7 +175,7 @@ class AlertController: BaseController {
 extension AlertController {
     
     @objc func switchButtonTapped() {
-        DebugLog("用户点击切换账号")
+        Logger.info("用户点击切换账号")
         
         UserService.logout()
         

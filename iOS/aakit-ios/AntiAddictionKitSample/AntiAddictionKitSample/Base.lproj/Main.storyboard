@@ -61,20 +61,11 @@
                                 <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GUr-rr-7DF">
-                                <rect key="frame" x="185" y="16" width="100" height="32"/>
-                                <segments>
-                                    <segment title="大陆"/>
-                                    <segment title="非大陆"/>
-                                </segments>
-                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="GUr-rr-7DF" firstAttribute="centerY" secondItem="zxy-0R-i8v" secondAttribute="centerY" id="2RV-6J-bEx"/>
                             <constraint firstItem="PYn-bI-Oxt" firstAttribute="top" secondItem="wAU-rc-mQF" secondAttribute="bottom" constant="20" id="4DX-Kz-1Zr"/>
                             <constraint firstItem="PYn-bI-Oxt" firstAttribute="leading" secondItem="40Q-wA-NaP" secondAttribute="leading" constant="20" id="7Do-Z6-Nsm"/>
-                            <constraint firstItem="zxy-0R-i8v" firstAttribute="leading" secondItem="GUr-rr-7DF" secondAttribute="trailing" constant="4" id="P38-df-R1P"/>
                             <constraint firstAttribute="trailing" secondItem="Wwf-up-h7q" secondAttribute="trailing" id="RPj-Vu-ghU"/>
                             <constraint firstItem="dtd-N2-aEJ" firstAttribute="top" secondItem="FSR-zu-UDi" secondAttribute="bottom" id="iJf-nI-KaS"/>
                             <constraint firstAttribute="trailing" secondItem="zxy-0R-i8v" secondAttribute="trailing" constant="20" id="mOZ-Ow-Qm4"/>
@@ -90,7 +81,6 @@
                         <outlet property="guideButton" destination="zxy-0R-i8v" id="4HP-fl-HrT"/>
                         <outlet property="nameLabel" destination="PYn-bI-Oxt" id="g1g-cm-T2l"/>
                         <outlet property="timeLabel" destination="Wwf-up-h7q" id="dmb-9m-LfU"/>
-                        <outlet property="userSegment" destination="GUr-rr-7DF" id="ife-lH-7wg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8D5-dq-jog" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

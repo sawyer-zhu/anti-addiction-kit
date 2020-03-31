@@ -143,7 +143,7 @@ class NoticeViewPresenter: NSObject {
     }
     
     deinit {
-        DebugLog("NoticePresenter Deinit")
+        Logger.debug("NoticePresenter Deinit")
     }
 }
 
@@ -207,6 +207,6 @@ class NoticeView: UIView {
     }
     
     deinit {
-        DebugLog("NoticeView Deinit")
+        Logger.debug("NoticeView Deinit")
     }
 }
