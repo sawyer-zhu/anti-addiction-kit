@@ -52,7 +52,7 @@ extension User {
     mutating func update(with new: User) {
         //如果id不同，无法更新
         if (new.id != self.id) {
-            DebugLog("user.id 不同，无法更新")
+            Logger.info("user.id 不同，无法更新")
             return
         }
         
@@ -61,58 +61,58 @@ extension User {
     
     mutating func updateUserType(_ type: UserType) {
         if (type == .unknown && self.type != .unknown && AntiAddictionKit.configuration.useSdkRealName) {
-            DebugLog("UserType 异常，无需更新")
+            Logger.info("UserType 异常，无需更新")
             return
         }
         
         if (type == self.type) {
-            DebugLog("UserType 相同，无需更新")
+            Logger.info("UserType 相同，无需更新")
             return
         }
         
         self.resetUserInfoButId()
         
         self.type = type
-        DebugLog("当前用户类型已更新！")
+        Logger.info("当前用户类型已更新！")
     }
     
     mutating func updateUserRealName(name: Data?, idCardNumber: Data?, phone: Data?) {
         self.realName = name
         self.idCardNumber = idCardNumber
         self.phone = phone
-        DebugLog("当前用户实名信息已更新！")
+        Logger.info("当前用户实名信息已更新！")
     }
      
     mutating func resetOnlineTime(_ time: Int) {
         self.totalOnlineTime = time
-        DebugLog("当前用户游戏时长已重设！")
+        Logger.info("当前用户游戏时长已重设！")
     }
     
     mutating func onlineTimeIncrease(_ addition: Int) {
         self.totalOnlineTime += addition
-        DebugLog("当前用户游戏时长已增加！")
+        Logger.info("当前用户游戏时长已增加！")
         
         UserService.store(self)
     }
     
     mutating func clearOnlineTime() {
         self.totalOnlineTime = 0
-        DebugLog("当前用户游戏时长已清空！")
+        Logger.info("当前用户游戏时长已清空！")
     }
     
     mutating func paymentIncrease(_ addition: Int) {
         self.totalPaymentAmount += addition
-        DebugLog("当前用户月总支付金额已增加！")
+        Logger.info("当前用户月总支付金额已增加！")
     }
     
     mutating func clearPaymentAmount() {
         self.totalPaymentAmount = 0
-        DebugLog("当前用户月总支付金额已清空！")
+        Logger.info("当前用户月总支付金额已清空！")
     }
     
     mutating func updateTimestamp() {
         self.timestamp = Date()
-        DebugLog("当前用户时间戳已更新！")
+        Logger.info("当前用户时间戳已更新！")
     }
     
     mutating private func resetUserInfoButId() {

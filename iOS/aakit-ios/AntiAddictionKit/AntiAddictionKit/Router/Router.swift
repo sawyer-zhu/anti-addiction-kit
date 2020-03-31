@@ -21,7 +21,6 @@ class Router {
             let alertController = AlertController(data, isHsqjCheckCurrentPayLimit: isHsqjCheckCurrentPayLimit)
             Router.openViewController(vc: alertController, forceOpen: forceOpen)
         }
-        DebugLog("弹窗提醒已经打开，tpye=\(data.type)")
     }
     
     public class func openRealNameController(backButtonEnabled flag: Bool, userOpen: Bool = false, forceOpen: Bool = false, cancelled: (() -> Void)? = nil, succeed: (() -> Void)? = nil) {
@@ -29,7 +28,6 @@ class Router {
             let realnameController = RealNameController(backButtonEnabled: flag, userOpen: userOpen, cancelled: cancelled, succeed: succeed)
             Router.openViewController(vc: realnameController, forceOpen: forceOpen)
         }
-        DebugLog("实名窗口已经打开")
     }
     
     public class func openAlertTip(_ type: AlertTipType) {

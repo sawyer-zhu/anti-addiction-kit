@@ -21,7 +21,11 @@ import AntiAddictionKit
 ```Objective-C
 // Objective-C
 @import AntiAddictionKit;
+或
+#import "AntiAddictionKit/AntiAddictionKit-Swift.h";
+//
 ```
+
 
 
 ## 1. SDK 配置（采用默认值可跳过）
@@ -63,7 +67,7 @@ AntiAddictionKit.setFunctionConfig(true, true, true)
 ### 1.2 其他功能配置：
 参数 | 类型 | 默认值 | 说明 
 --- | --- | --- | ---
-`showSwitchAccountButton` | `Bool` | `true` | SDK页面切换账号按钮是否显示，默认显示 `true`
+`showSwitchAccountButton` | `Bool` | `true` | SDK页面切换账号按钮是否显示，默认显示 `true`，单机游戏无账号系统可设置为`false`隐藏该按钮
 
 使用示例：
 
@@ -78,11 +82,11 @@ AntiAddictionKit.configuration.showSwitchAccountButton = YES;
 ### 1.3 时长配置：
  防沉迷限制时长配置 |类型（单位秒）| 默认值| 说明 
 --- | --- | --- | ---
-`minorCommonDayTotalTime` | `Int` | `5400` | 未成年人非节假日游戏限制时长
-`minorHolidayTotalTime` | `Int` | `10800` | 未成年人节假日游戏限制时长
-`guestTotalTime` | `Int` | `3600` | 游客用户（未实名）节假日游戏限制时长
-`firstAlertTipRemainTime` | `Int` | `900` | 第一次提醒用户时的剩余时长
-`countdownAlertTipRemainTime` | `Int` | `60` | 开始倒计时提醒用户时的剩余时长
+`minorCommonDayTotalTime` | `Int` | `5400` | 未成年人非节假日游戏限制时长`90`分钟
+`minorHolidayTotalTime` | `Int` | `10800` | 未成年人节假日游戏限制时长`180`分钟
+`guestTotalTime` | `Int` | `3600` | 游客用户（未实名）节假日游戏限制时长`60`分钟
+`firstAlertTipRemainTime` | `Int` | `900` | 第一次提醒用户时的剩余时长`15`分钟
+`countdownAlertTipRemainTime` | `Int` | `60` | 开始倒计时提醒用户时的剩余时长`1`分钟
 
 使用示例：
 
@@ -107,7 +111,7 @@ AntiAddictionKit.configuration.curfewHourStart = 22
 AntiAddictionKit.configuration.curfewHourEnd = 8
 ```
 
-### 1.5 支付限制金额配置：
+### 1.5 支付限制金额配置（单位分）：
  防沉迷支付限制金额配置 |类型（单位分）| 默认值| 说明 
 --- | --- | --- | ---
 `singlePaymentAmountLimitJunior` | `Int` | `5000` | 8-15 岁单笔付费额度限制，单位分（默认 5000 分，即 50 元）
@@ -178,7 +182,8 @@ USER\_TYPE\_YOUNG | 3 | 未成年人（16-17岁）
 USER\_TYPE\_ADULT | 4 | 成年人（18岁及以上）
 
 ### 3.1 登录
-游戏登录时调用，调用示例：
+游戏登录时调用，如果单机游戏无账号系统，可在登录时直接生成并保存 UUID 保证用户唯一性，userType 传入0，进而模拟账号系统。同时单机游戏可通过`showSwitchAccountButton`来关闭切换账号按钮，保证单一设备只有唯一用户。
+调用示例：
 
 ```swift
 let userId = "xxxx"
@@ -205,6 +210,9 @@ AntiAddictionKit.updateUserType(userType)
 注：`updateUserType 方法`只在游戏用户已经登录成功后能调用。
 
 ### 3.3 登出
+
+调用此方法后 SDK 会退出当前用户信息停止计时，因此游戏需要停止游戏回到登录前状态。
+
 ```swift
 AntiAddictionKit.logout()
 ```
@@ -255,7 +263,7 @@ AntiAddictionKit.logout()
 ##### 注意：如果用户在判断聊天限制过程中需要打开第三方页面进行实名，实名完成后，游戏需要调用 [updateUserType](#更新用户类型) 接口, 还需再次调用 [checkChatLimit]() 接口，SDK 才能判断用户类型并发出 [是否聊天限制](#回调类型) 的回调。
 
 ## 6.时长统计
-如果步骤一配置的 `useSdkOnlineTimeLimit` 值为 `true`，则 sdk 会根据当前政策主动限制游戏时长，反之不会限制用户游戏时长。
+如果步骤一配置的 `useSdkOnlineTimeLimit` 值为 `true`，则 SDK 会根据当前政策主动提醒和限制游戏时长，反之无任何时长限制。
 
 ## 7.获取用户类型
 SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户，会返回该用户的正常类型信息（0，1，2，3，4），否则返回 -1。调用示例如下：
