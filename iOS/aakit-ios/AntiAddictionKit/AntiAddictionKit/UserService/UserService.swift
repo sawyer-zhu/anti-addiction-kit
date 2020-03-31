@@ -64,12 +64,12 @@ extension UserService {
         var isFirstLogin = false
         var theUser: User = user
         if var storedUser = UserService.fetch(theUser.id) {
-            DebugLog("本地已找到用户[\(user.id)]")
+            Logger.info("本地已找到用户[\(user.id)]")
             isFirstLogin = false
             storedUser.updateUserType(theUser.type)
             theUser = storedUser
         } else {
-            DebugLog("本地未找到用户[\(user.id)]，用户第一次登录")
+            Logger.info("本地未找到用户[\(user.id)]，用户第一次登录")
             isFirstLogin = true
         }
         
@@ -78,20 +78,20 @@ extension UserService {
         
         // 如果在线时长控制未开启，则直接登录成功
         if !AntiAddictionKit.configuration.useSdkOnlineTimeLimit {
-            DebugLog("游戏未开启防沉迷时长统计")
+            Logger.info("游戏未开启防沉迷时长统计")
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             return
         }
         
         //如果最后一次存储的日期 与 现在不是同一天，则清空 在线时长
         if DateHelper.isSameDay(theUser.timestamp, Date()) == false {
-            DebugLog("上一次登录非今天，清空在线时长")
+            Logger.info("上一次登录非今天，清空在线时长")
             theUser.clearOnlineTime()
         }
         
         //如果最后一次存储的日期 与 现在不是同一月，则清空 支付金额
         if DateHelper.isSameMonth(theUser.timestamp, Date()) == false {
-            DebugLog("上一次登录非本月，情况付费金额")
+            Logger.info("上一次登录非本月，清空付费金额")
             theUser.clearPaymentAmount()
         }
         
@@ -100,7 +100,7 @@ extension UserService {
         
         //成年人 直接登录成功
         if limitLevel == .unlimited  {
-            DebugLog("成年用户，无需统计时长")
+            Logger.info("成年用户，无需统计时长")
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             return
         }
@@ -117,13 +117,13 @@ extension UserService {
             
             if (remainSeconds <= 0) {
                 //没有时间
-                DebugLog("游客用户，没时间了，弹窗")
+                Logger.info("游客用户，没时间了，弹窗")
                 User.shared!.resetOnlineTime(guestTotalTime)
                 let minutes = guestTotalTime / kSecondsPerMinute
                 content = AlertType.TimeLimitAlertContent.guestGameOver(minutes: minutes)
             } else {
-                DebugLog("游客用户，还有时间，弹窗")
-                let minutes = Int(ceilf(Float(guestTotalTime / kSecondsPerMinute)))
+                Logger.info("游客用户，还有时间，弹窗")
+                let minutes = Int(ceilf(Float(remainSeconds) / Float(kSecondsPerMinute)))
                 content = AlertType.TimeLimitAlertContent.guestLogin(minutes: minutes, isFirstLogin: isFirstLogin)
             }
 
@@ -141,7 +141,7 @@ extension UserService {
             //如果是宵禁，无法进入游戏，给游戏发送无游戏时间通知
             if DateHelper.isCurfew(Date()) {
                 //宵禁无法进入
-                DebugLog("当前为宵禁时间，弹窗")
+                Logger.info("当前为宵禁时间，弹窗")
                 
                 AntiAddictionKit.sendCallback(result: .noRemainTime, message: "宵禁时间，无法进入游戏！")
                 
@@ -163,7 +163,7 @@ extension UserService {
             assert(remainSeconds >= 0, "用户剩余时间不能为负数！！！")
             
             if remainSeconds <= 0 {
-                DebugLog("未成年用户，没时间了，弹窗")
+                Logger.info("未成年用户，没时间了，弹窗")
                 let minutes: Int = minorTotalTime / kSecondsPerMinute
                 let content = AlertType.TimeLimitAlertContent.minorGameOver(minutes: minutes, isCurfew: false)
                 Router.openAlertController(AlertData(type: .timeLimitAlert,
@@ -175,7 +175,7 @@ extension UserService {
             }
             
             //如果有剩余时间，未成年人登录时不弹窗，直接登录开始计时
-            DebugLog("未成年用户，有时间，直接登录开始计时")
+            Logger.info("未成年用户，有时间，直接登录开始计时")
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             TimeService.start()
             return
@@ -187,7 +187,7 @@ extension UserService {
 extension UserService {
     
     class func fetch(_ uid: String) -> User? {
-        DebugLog("从本地读取用户[\(uid)]")
+        Logger.info("从本地读取用户[\(uid)]")
         let key = Key<User>(uid)
         return Defaults.shared.get(for: key)
     }
@@ -195,16 +195,16 @@ extension UserService {
     class func store(_ user: User) {
         var aUser = user
         aUser.timestamp = Date()
-        DebugLog("user 时间戳已更新！")
+        Logger.info("user 时间戳已更新！")
         let key = Key<User>(aUser.id)
         Defaults.shared.set(aUser, for: key)
-        DebugLog("用户[\(user.id)]已保存到本地")
+        Logger.info("用户[\(user.id)]已保存到本地")
     }
     
     class func delete(_ user: User) {
         let key = Key<User>(user.id)
         Defaults.shared.clear(key)
-        DebugLog("用户[\(user.id)]已从本地清除")
+        Logger.info("用户[\(user.id)]已从本地清除")
     }
     
 }

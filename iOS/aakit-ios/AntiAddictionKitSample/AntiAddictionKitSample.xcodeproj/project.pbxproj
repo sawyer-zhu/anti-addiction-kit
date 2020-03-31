@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00048B9E242CABD800813723 /* AntiAddictionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00048B9D242CABD800813723 /* AntiAddictionKit.framework */; };
+		00048B9F242CABD800813723 /* AntiAddictionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 00048B9D242CABD800813723 /* AntiAddictionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		00B19AF323C86F0600816611 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B19AF223C86F0600816611 /* AppDelegate.m */; };
 		00B19AF923C86F0600816611 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B19AF823C86F0600816611 /* ViewController.m */; };
 		00B19AFC23C86F0600816611 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00B19AFA23C86F0600816611 /* Main.storyboard */; };
@@ -17,8 +19,6 @@
 		00B19B1923C86F0800816611 /* AntiAddictionKitSampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B19B1823C86F0800816611 /* AntiAddictionKitSampleUITests.m */; };
 		00B19B2823C8706500816611 /* GuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B19B2723C8706500816611 /* GuideViewController.m */; };
 		00B19B2B23C8712D00816611 /* ButtonViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B19B2A23C8712D00816611 /* ButtonViewCell.m */; };
-		00CA74EE2422396F00BC80F3 /* AntiAddictionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CA74ED2422396F00BC80F3 /* AntiAddictionKit.framework */; };
-		00CA74EF2422396F00BC80F3 /* AntiAddictionKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 00CA74ED2422396F00BC80F3 /* AntiAddictionKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,13 +39,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		00CA74F02422396F00BC80F3 /* Embed Frameworks */ = {
+		00048B9C242C82AA00813723 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				00CA74EF2422396F00BC80F3 /* AntiAddictionKit.framework in Embed Frameworks */,
+				00048B9F242CABD800813723 /* AntiAddictionKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,7 +53,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00B19AEE23C86F0600816611 /* 防沉迷单机版.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "防沉迷单机版.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00048B9D242CABD800813723 /* AntiAddictionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AntiAddictionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		00B19AEE23C86F0600816611 /* 防沉迷demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "防沉迷demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00B19AF123C86F0600816611 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		00B19AF223C86F0600816611 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		00B19AF723C86F0600816611 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -73,7 +74,6 @@
 		00B19B2723C8706500816611 /* GuideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuideViewController.m; sourceTree = "<group>"; };
 		00B19B2923C8712D00816611 /* ButtonViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonViewCell.h; sourceTree = "<group>"; };
 		00B19B2A23C8712D00816611 /* ButtonViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButtonViewCell.m; sourceTree = "<group>"; };
-		00CA74ED2422396F00BC80F3 /* AntiAddictionKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AntiAddictionKit.framework; path = ../AntiAddictionKit/AntiAddictionKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00CA74EE2422396F00BC80F3 /* AntiAddictionKit.framework in Frameworks */,
+				00048B9E242CABD800813723 /* AntiAddictionKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,7 +105,7 @@
 		0078E93A23C87C8E00EB2A76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				00CA74ED2422396F00BC80F3 /* AntiAddictionKit.framework */,
+				00048B9D242CABD800813723 /* AntiAddictionKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -124,7 +124,7 @@
 		00B19AEF23C86F0600816611 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				00B19AEE23C86F0600816611 /* 防沉迷单机版.app */,
+				00B19AEE23C86F0600816611 /* 防沉迷demo.app */,
 				00B19B0923C86F0700816611 /* AntiAddictionKitSampleTests.xctest */,
 				00B19B1423C86F0800816611 /* AntiAddictionKitSampleUITests.xctest */,
 			);
@@ -179,7 +179,7 @@
 				00B19AEA23C86F0600816611 /* Sources */,
 				00B19AEB23C86F0600816611 /* Frameworks */,
 				00B19AEC23C86F0600816611 /* Resources */,
-				00CA74F02422396F00BC80F3 /* Embed Frameworks */,
+				00048B9C242C82AA00813723 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -187,7 +187,7 @@
 			);
 			name = AntiAddictionKitSample;
 			productName = AntiAddictionKitSample;
-			productReference = 00B19AEE23C86F0600816611 /* 防沉迷单机版.app */;
+			productReference = 00B19AEE23C86F0600816611 /* 防沉迷demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		00B19B0823C86F0700816611 /* AntiAddictionKitSampleTests */ = {
@@ -476,7 +476,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = UE5H8B62F9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)",
@@ -494,9 +494,9 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 2020.3.27.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo;
-				PRODUCT_NAME = "防沉迷单机版";
+				PRODUCT_NAME = "防沉迷demo";
 				PROVISIONING_PROFILE_SPECIFIER = Everything;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
@@ -510,7 +510,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = UE5H8B62F9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)",
@@ -528,9 +528,9 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 2020.3.27.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddcitionKitDemo;
-				PRODUCT_NAME = "防沉迷单机版";
+				PRODUCT_NAME = "防沉迷demo";
 				PROVISIONING_PROFILE_SPECIFIER = Everything;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";

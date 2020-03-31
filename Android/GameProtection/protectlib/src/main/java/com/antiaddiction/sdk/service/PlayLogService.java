@@ -1,28 +1,52 @@
 package com.antiaddiction.sdk.service;
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
 import com.antiaddiction.sdk.AntiAddictionCore;
 import com.antiaddiction.sdk.AntiAddictionPlatform;
 import com.antiaddiction.sdk.AntiAddictionKit;
+import com.antiaddiction.sdk.Callback;
 import com.antiaddiction.sdk.entity.User;
+import com.antiaddiction.sdk.net.HttpUtil;
+import com.antiaddiction.sdk.net.NetUtil;
 import com.antiaddiction.sdk.utils.LogUtil;
 import com.antiaddiction.sdk.utils.TimeUtil;
 
 import org.json.JSONObject;
 
 public class PlayLogService {
-    static JSONObject handlePlayLog(long startTime,long endTime,User user){
+    static void handlePlayLog(long startTime,long endTime,User user,Callback callback){
         LogUtil.logd("handlePlayLog startTime = " + startTime + " endTime = " + endTime +
                 " user = " + user.toJsonString());
-        user.updateOnlineTime((int) (endTime - startTime));
-        AntiAddictionCore.saveUserInfo();
-        return checkUserState(user,false);
+         checkUserState(startTime,endTime,user,callback);
     }
 
-    public static JSONObject checkUserState(User user,boolean isLogin){
+    private static void checkUserState(long startTime, long endTime, User user, Callback callback){
+        if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+             checkUserStateByServer(startTime, endTime, user,callback,false);
+        }else{
+            if(callback != null){
+                user.updateOnlineTime((int) (endTime - startTime));
+                AntiAddictionCore.saveUserInfo();
+                callback.onSuccess(checkUserStateByLocal(user, false));
+            }
+
+        }
+    }
+
+    public static void checkUserStateSync(long startTime,long endTime,User user,Callback callback){
+        if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+            checkUserStateByServer(startTime, endTime, user, callback,true);
+        }else{
+            if(callback != null){
+                user.updateOnlineTime((int) (endTime - startTime));
+                AntiAddictionCore.saveUserInfo();
+                callback.onSuccess(checkUserStateByLocal(user, true));
+            }
+
+        }
+    }
+
+    private static JSONObject checkUserStateByLocal(User user,boolean isLogin){
         JSONObject response = new JSONObject();
         int restrictType = 0; //1 宵禁 2 在线时长限制
         int remainTime = 0;
@@ -71,9 +95,11 @@ public class PlayLogService {
             }
             response.put("restrictType",restrictType);
             response.put("remainTime",remainTime);
-            Intent intent = new Intent("time.click");
+
+            Intent intent = new Intent("antisdk.time.click");
             intent.putExtra("time",remainTime);
-            LocalBroadcastManager.getInstance(AntiAddictionPlatform.getActivity()).sendBroadcast(intent);
+            AntiAddictionPlatform.getActivity().sendBroadcast(intent);
+
             response.put("description",description);
             response.put("title",title);
             LogUtil.logd(" timeResult = " + response);
@@ -83,4 +109,24 @@ public class PlayLogService {
             return null;
         }
     }
+
+    private static void checkUserStateByServer(long startTime, long endTime, User user, final Callback callback,boolean isSync){
+      NetUtil.NetCallback netCallback =  new NetUtil.NetCallback() {
+            @Override
+            public void onSuccess(String response) {
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onFail(int code, String message) {
+                callback.onFail();
+            }
+        };
+      if(isSync){
+          NetUtil.postSync("","",netCallback);
+      }else{
+          HttpUtil.postAsync("","",netCallback);
+      }
+    }
+
 }
