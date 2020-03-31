@@ -31,7 +31,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    api files('libs/localbroadcast.jar')
 }
 task jarAntiAddiction(type: Jar, dependsOn: ['build']) {
     archiveName = 'libAAK.jar'

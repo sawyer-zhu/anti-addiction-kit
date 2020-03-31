@@ -4,6 +4,7 @@ import Foundation
 final class ChatService {
     
     class func checkChatLimit() {
+        
         //检查是否实名
         guard let user = User.shared else {
             AntiAddictionKit.sendCallback(result: .hasChatLimit, message: "当前无用户登录，无法聊天")

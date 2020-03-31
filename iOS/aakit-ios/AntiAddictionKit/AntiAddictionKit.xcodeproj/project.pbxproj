@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		00048BA2242CADE500813723 /* Just.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00048BA1242CADE500813723 /* Just.swift */; };
 		002CFC4B23C2E527009003AB /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002CFC4A23C2E527009003AB /* ChatService.swift */; };
 		002CFC5123C4357C009003AB /* RealNameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002CFC5023C4357C009003AB /* RealNameService.swift */; };
 		0032996323C59320004EF389 /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032996223C59320004EF389 /* UIApplication+.swift */; };
@@ -82,6 +83,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00048BA1242CADE500813723 /* Just.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Just.swift; sourceTree = "<group>"; };
 		002CFC4A23C2E527009003AB /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		002CFC5023C4357C009003AB /* RealNameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealNameService.swift; sourceTree = "<group>"; };
 		0032996223C59320004EF389 /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
@@ -155,6 +157,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00048BA0242CADC600813723 /* Just */ = {
+			isa = PBXGroup;
+			children = (
+				00048BA1242CADE500813723 /* Just.swift */,
+			);
+			path = Just;
+			sourceTree = "<group>";
+		};
 		0058C80023BB29C100491E6D = {
 			isa = PBXGroup;
 			children = (
@@ -178,14 +188,15 @@
 			isa = PBXGroup;
 			children = (
 				C161D08C23D0688F005B43F4 /* UnityWrapper */,
+				00048BA0242CADC600813723 /* Just */,
 				305A383723BCF344006AD644 /* Constants */,
 				305A383623BCF33A006AD644 /* Theme */,
 				305A383523BCF30B006AD644 /* ResourceLoading */,
-				305A382E23BCEE91006AD644 /* Store */,
+				305A382E23BCEE91006AD644 /* UserDefaults */,
 				305A382923BCE92A006AD644 /* UserService */,
 				30FE578D23BCC06500E1E5B4 /* TimerService */,
 				0058C82523BB29F000491E6D /* PayService */,
-				30E9A81723BBD7E600718506 /* Util */,
+				30E9A81723BBD7E600718506 /* Logger */,
 				0058C84523BB4CF800491E6D /* Crypto */,
 				0058C82A23BB2B5600491E6D /* Extensions */,
 				30E9A81A23BBDA0C00718506 /* CustomViews */,
@@ -268,12 +279,12 @@
 			path = UserService;
 			sourceTree = "<group>";
 		};
-		305A382E23BCEE91006AD644 /* Store */ = {
+		305A382E23BCEE91006AD644 /* UserDefaults */ = {
 			isa = PBXGroup;
 			children = (
 				305A382F23BCEEAF006AD644 /* Defaults.swift */,
 			);
-			path = Store;
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		305A383323BCF2D0006AD644 /* Alert */ = {
@@ -322,12 +333,12 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
-		30E9A81723BBD7E600718506 /* Util */ = {
+		30E9A81723BBD7E600718506 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
 				30E9A81823BBD7F200718506 /* Logger.swift */,
 			);
-			path = Util;
+			path = Logger;
 			sourceTree = "<group>";
 		};
 		30E9A81A23BBDA0C00718506 /* CustomViews */ = {
@@ -430,7 +441,7 @@
 					};
 					0058C80923BB29C100491E6D = {
 						CreatedOnToolsVersion = 11.3;
-						LastSwiftMigration = 1130;
+						LastSwiftMigration = "";
 					};
 					0058C81223BB29C100491E6D = {
 						CreatedOnToolsVersion = 11.3;
@@ -526,6 +537,7 @@
 				30FE578A23BCA43B00E1E5B4 /* AlertTip.swift in Sources */,
 				30FE578C23BCAAD200E1E5B4 /* DispatchTime+.swift in Sources */,
 				0032999323C5D379004EF389 /* Data+Crypto.swift in Sources */,
+				00048BA2242CADE500813723 /* Just.swift in Sources */,
 				0058C82C23BB2B6600491E6D /* UIColor+.swift in Sources */,
 				30C4FDE923BCFAEF00060CE7 /* AntiAddictionKit+Private.swift in Sources */,
 				007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */,
@@ -574,7 +586,9 @@
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_MODULE_NAME = AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -590,7 +604,9 @@
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_MODULE_NAME = AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -731,7 +747,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -747,14 +763,14 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 2020.3.27;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -770,7 +786,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -786,13 +802,13 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 2020.3.27;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

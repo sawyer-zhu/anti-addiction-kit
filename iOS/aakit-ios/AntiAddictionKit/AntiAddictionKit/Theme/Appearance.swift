@@ -4,19 +4,19 @@ import UIKit
 struct Appearance {
     static var `default` = Appearance()
     
-    let titleTextColor: UIColor
-    let bodyTextColor: UIColor
-    let tipTextColor: UIColor
-    let placeholderColor: UIColor
-    let iconColor: UIColor
+    var titleTextColor: UIColor
+    var bodyTextColor: UIColor
+    var tipTextColor: UIColor
+    var placeholderColor: UIColor
+    var iconColor: UIColor
     
-    let whiteBackgroundColor: UIColor
-    let blackBackgroundColor: UIColor
-    let grayBackgroundColor: UIColor
+    var whiteBackgroundColor: UIColor
+    var blackBackgroundColor: UIColor
+    var grayBackgroundColor: UIColor
     
-    let titleFontSize: CGFloat
-    let bodyFontSize: CGFloat
-    let tipFontSize: CGFloat
+    var titleFontSize: CGFloat
+    var bodyFontSize: CGFloat
+    var tipFontSize: CGFloat
     
     
     init() {

@@ -1,6 +1,8 @@
 
 import UIKit
 
+
+/// 回传给游戏的信息编码
 enum AntiAddictionResult: Int {
     case loginSuccess = 500 //用户登录成功
     case logout = 1000 //用户切换账号
@@ -20,7 +22,7 @@ enum AntiAddictionResult: Int {
     case hasChatLimit = 1090 //用户未实名，无法聊天
     
     case gamePause = 2000 //sdk页面打开，游戏暂停
-    case gameResume = 2500 //sdkd页面关闭，游戏恢复
+    case gameResume = 2500 //sdk页面关闭，游戏恢复
     
     
     func intValue() -> Int {
@@ -35,7 +37,7 @@ extension AntiAddictionKit {
     
     class func isKitInstalled() -> Bool {
         if (AntiAddictionKit.sharedDelegate == nil) {
-            Log("请先初始化 AAKit！")
+            Logger.info("请先初始化 AAKit！")
             return false
         }
         return true
@@ -50,24 +52,24 @@ extension AntiAddictionKit {
     class func addNotificationListener() {
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) in
-            DebugLog("游戏开始活跃")
+            Logger.info("游戏开始活跃")
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.start()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { (notification) in
-            DebugLog("游戏开始不活跃")
+            Logger.info("游戏开始不活跃")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { (notification) in
-            DebugLog("游戏进入后台")
+            Logger.info("游戏进入后台")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { (notification) in
-            DebugLog("游戏即将关闭")
+            Logger.info("游戏即将关闭")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()

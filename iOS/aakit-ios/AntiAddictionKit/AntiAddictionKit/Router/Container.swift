@@ -50,7 +50,7 @@ class Container: UIViewController {
     }
     
     deinit {
-        DebugLog("Container Deinit")
+        Logger.debug("Container Deinit")
     }
     
 }
