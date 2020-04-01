@@ -311,7 +311,7 @@ NSInteger userType = [AntiAddictionKit getUserType:@"userId"];
 ## Demo 截图
 
 <div align="left">
-<img src="./screenshots/time_alert.png" height="300px" alt="时长限制" >
-<img src="./screenshots/realname.png" height="300px" alt="实名认证" >
-<img src="./screenshots/payment_alert.png" height="300px" alt="支付限制" >
+<img src="./screenshots/time_alert.png" height="414px" alt="时长限制" >
+<img src="./screenshots/realname.png" height="414px" alt="实名认证" >
+<img src="./screenshots/payment_alert.png" height="414px" alt="支付限制" >
 </div>
