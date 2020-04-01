@@ -13,4 +13,4 @@ work_path=$(dirname $0)
  
 # 切换到工程目录，使用 Carthage 打包 release 动态库
 # Framework产出目录 Carthage/Build/iOS/AntiAddictionKit.framework
-cd ${work_path}/iOS/aakit-ios/AntiAddictionKit && Carthage build --configuration release --no-skip-current --platform ios AntiAddictionKit
+cd ${work_path}/iOS/AntiAddictionKit && Carthage build --configuration release --no-skip-current --platform ios AntiAddictionKit
