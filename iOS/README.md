@@ -9,8 +9,11 @@
 2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Svign`。
 3. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译。
 4. 修改 Xcode 工程的 `BuildSettings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即`始终引入 Swift 标准库`，避免 App 启动时报错（无法找到 Swift标准库之类）。
-5. 添加依赖库 `libc++.tbd`
-6. 开始代码接入
+5. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中`AntiAddiction.framework`勾上`Code Sign On Copy`，否则打包提审时可能会出现审核打回（ITMS-90424: Invalid Swift Support）。
+6. 添加依赖库 `libc++.tbd`
+7. 开始代码接入
+
+> 请确保以上操作。
  
 
 ```swift
