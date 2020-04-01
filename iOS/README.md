@@ -306,8 +306,9 @@ NSInteger userType = [AntiAddictionKit getUserType:@"userId"];
 参数是用户的唯一标识字符串，返回值参考[用户类型](#用户类型)。
 
 ## Demo 截图
-![时长限制](./screenshots/time_alert.png)
 
-![实名认证](./screenshots/realname.png)
-
-![支付限制](./screenshots/payment_alert.png)
+<div align="left">
+<img src="./screenshots/time_alert.png" height="300px" alt="时长限制" >
+<img src="./screenshots/realname.png" height="300px" alt="实名认证" >
+<img src="./screenshots/payment_alert.png" height="300px" alt="支付限制" >
+</div>
