@@ -97,12 +97,6 @@ public final class AntiAddictionKit: NSObject {
         PayService.didPurchase(amount)
     }
     
-    /// 查询能否支付，直接返回支付限制相关回调类型 raw value，hsqj使用
-    /// - Parameter amount: 支付金额，单位分
-    public class func checkCurrentPayLimit(_ amount: Int) -> Int {
-        PayService.checkCurrentPayLimit(amount)
-    }
-    
     /// 查询当前用户能否聊天
     public class func checkChatLimit() {
         if !self.isKitInstalled() { return }

@@ -5,41 +5,6 @@ final class PayService {
     
     // MARK: - Public
     
-    
-    /// 查询能否购买道具，直接返回支付限制相关的回调类型 raw value, 仅供 HSQJ 定制，请谨慎使用。
-    /// - Parameter price: 道具价格
-    public class func checkCurrentPayLimit(_ price: Int) -> Int {
-        if User.shared == nil { return AntiAddictionResult.hasPayLimit.intValue() }
-        let payLimitType = PayService.getPayLimitType(price)
-        switch payLimitType {
-            
-        case .unlimited:
-            //无限制
-            return AntiAddictionResult.noPayLimit.intValue()
-        case .unAuthed(_):
-            //未实名，有限制，打开实名窗口
-            if AntiAddictionKit.configuration.useSdkRealName {
-                Router.openRealNameController(backButtonEnabled: false, forceOpen: false, cancelled: {
-                    Logger.info("用户取消实名")
-                }) {
-                    Logger.info("用户实名成功")
-                }
-            } else {
-                AntiAddictionKit.sendCallback(result: .realNameRequest, message: "用户支付，请求实名")
-            }
-            
-            return AntiAddictionResult.hasPayLimit.intValue()
-            
-        case .tooYoung, .singleAmountLimit, .monthTotalAmountLimit:
-            
-            // 打开付费限制提示，此页面中只有返回游戏按钮，点击后不会发送回调
-            let alertData = AlertData(type: .payLimitAlert, title: kPaymentLimitAlertTitle, body: payLimitType.paymentLimitAlertBody())
-            Router.openAlertController(alertData, isHsqjCheckCurrentPayLimit: true)
-            
-            return AntiAddictionResult.hasPayLimit.intValue()
-        }
-    }
-    
     /// 查询能否购买道具，通过回调通知调用方
     /// - Parameter price: 道具价格
     public class func canPurchase(_ price: Int) {
