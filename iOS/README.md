@@ -6,7 +6,7 @@
 
 ### 手动引入 iOS 动态库文件
 1. 下载最新的 Release 中的 `AntiAddictionKitiOS.zip`文件解压得到动态库`AntiAddictionKit.Framework`。
-2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Svign`。
+2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Sign`。
 3. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译。
 4. 修改 Xcode 工程的 `BuildSettings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即`始终引入 Swift 标准库`，避免 App 启动时报错（无法找到 Swift标准库之类）。
 5. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中`AntiAddiction.framework`勾上`Code Sign On Copy`，否则打包提审时可能会出现审核打回（ITMS-90424: Invalid Swift Support）。
@@ -311,7 +311,7 @@ NSInteger userType = [AntiAddictionKit getUserType:@"userId"];
 ## Demo 截图
 
 <div align="left">
-<img src="./screenshots/time_alert.png" height="300px" alt="时长限制" >
-<img src="./screenshots/realname.png" height="300px" alt="实名认证" >
-<img src="./screenshots/payment_alert.png" height="300px" alt="支付限制" >
+<img src="./screenshots/time_alert.png" height="414px" alt="时长限制" >
+<img src="./screenshots/realname.png" height="414px" alt="实名认证" >
+<img src="./screenshots/payment_alert.png" height="414px" alt="支付限制" >
 </div>
