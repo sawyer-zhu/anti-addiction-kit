@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using AOT;
 
 /*
-	version 1.0.4
+	version 1.0.6
  */
 namespace AntiAddiction.StandAlone
 {
@@ -202,20 +202,6 @@ namespace AntiAddiction.StandAlone
 			#elif UNITY_ANDROID && !UNITY_EDITOR
 				AntiAddictionClass.CallStatic ("openRealName");
 			#else
-			#endif
-		}
-
-		/*
-			检查是否能支付,结果同步返回，可能会阻塞线程.不建议使用
-			price：商品价格，单位分
-		 */
-		public static int checkPayLimitSync(int price) {
-			#if UNITY_IOS && !UNITY_EDITOR
-				return AntiAddictionCheckCurrentPayLimit(price);
-			#elif UNITY_ANDROID && !UNITY_EDITOR
-				return AntiAddictionClass.CallStatic<int> ("checkCurrentPayLimit", price);
-			#else
-				return 1020;
 			#endif
 		}
 
