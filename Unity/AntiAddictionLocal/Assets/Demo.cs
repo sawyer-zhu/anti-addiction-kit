@@ -5,12 +5,11 @@ using UnityEngine;
 using AntiAddiction.StandAlone;
 using System;
 
-/*
-	version 1.0.1
- */
-
 public class Demo : MonoBehaviour {
 	public Action<int,string> onAntiAddictionResult;
+
+	private string callbackStatus = "";
+
 	// Use this for initialization
 	void Start () {
 		
@@ -41,19 +40,21 @@ public class Demo : MonoBehaviour {
 
 		GUIStyle myLabelStyle = new GUIStyle(GUI.skin.label)
 		{
-			fontSize = 30
+			fontSize = 40
 		};
 
 
 		GUI.depth = 0;
 
-		if (GUI.Button(new Rect(50, 200, 300, 60), "初始化", myButtonStyle))
+		GUI.Label(new Rect(50, 100, 500, 50), callbackStatus, myLabelStyle);
+
+		if (GUI.Button(new Rect(50, 200, 380, 60), "初始化", myButtonStyle))
 		{
 			onAntiAddictionResult += onAntiAddictionHandler;
 			AntiAddiction.StandAlone.AntiAddiction.init(onAntiAddictionResult);
 		}
 
-		if (GUI.Button(new Rect(50, 300, 300, 60), "登录", myButtonStyle))
+		if (GUI.Button(new Rect(50, 300, 380, 60), "登录", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.login("1234567",0);
 		}
@@ -63,7 +64,7 @@ public class Demo : MonoBehaviour {
 			AntiAddiction.StandAlone.AntiAddiction.updateUserType(4);
 		}
 
-		if (GUI.Button(new Rect(50, 460, 300, 60), "登出", myButtonStyle))
+		if (GUI.Button(new Rect(50, 460, 380, 60), "登出", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.logout();
 		}
@@ -73,23 +74,17 @@ public class Demo : MonoBehaviour {
 			AntiAddiction.StandAlone.AntiAddiction.checkPayLimit(200);
 		}
 
-		if (GUI.Button(new Rect(50, 610, 300, 60), "付费成功", myButtonStyle))
+		if (GUI.Button(new Rect(50, 610, 380, 60), "付费成功", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.paySuccess(100);
 		}
-
-		// if (GUI.Button(new Rect(50, 690, 460, 60), "同步检查付费限制", myButtonStyle))
-		// {
-		// 	int result = AntiAddiction.StandAlone.AntiAddiction.checkPayLimitSync(200);
-		// 	Debug.Log("checkPayLimitSync" + result);
-		// }
 
 		if (GUI.Button(new Rect(50, 770, 380, 60), "检查聊天限制", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.checkChatLimit();
 		}
 
-		if (GUI.Button(new Rect(50, 850, 300, 60), "配置SDK", myButtonStyle))
+		if (GUI.Button(new Rect(50, 850, 380, 60), "配置SDK", myButtonStyle))
 		{
 			AntiAddictionConfig config = new AntiAddictionConfig.Builder ()
 			.UseSdkRealName (true)
@@ -102,19 +97,48 @@ public class Demo : MonoBehaviour {
 			// AntiAddiction.StandAlone.AntiAddiction.fuctionConfig(false,true,true);
 		}
 
-		if (GUI.Button(new Rect(50, 930, 330, 60), "获取用户类型", myButtonStyle))
+		if (GUI.Button(new Rect(50, 930, 380, 60), "获取用户类型", myButtonStyle))
 		{
 			int userType = AntiAddiction.StandAlone.AntiAddiction.getUserType("12345");
 			Debug.Log("getUserType" + userType);
 		}
 
-		if (GUI.Button(new Rect(50, 1010, 330, 60), "打开实名", myButtonStyle))
+		if (GUI.Button(new Rect(50, 1010, 380, 60), "打开实名", myButtonStyle))
 		{
 			AntiAddiction.StandAlone.AntiAddiction.openRealName();
 		}
 	}
 
 	public void onAntiAddictionHandler (int resultCode,string msg){
-		Debug.Log("onAntiAddictionHandler" + resultCode);
+		callbackStatus = "onAntiAddictionHandler" + resultCode;
+
+		if (resultCode == (int)CallbackCode.CALLBACK_CODE_ENTER_SUCCESS){
+			callbackStatus = "进入游戏成功";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_SWITCH_ACCOUNT){
+			callbackStatus = "点击切换账号";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_REAL_NAME_SUCCESS){
+			callbackStatus = "实名成功";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_REAL_NAME_FAIL) {
+			callbackStatus = "实名失败";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_PAY_NO_LIMIT){
+			callbackStatus = "付费不受限制";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_PAY_LIMIT){
+			callbackStatus = "付费受限：" + msg;
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_TIME_LIMIT){
+			callbackStatus = "游戏时长已达限制";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_OPEN_REAL_NAME){
+			callbackStatus = "打开实名窗口";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_CHAT_NO_LIMIT){
+			callbackStatus = "聊天无限制";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_USER_TYPE_CHANGED){
+			callbackStatus = "用户类型变更";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_AAT_WINDOW_SHOWN){
+			callbackStatus = "SDK窗口弹出";
+		}else if (resultCode == (int)CallbackCode.CALLBACK_CODE_AAK_WINDOW_DISMISS){
+			callbackStatus = "SDK窗口消失";
+		}
+
+
+		Debug.Log(callbackStatus);
 	}
 }
