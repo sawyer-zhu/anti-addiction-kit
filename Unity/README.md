@@ -2,6 +2,8 @@
 AntiAddictionSDK 是为了应对最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
 
 ## 1.接入SDK
+Unity开发环境:2018.4.17f
+
 导入AntiAddictionForUnity1.0.0.unitypackage
 
 ### 1.1 iOS
