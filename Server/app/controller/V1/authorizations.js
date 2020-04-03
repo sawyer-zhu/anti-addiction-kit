@@ -16,7 +16,6 @@ class AuthorizationsController extends Controller{
             return ctx.body = ({'error':'bad_request', 'error_description': 'Missing some parameters.'});
         }
         try{
-            console.log(token);
             userInfo = helper.decryptUserInfo(token);
             userInfo = JSON.parse(userInfo);
             for(let key in userInfo){

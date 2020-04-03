@@ -31,7 +31,6 @@ class UserInfoService extends Service{
             name,
             is_identification: 1
         };
-        console.log(row)
         result = await antiAddictionKit.update('user_info', row);
         if(result.affectedRows > 0){
             return true;
