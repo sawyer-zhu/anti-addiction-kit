@@ -1,4 +1,4 @@
-# taptap-fcm-server
+# anti-addiction-kit-server
 
 ## 获取服务器时间
 </v1/fcm/get_server_time>
