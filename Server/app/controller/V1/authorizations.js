@@ -46,7 +46,7 @@ class AuthorizationsController extends Controller{
             let userToken = {
                 id: user.id
             }
-            const accessToken = this.app.jwt.sign(userToken, this.app.jwt.secret, {expiresIn: '1'})  //token签名 有效期为1小时
+            const accessToken = this.app.jwt.sign(userToken, this.app.jwt.secret)  //token签名
             return ctx.body = {'code': 200, 'data': {'access_token': accessToken , 'birthday': helper.getBirthray(encrypt.decrypt(user.identify)), 'age': helper.getAge(encrypt.decrypt(user.identify))}};
         }catch(error){
             console.log(error)
