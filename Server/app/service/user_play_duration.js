@@ -96,7 +96,6 @@ class UserPlayDurationService extends Service{
                         }else{
                             remain_ngiht_start = helper.getTimeStamp(switchs.night_ban_time_start) - helper.getNow();//距宵禁时长
                         }
-                        console.log(remain_ngiht_start)
 
                         if(remain_ngiht_start > remainTime){//距离宵禁时间大于剩余时长 返回剩余时长限制
                             restrictType = 2;
