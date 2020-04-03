@@ -51,7 +51,7 @@ class FcmController extends Controller{
         if(duration > 0){
             await this.ctx.service.userPlayDuration.updateDuration(duration, info.durationKey, day, lastTimestamp);
         }
-        durationResult = await this.ctx.service.userPlayDuration.getDuration(switchs.share_duration_switch, day, info.durationKey);
+        durationResult = await this.ctx.service.userPlayDuration.getDuration(day, info.durationKey);
         result = await this.ctx.service.userPlayDuration.checkRule(switchs, durationResult, info.age, info.isIdentification);
         return ctx.body = (result);
     }
