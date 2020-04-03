@@ -32,7 +32,6 @@ class AAKitIDNumberGenerator {
     
     class func generate() -> String {
         let timestamp: Int64 = Int64(Date().timeIntervalSince1970)
-//        let timestamp: Int64 = Int64(1234567891)
         let hashid = Hashids(salt: AAKitIDNumberGenerator.salt, minHashLength: 6)
         return hashid.encode(timestamp) ?? self.default
     }
