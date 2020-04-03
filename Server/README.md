@@ -1,4 +1,6 @@
-# taptap-fcm-server
+# anti-addiction-kit-server
+
+基于[egg.js](https://eggjs.org/)开发，[api文档](ApiDoc.md)。
 
 
 
