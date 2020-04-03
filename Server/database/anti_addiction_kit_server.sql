@@ -48,7 +48,6 @@ DROP TABLE IF EXISTS `switchs`;
 CREATE TABLE IF NOT EXISTS `switchs` (
   `id` int(10) unsigned NOT NULL,
   `use_time_switch` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '默认0，ps 0 ：使用客户端时间，1：使用服务器时间',
-  `share_duration_switch` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '默认0，ps 0：分游戏计算时长，1：统一计算',
   `night_ban_time_start` varchar(10) NOT NULL DEFAULT '22:00' COMMENT '宵禁开始时间',
   `night_ban_time_end` varchar(10) NOT NULL DEFAULT '08:00' COMMENT '宵禁结束时间',
   `shiming_user_duration` int(3) unsigned NOT NULL DEFAULT '5400' COMMENT '实名未成年账号时长',

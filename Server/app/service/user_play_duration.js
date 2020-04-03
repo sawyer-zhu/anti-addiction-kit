@@ -11,24 +11,16 @@ class UserPlayDurationService extends Service{
             }
         }, this.ctx);
     }
-    async getDuration(shareDurationSwitch, day , durationKey){
+    async getDuration(day , durationKey){
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
         let durationResult;
-        if(shareDurationSwitch == 0){
-            durationResult = await antiAddictionKit.get('user_play_durations', {day: day, duration_key: durationKey})
-            if(durationResult == null){
-                durationResult = 0;
-            }else{
-                durationResult = durationResult.duration;
-            }
+        durationResult = await antiAddictionKit.get('user_play_durations', {day: day, duration_key: durationKey})
+        if(durationResult == null){
+            durationResult = 0;
         }else{
-            durationResult = await taptap_fcm.query('SELECT sum(`duration`) as duration from user_play_durations where duration_key = ? and day = ?', [durationKey, day]);
-            if(durationResult[0].duration == null){
-                durationResult = 0;
-            }else{
-                durationResult = durationResult[0].duration;
-            }
+            durationResult = durationResult.duration;
         }
+
         return durationResult;
     }
     async checkRule(switchs, duration, age, isIdentification){
