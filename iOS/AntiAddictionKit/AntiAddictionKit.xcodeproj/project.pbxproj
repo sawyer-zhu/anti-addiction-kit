@@ -43,7 +43,7 @@
 		0058C84023BB49FB00491E6D /* PayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C83F23BB49FB00491E6D /* PayService.swift */; };
 		0058C84223BB4CC500491E6D /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C84123BB4CC500491E6D /* String+Crypto.swift */; };
 		0058C84423BB4CD700491E6D /* HashIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C84323BB4CD700491E6D /* HashIds.swift */; };
-		006291FB23F12B50000AD39E /* SDKConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006291FA23F12B50000AD39E /* SDKConfiguration.swift */; };
+		006291FB23F12B50000AD39E /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006291FA23F12B50000AD39E /* Configuration.swift */; };
 		007622AB23BDADC400DC3AF8 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AA23BDADC400DC3AF8 /* Date+.swift */; };
 		007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AC23BDB22A00DC3AF8 /* DateHelper.swift */; };
 		007622B523BF6F9E00DC3AF8 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622B423BF6F9E00DC3AF8 /* NoticeView.swift */; };
@@ -95,10 +95,14 @@
 		0058C83F23BB49FB00491E6D /* PayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayService.swift; sourceTree = "<group>"; };
 		0058C84123BB4CC500491E6D /* String+Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Crypto.swift"; sourceTree = "<group>"; };
 		0058C84323BB4CD700491E6D /* HashIds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashIds.swift; sourceTree = "<group>"; };
-		006291FA23F12B50000AD39E /* SDKConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKConfiguration.swift; sourceTree = "<group>"; };
+		006291FA23F12B50000AD39E /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		007622AA23BDADC400DC3AF8 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		007622AC23BDB22A00DC3AF8 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		007622B423BF6F9E00DC3AF8 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
+		0095260C243C2713000534A8 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		0095260E243C27F1000534A8 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		0095260F243C2801000534A8 /* Common.Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Release.xcconfig; sourceTree = "<group>"; };
+		00952610243C280D000534A8 /* Common.Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Debug.xcconfig; sourceTree = "<group>"; };
 		00E3AA4A23D012D400B6F39E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		305A382A23BCE942006AD644 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		305A382C23BCE949006AD644 /* UserType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserType.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		0058C80C23BB29C100491E6D /* AntiAddictionKit */ = {
 			isa = PBXGroup;
 			children = (
+				0095260D243C271C000534A8 /* BuildConfigurations */,
 				C161D08C23D0688F005B43F4 /* UnityWrapper */,
 				00048BA0242CADC600813723 /* Network */,
 				305A383723BCF344006AD644 /* Constants */,
@@ -179,7 +184,7 @@
 				305A383423BCF2D9006AD644 /* RealName */,
 				30C4FDE823BCFAEF00060CE7 /* AntiAddictionKit+Private.swift */,
 				0058C82823BB2B0100491E6D /* Appearance.swift */,
-				006291FA23F12B50000AD39E /* SDKConfiguration.swift */,
+				006291FA23F12B50000AD39E /* Configuration.swift */,
 				30F022B423BBC49900DEB3BE /* AntiAddictionKit.swift */,
 				30B43FFA23BBD2240014336A /* AntiAddictionKit.h */,
 				0058C80E23BB29C100491E6D /* Info.plist */,
@@ -232,6 +237,17 @@
 				0058C84323BB4CD700491E6D /* HashIds.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		0095260D243C271C000534A8 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				0095260C243C2713000534A8 /* Version.xcconfig */,
+				0095260E243C27F1000534A8 /* Common.xcconfig */,
+				00952610243C280D000534A8 /* Common.Debug.xcconfig */,
+				0095260F243C2801000534A8 /* Common.Release.xcconfig */,
+			);
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		305A382923BCE92A006AD644 /* UserService */ = {
@@ -471,7 +487,7 @@
 				30C4FDE923BCFAEF00060CE7 /* AntiAddictionKit+Private.swift in Sources */,
 				007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */,
 				002CFC4B23C2E527009003AB /* ChatService.swift in Sources */,
-				006291FB23F12B50000AD39E /* SDKConfiguration.swift in Sources */,
+				006291FB23F12B50000AD39E /* Configuration.swift in Sources */,
 				30EB508523BC8327007B817F /* UIView+Toast.swift in Sources */,
 				305A382D23BCE949006AD644 /* UserType.swift in Sources */,
 				0058C84423BB4CD700491E6D /* HashIds.swift in Sources */,
@@ -493,7 +509,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -558,7 +573,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -615,6 +629,7 @@
 		};
 		0058C81F23BB29C100491E6D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00952610243C280D000534A8 /* Common.Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = YES;
@@ -622,7 +637,6 @@
 					"$(ARCHS_STANDARD)",
 					armv7s,
 				);
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -657,6 +671,7 @@
 		};
 		0058C82023BB29C100491E6D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0095260F243C2801000534A8 /* Common.Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = YES;
@@ -664,7 +679,6 @@
 					"$(ARCHS_STANDARD)",
 					armv7s,
 				);
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;

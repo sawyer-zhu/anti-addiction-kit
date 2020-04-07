@@ -5,7 +5,7 @@
 - iOS Deployment Target 最低支持 iOS 8.0
 - 要求 Xcode 11 编译 (App Store 强制要求使用 Xcode 11 打包提交)
 
-## 手动引入动态库文件 `AntiAddictionKit.xcframework`
+## 引入动态库文件 `AntiAddictionKit.xcframework`
 
 > 说明：`AntiAddictionKit` iOS 模块由 Swift 编写，但接口同时支持 Swift 或 Objective-C 使用，文档中代码示例同时包含 Swift 与  Objective-C 两种示例，可根据自身项目语言类型参考。
 >

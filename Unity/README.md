@@ -7,16 +7,18 @@ Unity开发环境:2018.4.17f
 导入AntiAddictionForUnity1.0.0.unitypackage
 
 ### 1.1 iOS
-最低支持系统版本iOS8.0
+- iOS Deployment Target 最低支持 iOS 8.0
+- 要求 Xcode 11 编译 (App Store 强制要求使用 Xcode 11 打包提交)
 
-**手动引入动态库文件**
-
-1. 修改 Xcode 工程的 `BuildSettings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即`始终引入 Swift 标准库`，避免 App 启动时报错（无法找到 Swift标准库之类）。
-2. 添加依赖库libc++.tbd
+**检查 Unity 输出的 Xcode 工程**
+1. 确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.xcframework`为`Embed & Sign`
+2. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译
+3. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.xcframework`且已勾上`Code Sign On Copy`
+4. 添加依赖库 `libc++.tbd`
+5. 开始代码接入
 
 ### 1.2 Android
 最低支持安卓版本5.0。
-
 
 ## 2.接口文档
 安卓和iOS分别有默认的防沉迷时长和外观默认值，如需修改，请查看对应平台文档或代码。
