@@ -1,10 +1,13 @@
 # 防沉迷 AntiAddictionSDK 对接文档
-AntiAddictionSDK 是为了应对最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
+AntiAddictionSDK 是为了遵循最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
+
+# 说明
+Unity 模块是通过引入 iOS 和 Android 模块后增加 wrapper 文件打包出的 `.unitypackage`，方便以 Unity 开发的游戏直接引入。其他引擎/平台的游戏可以通过 iOS/Android 原生的方式接入，详见 iOS/Android 模块文档。
 
 ## 1.接入SDK
 Unity开发环境:2018.4.17f
 
-导入AntiAddictionForUnity1.0.0.unitypackage
+导入 AntiAddictionForUnity.unitypackage
 
 ### 1.1 iOS
 - iOS Deployment Target 最低支持 iOS 8.0
@@ -18,10 +21,10 @@ Unity开发环境:2018.4.17f
 5. 开始代码接入
 
 ### 1.2 Android
-最低支持安卓版本5.0。
+最低支持安卓版本 5.0。
 
 ## 2.接口文档
-安卓和iOS分别有默认的防沉迷时长和外观默认值，如需修改，请查看对应平台文档或代码。
+安卓和 iOS 分别有默认的防沉迷时长和外观默认值，如需修改，请查看对应平台文档或代码。
 
 **以下使用需要SDK命名空间下**
 
@@ -30,7 +33,7 @@ namespace AntiAddiction.StandAlone
 ```
 
 ### 2.1 功能配置（采用默认值可跳过）
-#### （1）功能配置参数列表如下：
+#### (1) 功能配置参数列表如下：
 
  功能配置参数 |类型|默认值|说明 
 --- |--- |--- | ---
