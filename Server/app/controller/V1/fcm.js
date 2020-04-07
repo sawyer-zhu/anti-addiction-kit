@@ -71,6 +71,10 @@ class FcmController extends Controller{
                 'nightStrictEnd' : switchs.night_ban_time_end,
                 'childCommonTime' : switchs.shiming_user_duration,
                 'childHolidayTime' : switchs.shiming_user_holiday_duration,
+                'teenPayLimit' : switchs.teen_pay_limit,
+                'teenMonthPayLimit' : switchs.teen_month_pay_limit,
+                'youngPayLimit' : switchs.young_pay_limit,
+                'youngMonthPayLimit' : switchs.young_month_pay_limit
             }
         }
         return ctx.body = {'code' : 200 , 'data' : retuenData};
@@ -95,6 +99,11 @@ class FcmController extends Controller{
         }
     }
 
+    /**
+     * amount 单位：分
+     * @param ctx
+     * @returns {Promise.<*>}
+     */
     async checkPay(ctx){
         let user = ctx.user;
         let amount = ctx.request.body.amount;
@@ -105,6 +114,11 @@ class FcmController extends Controller{
         return ctx.body = {'code': 200, check: 1}
     }
 
+    /**
+     * amount 单位：分
+     * @param ctx
+     * @returns {Promise.<{code: number, result: number}>}
+     */
     async submitPay(ctx){
         let user = ctx.user;
         let amount = ctx.request.body.amount;

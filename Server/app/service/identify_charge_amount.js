@@ -8,7 +8,6 @@ class IdentifyChargeAmountService extends Service {
     async updateAmount(identify, amount) {
         let month = helper.getMonth();
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
-        amount = amount/10;
         await antiAddictionKit.beginTransactionScope(async conn => {
             const result = await conn.query('update identify_charge_amounts set amount = amount + ? where identify = ? and month = ? ', [amount, identify, month]);
             if(result.affectedRows === 0){
@@ -31,6 +30,7 @@ class IdentifyChargeAmountService extends Service {
             5: {'title': '健康消费提醒', 'description' : '您当前未登记实名信息。根据国家相关规定，游戏用户需使用真实有效身份信息登记。请前往用户中心-账号安全进行实名登记。'}
         };
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
+        let switchs = await antiAddictionKit.get('switchs', {id: 1});
         let month = helper.getMonth();
         if(identify.length == 0){
             return REASON[5];
@@ -46,18 +46,18 @@ class IdentifyChargeAmountService extends Service {
                 total_amount = 0;
             }
             if (age >= 8 && age < 16) {
-                if (amount > 50) {
+                if (amount > switchs.teen_pay_limit) {
                     return REASON[2];
                 }
-                if (Number(total_amount) + Number(amount) > 200) {
+                if (Number(total_amount) + Number(amount) > switchs.teen_month_pay_limit) {
                     return REASON[3];
                 }
 
             } else if (age >= 16 && age < 18) {
-                if (amount > 100) {
+                if (amount > switchs.young_pay_limit) {
                     return REASON[2];
                 }
-                if (Number(total_amount) + Number(amount) > 400) {
+                if (Number(total_amount) + Number(amount) > switchs.young_month_pay_limit) {
                     return REASON[4];
                 }
             }
