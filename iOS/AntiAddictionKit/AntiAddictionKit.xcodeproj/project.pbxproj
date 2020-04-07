@@ -6,6 +6,20 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		00A2FD6824376824005C7A0F /* XCFrameworkBuilder */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 00A2FD6B24376824005C7A0F /* Build configuration list for PBXAggregateTarget "XCFrameworkBuilder" */;
+			buildPhases = (
+				00A2FD6C24376846005C7A0F /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = XCFrameworkBuilder;
+			productName = XCFrameworkBuilder;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		00048BA2242CADE500813723 /* Just.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00048BA1242CADE500813723 /* Just.swift */; };
 		002CFC4B23C2E527009003AB /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002CFC4A23C2E527009003AB /* ChatService.swift */; };
@@ -14,8 +28,6 @@
 		0032999123C5D0F6004EF389 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032999023C5D0F6004EF389 /* Crypto.swift */; };
 		0032999323C5D379004EF389 /* Data+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032999223C5D379004EF389 /* Data+Crypto.swift */; };
 		00347EBD23CC6F4200F00192 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00347EBC23CC6F4200F00192 /* UserModel.swift */; };
-		0058C81423BB29C100491E6D /* AntiAddictionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0058C80A23BB29C100491E6D /* AntiAddictionKit.framework */; };
-		0058C81923BB29C100491E6D /* AntiAddictionKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C81823BB29C100491E6D /* AntiAddictionKitTests.swift */; };
 		0058C82723BB2A2700491E6D /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C82623BB2A2700491E6D /* BaseController.swift */; };
 		0058C82923BB2B0100491E6D /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C82823BB2B0100491E6D /* Appearance.swift */; };
 		0058C82C23BB2B6600491E6D /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C82B23BB2B6600491E6D /* UIColor+.swift */; };
@@ -58,16 +70,6 @@
 		C161D09923D06E83005B43F4 /* AntiAddictioniOSWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = C161D09723D06E82005B43F4 /* AntiAddictioniOSWrapper.mm */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		0058C81523BB29C100491E6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0058C80123BB29C100491E6D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0058C80923BB29C100491E6D;
-			remoteInfo = MinorProtection;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		00048BA1242CADE500813723 /* Just.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Just.swift; sourceTree = "<group>"; };
 		002CFC4A23C2E527009003AB /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
@@ -78,9 +80,6 @@
 		00347EBC23CC6F4200F00192 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		0058C80A23BB29C100491E6D /* AntiAddictionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AntiAddictionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0058C80E23BB29C100491E6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0058C81323BB29C100491E6D /* AntiAddictionKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AntiAddictionKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0058C81823BB29C100491E6D /* AntiAddictionKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiAddictionKitTests.swift; sourceTree = "<group>"; };
-		0058C81A23BB29C100491E6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0058C82623BB2A2700491E6D /* BaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		0058C82823BB2B0100491E6D /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		0058C82B23BB2B6600491E6D /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
@@ -100,6 +99,10 @@
 		007622AA23BDADC400DC3AF8 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		007622AC23BDB22A00DC3AF8 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		007622B423BF6F9E00DC3AF8 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
+		0095260C243C2713000534A8 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		0095260E243C27F1000534A8 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		0095260F243C2801000534A8 /* Common.Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Release.xcconfig; sourceTree = "<group>"; };
+		00952610243C280D000534A8 /* Common.Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Debug.xcconfig; sourceTree = "<group>"; };
 		00E3AA4A23D012D400B6F39E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		305A382A23BCE942006AD644 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		305A382C23BCE949006AD644 /* UserType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserType.swift; sourceTree = "<group>"; };
@@ -132,30 +135,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0058C81023BB29C100491E6D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0058C81423BB29C100491E6D /* AntiAddictionKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00048BA0242CADC600813723 /* Just */ = {
+		00048BA0242CADC600813723 /* Network */ = {
 			isa = PBXGroup;
 			children = (
 				00048BA1242CADE500813723 /* Just.swift */,
 			);
-			path = Just;
+			path = Network;
 			sourceTree = "<group>";
 		};
 		0058C80023BB29C100491E6D = {
 			isa = PBXGroup;
 			children = (
 				0058C80C23BB29C100491E6D /* AntiAddictionKit */,
-				0058C81723BB29C100491E6D /* AntiAddictionKitTests */,
 				0058C80B23BB29C100491E6D /* Products */,
 				C161D09123D06DC2005B43F4 /* Frameworks */,
 			);
@@ -165,7 +159,6 @@
 			isa = PBXGroup;
 			children = (
 				0058C80A23BB29C100491E6D /* AntiAddictionKit.framework */,
-				0058C81323BB29C100491E6D /* AntiAddictionKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,39 +166,31 @@
 		0058C80C23BB29C100491E6D /* AntiAddictionKit */ = {
 			isa = PBXGroup;
 			children = (
+				0095260D243C271C000534A8 /* BuildConfigurations */,
 				C161D08C23D0688F005B43F4 /* UnityWrapper */,
-				00048BA0242CADC600813723 /* Just */,
+				00048BA0242CADC600813723 /* Network */,
 				305A383723BCF344006AD644 /* Constants */,
-				305A383623BCF33A006AD644 /* Theme */,
 				305A383523BCF30B006AD644 /* ResourceLoading */,
 				305A382E23BCEE91006AD644 /* UserDefaults */,
 				305A382923BCE92A006AD644 /* UserService */,
-				30FE578D23BCC06500E1E5B4 /* TimerService */,
+				30FE578D23BCC06500E1E5B4 /* TimeService */,
 				0058C82523BB29F000491E6D /* PayService */,
 				30E9A81723BBD7E600718506 /* Logger */,
 				0058C84523BB4CF800491E6D /* Crypto */,
 				0058C82A23BB2B5600491E6D /* Extensions */,
-				30E9A81A23BBDA0C00718506 /* CustomViews */,
+				30E9A81A23BBDA0C00718506 /* View */,
 				0058C82423BB29DA00491E6D /* Router */,
 				305A383323BCF2D0006AD644 /* Alert */,
 				305A383423BCF2D9006AD644 /* RealName */,
-				30B43FFA23BBD2240014336A /* AntiAddictionKit.h */,
-				30F022B423BBC49900DEB3BE /* AntiAddictionKit.swift */,
 				30C4FDE823BCFAEF00060CE7 /* AntiAddictionKit+Private.swift */,
+				0058C82823BB2B0100491E6D /* Appearance.swift */,
 				006291FA23F12B50000AD39E /* Configuration.swift */,
+				30F022B423BBC49900DEB3BE /* AntiAddictionKit.swift */,
+				30B43FFA23BBD2240014336A /* AntiAddictionKit.h */,
 				0058C80E23BB29C100491E6D /* Info.plist */,
 				00E3AA4A23D012D400B6F39E /* Assets.xcassets */,
 			);
 			path = AntiAddictionKit;
-			sourceTree = "<group>";
-		};
-		0058C81723BB29C100491E6D /* AntiAddictionKitTests */ = {
-			isa = PBXGroup;
-			children = (
-				0058C81823BB29C100491E6D /* AntiAddictionKitTests.swift */,
-				0058C81A23BB29C100491E6D /* Info.plist */,
-			);
-			path = AntiAddictionKitTests;
 			sourceTree = "<group>";
 		};
 		0058C82423BB29DA00491E6D /* Router */ = {
@@ -252,6 +237,17 @@
 				0058C84323BB4CD700491E6D /* HashIds.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		0095260D243C271C000534A8 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				0095260C243C2713000534A8 /* Version.xcconfig */,
+				0095260E243C27F1000534A8 /* Common.xcconfig */,
+				00952610243C280D000534A8 /* Common.Debug.xcconfig */,
+				0095260F243C2801000534A8 /* Common.Release.xcconfig */,
+			);
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		305A382923BCE92A006AD644 /* UserService */ = {
@@ -303,14 +299,6 @@
 			path = ResourceLoading;
 			sourceTree = "<group>";
 		};
-		305A383623BCF33A006AD644 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				0058C82823BB2B0100491E6D /* Appearance.swift */,
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
 		305A383723BCF344006AD644 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
@@ -327,21 +315,21 @@
 			path = Logger;
 			sourceTree = "<group>";
 		};
-		30E9A81A23BBDA0C00718506 /* CustomViews */ = {
+		30E9A81A23BBDA0C00718506 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				30E9A81B23BBDA5300718506 /* AATextField.swift */,
 			);
-			path = CustomViews;
+			path = View;
 			sourceTree = "<group>";
 		};
-		30FE578D23BCC06500E1E5B4 /* TimerService */ = {
+		30FE578D23BCC06500E1E5B4 /* TimeService */ = {
 			isa = PBXGroup;
 			children = (
 				30FE578E23BCC07000E1E5B4 /* SwiftTimer.swift */,
 				30EF76B523BD032C00157DA0 /* TimeService.swift */,
 			);
-			path = TimerService;
+			path = TimeService;
 			sourceTree = "<group>";
 		};
 		C161D08C23D0688F005B43F4 /* UnityWrapper */ = {
@@ -394,24 +382,6 @@
 			productReference = 0058C80A23BB29C100491E6D /* AntiAddictionKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0058C81223BB29C100491E6D /* AntiAddictionKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0058C82123BB29C100491E6D /* Build configuration list for PBXNativeTarget "AntiAddictionKitTests" */;
-			buildPhases = (
-				0058C80F23BB29C100491E6D /* Sources */,
-				0058C81023BB29C100491E6D /* Frameworks */,
-				0058C81123BB29C100491E6D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0058C81623BB29C100491E6D /* PBXTargetDependency */,
-			);
-			name = AntiAddictionKitTests;
-			productName = MinorProtectionTests;
-			productReference = 0058C81323BB29C100491E6D /* AntiAddictionKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -426,8 +396,8 @@
 						CreatedOnToolsVersion = 11.3;
 						LastSwiftMigration = "";
 					};
-					0058C81223BB29C100491E6D = {
-						CreatedOnToolsVersion = 11.3;
+					00A2FD6824376824005C7A0F = {
+						CreatedOnToolsVersion = 11.4;
 					};
 				};
 			};
@@ -445,7 +415,7 @@
 			projectRoot = "";
 			targets = (
 				0058C80923BB29C100491E6D /* AntiAddictionKit */,
-				0058C81223BB29C100491E6D /* AntiAddictionKitTests */,
+				00A2FD6824376824005C7A0F /* XCFrameworkBuilder */,
 			);
 		};
 /* End PBXProject section */
@@ -459,14 +429,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0058C81123BB29C100491E6D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00A2FD6C24376846005C7A0F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Release dir path\nOUTPUT_DIR_PATH=\"${PROJECT_DIR}/Build\"\n\nfunction archivePathSimulator {\n  local DIR=${OUTPUT_DIR_PATH}/archives/\"${1}-SIMULATOR\"\n  echo \"${DIR}\"\n}\n\nfunction archivePathDevice {\n  local DIR=${OUTPUT_DIR_PATH}/archives/\"${1}-DEVICE\"\n  echo \"${DIR}\"\n}\n\n# Archive takes 3 params\n#\n# 1st == SCHEME\n# 2nd == destination\n# 3rd == archivePath\nfunction archive {\n    echo \"▸ Starts archiving the scheme: ${1} for destination: ${2};\\n▸ Archive path: ${3}.xcarchive\"\n    xcodebuild clean archive \\\n    -project \"${PROJECT_NAME}.xcodeproj\" \\\n    -scheme ${1} \\\n    -configuration ${CONFIGURATION} \\\n    -destination \"${2}\" \\\n    -archivePath \"${3}\" \\\n    SKIP_INSTALL=NO \\\n    OBJROOT=\"${OBJROOT}/DependentBuilds\" \\\n    BUILD_LIBRARY_FOR_DISTRIBUTION=YES | xcpretty\n}\n\n# Builds archive for iOS simulator & device\nfunction buildArchive {\n  SCHEME=${1}\n\n  archive $SCHEME \"generic/platform=iOS Simulator\" $(archivePathSimulator $SCHEME)\n  archive $SCHEME \"generic/platform=iOS\" $(archivePathDevice $SCHEME)\n}\n\n# Creates xc framework\nfunction createXCFramework {\n  FRAMEWORK_ARCHIVE_PATH_POSTFIX=\".xcarchive/Products/Library/Frameworks\"\n  FRAMEWORK_SIMULATOR_DIR=\"$(archivePathSimulator $1)${FRAMEWORK_ARCHIVE_PATH_POSTFIX}\"\n  FRAMEWORK_DEVICE_DIR=\"$(archivePathDevice $1)${FRAMEWORK_ARCHIVE_PATH_POSTFIX}\"\n\n  xcodebuild -create-xcframework \\\n            -framework ${FRAMEWORK_SIMULATOR_DIR}/${1}.framework \\\n            -framework ${FRAMEWORK_DEVICE_DIR}/${1}.framework \\\n            -output ${OUTPUT_DIR_PATH}/xcframeworks/${1}.xcframework\n}\n\n### Static Libraries cant be turned into frameworks\nfunction createXCFrameworkForStaticLibrary {\n\n  LIBRARY_ARCHIVE_PATH_POSTFIX=\".xcarchive/Products/usr/local/lib\"\n  LIBRARY_SIMULATOR_DIR=\"$(archivePathSimulator $1)${LIBRARY_ARCHIVE_PATH_POSTFIX}\"\n  LIBRARY_DEVICE_DIR=\"$(archivePathDevice $1)${LIBRARY_ARCHIVE_PATH_POSTFIX}\"\n\n  xcodebuild -create-xcframework \\\n            -library ${LIBRARY_SIMULATOR_DIR}/libStaticLibrary.a \\\n            -library ${LIBRARY_DEVICE_DIR}/libStaticLibrary.a \\\n            -output ${OUTPUT_DIR_PATH}/xcframeworks/${1}.xcframework\n}\n\necho \"#####################\"\necho \"▸ Cleaning the dir: ${OUTPUT_DIR_PATH}\"\nrm -rf $OUTPUT_DIR_PATH\n\n#### Dynamic Framework ####\n\nDYNAMIC_FRAMEWORK=\"${PROJECT_NAME}\"\n\necho \"▸ Archive $DYNAMIC_FRAMEWORK\"\nbuildArchive ${DYNAMIC_FRAMEWORK}\n\necho \"▸ Create $DYNAMIC_FRAMEWORK.xcframework\"\ncreateXCFramework ${DYNAMIC_FRAMEWORK}\n";
 		};
-/* End PBXResourcesBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0058C80623BB29C100491E6D /* Sources */ = {
@@ -519,30 +502,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0058C80F23BB29C100491E6D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0058C81923BB29C100491E6D /* AntiAddictionKitTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		0058C81623BB29C100491E6D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0058C80923BB29C100491E6D /* AntiAddictionKit */;
-			targetProxy = 0058C81523BB29C100491E6D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0058C81C23BB29C100491E6D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -607,7 +573,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BITCODE_GENERATION_MODE = bitcode;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -664,6 +629,7 @@
 		};
 		0058C81F23BB29C100491E6D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00952610243C280D000534A8 /* Common.Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = YES;
@@ -690,7 +656,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -705,6 +671,7 @@
 		};
 		0058C82023BB29C100491E6D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0095260F243C2801000534A8 /* Common.Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = YES;
@@ -730,7 +697,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ios.aakit.AntiAddictionKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -741,39 +708,19 @@
 			};
 			name = Release;
 		};
-		0058C82223BB29C100491E6D /* Debug */ = {
+		00A2FD6924376824005C7A0F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = AntiAddictionKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ios.game.MinorProtectionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		0058C82323BB29C100491E6D /* Release */ = {
+		00A2FD6A24376824005C7A0F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = AntiAddictionKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ios.game.MinorProtectionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -798,11 +745,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0058C82123BB29C100491E6D /* Build configuration list for PBXNativeTarget "AntiAddictionKitTests" */ = {
+		00A2FD6B24376824005C7A0F /* Build configuration list for PBXAggregateTarget "XCFrameworkBuilder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0058C82223BB29C100491E6D /* Debug */,
-				0058C82323BB29C100491E6D /* Release */,
+				00A2FD6924376824005C7A0F /* Debug */,
+				00A2FD6A24376824005C7A0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

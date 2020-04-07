@@ -43,6 +43,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     //显示切换账号按钮
 //    AntiAddictionKit.configuration.showSwitchAccountButton = NO;
     
+    // 900s(15分钟) 提醒
+//    AntiAddictionKit.configuration.firstAlertTipRemainTime = 900;
 }
 
 - (void)dealloc {
@@ -301,7 +303,7 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
         textField.keyboardType = UIKeyboardTypeNumberPad;
         textField.placeholder = @"账号类型";
     }];
-    UIAlertAction *purchaseAction = [UIAlertAction actionWithTitle:@"登录" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *purchaseAction = [UIAlertAction actionWithTitle:@"更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSInteger userType = [alert.textFields.firstObject.text integerValue];
         [AntiAddictionKit updateUserType:userType];
         dispatch_async(dispatch_get_main_queue(), ^{
