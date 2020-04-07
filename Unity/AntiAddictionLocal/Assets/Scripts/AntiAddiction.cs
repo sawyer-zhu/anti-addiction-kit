@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using AOT;
 
 /*
-	version 1.0.6
+	version 1.0.7
  */
-namespace AntiAddiction.StandAlone
+namespace AntiAddiction.OpenSource
 {
 
 	public enum AntiAddictionUserType : int{
@@ -248,9 +248,6 @@ namespace AntiAddiction.StandAlone
 
 		[DllImport("__Internal")]
         private static extern void AntiAddictionCheckPayLimit(int amount);
-		
-		[DllImport("__Internal")]
-        private static extern int AntiAddictionCheckCurrentPayLimit(int amount);
 
 		[DllImport("__Internal")]
         private static extern void AntiAddictionPaySuccess(int amount);

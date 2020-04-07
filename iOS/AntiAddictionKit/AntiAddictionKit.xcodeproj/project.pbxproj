@@ -103,6 +103,7 @@
 		0095260E243C27F1000534A8 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		0095260F243C2801000534A8 /* Common.Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Release.xcconfig; sourceTree = "<group>"; };
 		00952610243C280D000534A8 /* Common.Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Debug.xcconfig; sourceTree = "<group>"; };
+		0095261E243C81F3000534A8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		00E3AA4A23D012D400B6F39E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		305A382A23BCE942006AD644 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		305A382C23BCE949006AD644 /* UserType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserType.swift; sourceTree = "<group>"; };
@@ -149,6 +150,7 @@
 		0058C80023BB29C100491E6D = {
 			isa = PBXGroup;
 			children = (
+				0095261E243C81F3000534A8 /* README.md */,
 				0058C80C23BB29C100491E6D /* AntiAddictionKit */,
 				0058C80B23BB29C100491E6D /* Products */,
 				C161D09123D06DC2005B43F4 /* Frameworks */,
