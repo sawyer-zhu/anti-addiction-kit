@@ -180,7 +180,7 @@ POST
 **请求数据**
 字段             | 类型           | 说明
 --------------- | ------------- | ------------
-amount          | int           | 充值金额（单位：元）
+amount          | int           | 充值金额（单位：分）
 
 ````
 curl -H 'Authorization: Bearer 121212121' -d  amount=10' http://localhost:7001/v1/fcm/check_pay
@@ -218,7 +218,7 @@ POST
 **请求数据**
 字段             | 类型           | 说明
 --------------- | ------------- | ------------
-amount          | int           | 充值金额（单位：元）
+amount          | int           | 充值金额（单位：分）
 
 ````
 curl -H 'Authorization: Bearer 121212121' -d  amount=10' http://localhost:7001/v1/fcm/submit_pay
