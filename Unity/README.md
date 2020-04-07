@@ -7,16 +7,18 @@ Unity 模块是通过引入 iOS 和 Android 模块后增加 wrapper 文件打包
 ## 1.接入SDK
 Unity开发环境:2018.4.17f
 
-导入 AntiAddictionForUnity.unitypackage
+导入 `AntiAddictionForUnity.unitypackage`
+
+> 注：提供的 `AntiAddictionForUnity.unitypackage/Assets/Plugins/iOS` 中的 `AntiAddiction.framework` 只包含 iOS 真机架构。如需要模拟器测试，则需自行下载 Repo  Release 中提供的 `AntiAddictionKitiOS.zip`，然后解压得到`AntiAddictionKit.xcframework`，`ios-i386_x86_64-simulator`和`ios-armv7_armv7s_arm64`文件夹中的`AntiAddictionKit.framework`分别为模拟器和 iOS 真机的Framework，按需替换。
 
 ### 1.1 iOS
 - iOS Deployment Target 最低支持 iOS 8.0
 - 要求 Xcode 11 编译 (App Store 强制要求使用 Xcode 11 打包提交)
 
 **检查 Unity 输出的 Xcode 工程**
-1. 确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.xcframework`为`Embed & Sign`
+1. 确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Sign`
 2. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译
-3. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.xcframework`且已勾上`Code Sign On Copy`
+3. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.framework`且已勾上`Code Sign On Copy`
 4. 添加依赖库 `libc++.tbd`
 5. 开始代码接入
 
