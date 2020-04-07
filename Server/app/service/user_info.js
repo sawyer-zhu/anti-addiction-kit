@@ -8,9 +8,9 @@ class UserInfoService extends Service{
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
         identify = encrypt.encrypt(identify);
         name = encrypt.encrypt(name);
-        user = await antiAddictionKit.get('user_info', {user_id: userInfo.user_id});
+        user = await antiAddictionKit.get('user_info', {user_id: userInfo.userId});
         if(user == null){
-            const results = await antiAddictionKit.insert('user_info', {user_id: userInfo.user_id, identify, name, is_identification});
+            const results = await antiAddictionKit.insert('user_info', {user_id: userInfo.userId, identify, name, is_identification});
             if(results.affectedRows === 0){
                 return false;
             }
