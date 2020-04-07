@@ -58,7 +58,7 @@ class DashboardController extends Controller {
     }
 
     async createUserToken(ctx){
-        let userId = ctx.request.body.user_id;
+        let userId = ctx.request.query.user_id;
         let token = helper.encryptUserInfo({userId});
         return ctx.body = {token};
     }

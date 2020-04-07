@@ -8,6 +8,7 @@ class IdentifyChargeAmountService extends Service {
     async updateAmount(identify, amount) {
         let month = helper.getMonth();
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
+        amount = amount/10;
         await antiAddictionKit.beginTransactionScope(async conn => {
             const result = await conn.query('update identify_charge_amounts set amount = amount + ? where identify = ? and month = ? ', [amount, identify, month]);
             if(result.affectedRows === 0){

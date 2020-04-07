@@ -28,7 +28,7 @@ class AuthorizationsController extends Controller{
                 localUserInfo = JSON.parse(localUserInfo);
                 for (let key in localUserInfo){
                     let localUser = localUserInfo[key];
-                    if(localUser.userId == userInfo.user_id){
+                    if(localUser.userId === userInfo.userId){
                         if(localUser.identify && localUser.name){
                             identify = localUser.identify;
                             name = localUser.name;
