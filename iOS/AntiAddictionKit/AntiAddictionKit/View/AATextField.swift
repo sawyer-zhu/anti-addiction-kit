@@ -20,10 +20,6 @@ class AATextField: UITextField {
         super.drawText(in: rect.insetBy(dx: 10, dy: 0))
     }
     
-//    override func drawPlaceholder(in rect: CGRect) {
-//        super.drawPlaceholder(in: rect.insetBy(dx: 10, dy: 0))
-//    }
-    
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.insetBy(dx: 10, dy: 0)
     }

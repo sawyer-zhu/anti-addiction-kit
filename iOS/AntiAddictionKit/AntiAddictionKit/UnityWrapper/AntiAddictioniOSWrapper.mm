@@ -66,10 +66,6 @@ extern "C" {
         [AntiAddictionKit checkPayLimit:amount];
     }
     
-    int AntiAddictionCheckCurrentPayLimit(int amount) {
-        return [AntiAddictionKit checkCurrentPayLimit:amount];
-    }
-    
     void AntiAddictionPaySuccess(int amount) {
         [AntiAddictionKit paySuccess:amount];
     }
