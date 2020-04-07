@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.7 (2020-04-07)
+1. iOS 使用全新的 AntiAddictionKit.xcframework 接入，方便快捷
+2. 更新 iOS 文档
+
 ## 1.0.6 (2020-04-01)
 
 1. 提升 iOS 模块稳定性，更新文档
