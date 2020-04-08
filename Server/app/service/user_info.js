@@ -2,27 +2,30 @@ const Service = require('egg').Service;
 const encrypt = require('../extend/encrypt');
 
 class UserInfoService extends Service{
-    async getUser(userInfo, identify = '', name = '', localUserInfo) {
+    async getUser(userInfo, identify = '', name = '', localUserInfo, accountType) {
         let identifyState = 0;
-        let accountType = 0;
-        if(localUserInfo != undefined && localUserInfo.length != 0 ){
-            localUserInfo = JSON.parse(localUserInfo);
-            for (let key in localUserInfo){
-                let localUser = localUserInfo[key];
-                if(localUser.userId === userInfo.userId){
+        if(accountType == 0){
+            if(localUserInfo != undefined && localUserInfo.length != 0 ){
+                localUserInfo = JSON.parse(localUserInfo);
+                for (let key in localUserInfo){
+                    let localUser = localUserInfo[key];
                     accountType = localUserInfo[key].accountType;
-                    if(localUser.accountType > 0){
-                        identifyState = 2;
-                    }else{
-                        if(localUser.identify && localUser.name){
-                            identify = encrypt.encrypt(localUser.identify);
-                            name = encrypt.encrypt(localUser.name);
-                            identifyState = 1;
-                            break;
+                    if(localUser.userId === userInfo.userId){
+                        if(localUser.accountType > 0){
+                            identifyState = 2;
+                        }else{
+                            if(localUser.identify && localUser.name){
+                                identify = encrypt.encrypt(localUser.identify);
+                                name = encrypt.encrypt(localUser.name);
+                                identifyState = 1;
+                                break;
+                            }
                         }
                     }
                 }
             }
+        }else{
+            identifyState = 2;
         }
         let user;
         let userId;
