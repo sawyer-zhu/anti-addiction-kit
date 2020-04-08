@@ -101,7 +101,7 @@ class FcmController extends Controller{
             }
         }
         if(await this.ctx.service.userInfo.setIdentify(user.id, identify, name, accountType)){
-            return ctx.body = { code:200, data: { age : helper.getAge(identify), accountType: user.account_type}} ;
+            return ctx.body = { code:200, data: { age : helper.getAge(identify), accountType: accountType}} ;
         }else{
             ctx.status = 400;
             return ctx.body = {'error':'bad_credentials', 'error_description': 'identify failed.'};
