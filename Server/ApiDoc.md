@@ -64,7 +64,7 @@ token           | string        | 通过客户端授权获得的token
 local_user_info | string        | 单机版本地存的实名信息，有才传。
 
 ````
-curl -v  -d 'token=12345&local_user_info=[{"userId":1,"name":"\u6d4b\u8bd5","identify":"342623201008147713"}]' http://localhost:7001/v1/fcm/authorizations
+curl -v  -d 'token=12345&local_user_info=[{"userId":1,"name":"\u6d4b\u8bd5","identify":"342623201008147713","accountType":0}]' http://localhost:7001/v1/fcm/authorizations
 
 ````
 
@@ -81,7 +81,8 @@ data            | string        | 用户信息json
 	"data": {
 		"access_token": "1111",//jwt token,用于用户认证
 		"birthday": "2000-03-24",//生日
-		"age": 20 //年龄
+		"age": 20 //年龄,
+	    "accountType":0 // 第三方实名类型，0 非第三方实名， 1  =8岁以下 ，2  =8-15岁，  3 =16-17岁， 4 =18+
 	}
 }
 ````
@@ -145,9 +146,10 @@ POST
 --------------- | ------------- | ------------
 name            | string        | 姓名
 identify        | string        | 身份证
+accountType     | int           | 第三方实名类型，0 非第三方实名， 1  =8岁以下 ，2  =8-15岁，  3 =16-17岁， 4 =18+
 
 ````
-curl -H 'Authorization: Bearer 121212121' -d  name=测试&identify=123' http://localhost:7001/v1/fcm/real_user_info
+curl -H 'Authorization: Bearer 121212121' -d  name=测试&identify=123&accountType=0' http://localhost:7001/v1/fcm/real_user_info
 
 ````
 
@@ -165,6 +167,7 @@ data            | string        | 用户信息json
     code: 200,
 	"data": {
 		"age": 20 //年龄
+		"accountType: 0
 	},
 }
 ````

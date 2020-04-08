@@ -12,7 +12,7 @@ module.exports = app => {
             ctx.status = 400;
             return ctx.body = {'error':'bad_credentials', 'error_description': 'Param error.'};
         }
-        if(userInfo.is_identification == 1){
+        if(userInfo.identify_state == 1){
             age = helper.getAge(userInfo.identify);
             if(age >= 18){//18岁及以上不需要防沉迷
                 return ctx.body = ({'status' : true});
@@ -21,7 +21,7 @@ module.exports = app => {
         }else{
             durationKey = userInfo.user_id;
         }
-        ctx.userInfo = { durationKey, age: age, isIdentification: userInfo.is_identification};
+        ctx.userInfo = { durationKey, identifyState: userInfo.identify_state, accountType: userInfo.account_type};
         await next();
     };
 };

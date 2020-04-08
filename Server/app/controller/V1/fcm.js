@@ -43,7 +43,7 @@ class FcmController extends Controller{
                 }
             }
         }
-        if(info.isIdentification == 0){
+        if(info.identifyState == 0){
             day = 0;
         }else{
             day = helper.getToady();
@@ -52,7 +52,7 @@ class FcmController extends Controller{
             await this.ctx.service.userPlayDuration.updateDuration(duration, info.durationKey, day, lastTimestamp);
         }
         durationResult = await this.ctx.service.userPlayDuration.getDuration(day, info.durationKey);
-        result = await this.ctx.service.userPlayDuration.checkRule(switchs, durationResult, info.age, info.isIdentification);
+        result = await this.ctx.service.userPlayDuration.checkRule(switchs, durationResult, info.identifyState);
         return ctx.body = (result);
     }
 
@@ -83,19 +83,28 @@ class FcmController extends Controller{
     async realUserInfo(ctx){
         let body = ctx.request.body;
         let name = body.name;
+        let accountType = body.accountType;
         let identify = body.identify;
         let user = ctx.user;
-        if(user.is_identification == 1){
+        if(user.identify_state == 1){
             ctx.status = 400;
             return ctx.body = {'error':'bad_credentials', 'error_description': 'user is identification.'};
         }
-        if(name && identify){
-            if(await this.ctx.service.userInfo.setIdentify(user.id, identify, name)){
-                return ctx.body = { code:200, data: { age : helper.getAge(identify)}} ;
-            }else{
+        if(accountType == undefined){
+            ctx.status = 400;
+            return ctx.body = {'error':'bad_request', 'error_description': 'miss paramter.'};
+        }
+        if(accountType == 0){
+            if(name.length == 0 || identify.length == 0){
                 ctx.status = 400;
-                return ctx.body = {'error':'bad_credentials', 'error_description': 'identify failed.'};
+                return ctx.body = {'error':'bad_request', 'error_description': 'miss paramter.'};
             }
+        }
+        if(await this.ctx.service.userInfo.setIdentify(user.id, identify, name, accountType)){
+            return ctx.body = { code:200, data: { age : helper.getAge(identify), accountType: user.account_type}} ;
+        }else{
+            ctx.status = 400;
+            return ctx.body = {'error':'bad_credentials', 'error_description': 'identify failed.'};
         }
     }
 
@@ -107,7 +116,7 @@ class FcmController extends Controller{
     async checkPay(ctx){
         let user = ctx.user;
         let amount = ctx.request.body.amount;
-        let check_result = await this.ctx.service.identifyChargeAmount.checkPay(user.identify, amount)
+        let check_result = await this.ctx.service.chargeAmount.checkPay(user, amount)
         if( check_result !== true){
             return ctx.body = {'code': 200, check: 0, title: check_result.title, description: check_result.description}
         }
@@ -122,7 +131,7 @@ class FcmController extends Controller{
     async submitPay(ctx){
         let user = ctx.user;
         let amount = ctx.request.body.amount;
-        let check_result = await this.ctx.service.identifyChargeAmount.updateAmount(user.identify, amount)
+        let check_result = await this.ctx.service.chargeAmount.updateAmount(user, amount)
         if( check_result !== true){
             return ctx.body = {'code': 200, result: 0}
         }

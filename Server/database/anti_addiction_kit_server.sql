@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 172.26.1.2
--- Generation Time: 2020-04-03 05:26:01
+-- Generation Time: 2020-04-08 06:08:24
 -- 服务器版本： 5.6.39-log
 -- PHP Version: 7.2.24
 
@@ -19,19 +19,16 @@ SET time_zone = "+00:00";
 --
 -- Database: `anti_addiction_kit_server`
 --
-CREATE DATABASE IF NOT EXISTS `anti_addiction_kit_server` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `anti_addiction_kit_server`;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `identify_charge_amounts`
+-- 表的结构 `charge_amounts`
 --
 
-DROP TABLE IF EXISTS `identify_charge_amounts`;
-CREATE TABLE IF NOT EXISTS `identify_charge_amounts` (
+CREATE TABLE IF NOT EXISTS `charge_amounts` (
   `id` int(11) unsigned NOT NULL,
-  `identify` varchar(255) NOT NULL,
+  `charge_key` varchar(255) NOT NULL COMMENT '累计充值金额key，身份证或者账号',
   `amount` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '金额',
   `month` varchar(20) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -44,15 +41,18 @@ CREATE TABLE IF NOT EXISTS `identify_charge_amounts` (
 -- 表的结构 `switchs`
 --
 
-DROP TABLE IF EXISTS `switchs`;
 CREATE TABLE IF NOT EXISTS `switchs` (
   `id` int(10) unsigned NOT NULL,
   `use_time_switch` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '默认0，ps 0 ：使用客户端时间，1：使用服务器时间',
   `night_ban_time_start` varchar(10) NOT NULL DEFAULT '22:00' COMMENT '宵禁开始时间',
   `night_ban_time_end` varchar(10) NOT NULL DEFAULT '08:00' COMMENT '宵禁结束时间',
   `shiming_user_duration` int(3) unsigned NOT NULL DEFAULT '5400' COMMENT '实名未成年账号时长',
-  `no_shiming_user_duration` int(11) NOT NULL COMMENT '未实名游戏时长',
+  `no_shiming_user_duration` int(11) NOT NULL DEFAULT '3600' COMMENT '未实名游戏时长',
   `shiming_user_holiday_duration` int(3) unsigned NOT NULL DEFAULT '10800' COMMENT '实名未成年账号节假日时长',
+  `teen_pay_limit` int(3) unsigned NOT NULL DEFAULT '5000' COMMENT '8-15岁单笔付费限额，单位：分',
+  `teen_month_pay_limit` int(3) unsigned NOT NULL DEFAULT '20000' COMMENT '8-15岁月付费限额，单位：分',
+  `young_pay_limit` int(3) unsigned NOT NULL DEFAULT '10000' COMMENT '16-17岁单笔付费限额，单位：分',
+  `young_month_pay_limit` int(3) unsigned NOT NULL DEFAULT '40000' COMMENT '16-17 月付费限额，单位：分',
   `holiday_dates` text NOT NULL COMMENT '每年的法定节假日json',
   `version` varchar(20) NOT NULL COMMENT '版本'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -63,13 +63,13 @@ CREATE TABLE IF NOT EXISTS `switchs` (
 -- 表的结构 `user_info`
 --
 
-DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE IF NOT EXISTS `user_info` (
   `id` int(11) unsigned NOT NULL,
-  `user_id` int(11) unsigned NOT NULL COMMENT '用户 ID',
-  `is_identification` int(1) NOT NULL COMMENT '是否实名认证',
+  `user_id` varchar(255) NOT NULL COMMENT '用户 ID',
+  `identify_state` int(1) unsigned NOT NULL COMMENT '实名状态，0=>未实名，1=>实名,2=>第三方实名',
   `identify` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `account_type` int(1) unsigned NOT NULL DEFAULT '0' COMMENT '第三方实名类型，默认0，非第三方实名， 1  =8岁以下 ，2  =8-15岁，  3 =16-17岁， 4 =18+',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -80,7 +80,6 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 -- 表的结构 `user_play_durations`
 --
 
-DROP TABLE IF EXISTS `user_play_durations`;
 CREATE TABLE IF NOT EXISTS `user_play_durations` (
   `id` int(10) unsigned NOT NULL,
   `day` varchar(10) NOT NULL,
@@ -96,11 +95,11 @@ CREATE TABLE IF NOT EXISTS `user_play_durations` (
 --
 
 --
--- Indexes for table `identify_charge_amounts`
+-- Indexes for table `charge_amounts`
 --
-ALTER TABLE `identify_charge_amounts`
+ALTER TABLE `charge_amounts`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `identify` (`identify`,`month`),
+  ADD UNIQUE KEY `identify` (`charge_key`,`month`),
   ADD KEY `month` (`month`) USING BTREE;
 
 --
@@ -133,9 +132,9 @@ ALTER TABLE `user_play_durations`
 --
 
 --
--- AUTO_INCREMENT for table `identify_charge_amounts`
+-- AUTO_INCREMENT for table `charge_amounts`
 --
-ALTER TABLE `identify_charge_amounts`
+ALTER TABLE `charge_amounts`
   MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `switchs`
