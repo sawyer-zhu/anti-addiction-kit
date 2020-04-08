@@ -6,6 +6,7 @@ class AuthorizationsController extends Controller{
     async index(ctx){
         let body = ctx.request.body;
         let token = body.token;
+        let accountType = body.accountType;
         let userInfo;
         let localUserInfo = body.local_user_info;
         let identify = '';
@@ -23,7 +24,7 @@ class AuthorizationsController extends Controller{
                     return ctx.body = ({'error':'bad_request', 'error_description': 'User info missing.'});
                 }
             }
-            let user = await ctx.service.userInfo.getUser(userInfo, identify, name, localUserInfo);
+            let user = await ctx.service.userInfo.getUser(userInfo, identify, name, localUserInfo, accountType);
             if(user === false){
                 ctx.status = 500;
                 return ctx.body = ({'error':'internal_error', 'error_description': 'Internal server error.'});

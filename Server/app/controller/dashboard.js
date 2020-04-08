@@ -43,14 +43,25 @@ class DashboardController extends Controller {
         if(userInfo === null){
             return ctx.body = '用户不存在';
         }
+        let durationKey;
+        if (userInfo.identify_state == 1){
+            durationKey = userInfo.identify;
+            day = helper.getToady();
+        }else if (userInfo.identify_state == 2){
+            durationKey = userInfo.user_id;
+            day = helper.getToady();
+        }else{
+            durationKey = userInfo.user_id;
+            day = 0;
+        }
         if(duration < 0){
             return ctx.body = '剩余时长不能超过最大可玩时长';
         }
         if(userInfo !== null && duration > 0){
             day = helper.getToady();
-            const results = await antiAddictionKit.query('update user_play_durations set duration = ? where day = ? and duration_key = ?', [duration, day, userInfo.identify]);
+            const results = await antiAddictionKit.query('update user_play_durations set duration = ? where day = ? and duration_key = ?', [duration, day, durationKey]);
             if(results.affectedRows === 0){
-                await antiAddictionKit.insert('user_play_durations', {day: day, duration: duration, duration_key: userInfo.identify, last_timestamp: helper.getNow()});
+                await antiAddictionKit.insert('user_play_durations', {day: day, duration: duration, duration_key: durationKey, last_timestamp: helper.getNow()});
             }
         }
         ctx.body = 'success';
