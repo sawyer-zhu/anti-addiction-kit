@@ -2,25 +2,61 @@ const Service = require('egg').Service;
 const encrypt = require('../extend/encrypt');
 
 class UserInfoService extends Service{
-    async getUser(userInfo, identify = '', name = '', is_identification = 0) {
+    async getUser(userInfo, identify = '', name = '', localUserInfo) {
+        let identifyState = 0;
+        let accountType = 0;
+        if(localUserInfo != undefined && localUserInfo.length != 0 ){
+            localUserInfo = JSON.parse(localUserInfo);
+            for (let key in localUserInfo){
+                let localUser = localUserInfo[key];
+                if(localUser.userId === userInfo.userId){
+                    accountType = localUserInfo[key].accountType;
+                    if(localUser.accountType > 0){
+                        identifyState = 2;
+                    }else{
+                        if(localUser.identify && localUser.name){
+                            identify = encrypt.encrypt(localUser.identify);
+                            name = encrypt.encrypt(localUser.name);
+                            identifyState = 1;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         let user;
         let userId;
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
-        identify = encrypt.encrypt(identify);
-        name = encrypt.encrypt(name);
         user = await antiAddictionKit.get('user_info', {user_id: userInfo.userId});
         if(user == null){
-            const results = await antiAddictionKit.insert('user_info', {user_id: userInfo.userId, identify, name, is_identification});
+            const results = await antiAddictionKit.insert('user_info', {user_id: userInfo.userId, identify, name, identify_state:identifyState, account_type:accountType});
             if(results.affectedRows === 0){
                 return false;
             }
             userId = results.insertId;
         }else{
+            const row = {
+                id: user.id,
+                identify,
+                name,
+                identify_state: identifyState,
+                account_type: accountType
+            }
+            const results = await antiAddictionKit.update('user_info', row);
+            if(results.affectedRows === 0){
+                return false;
+            }
             userId = user.id;
         }
         return await antiAddictionKit.get('user_info', {id: userId});
     }
-    async setIdentify(userId, identify, name){
+    async setIdentify(userId, identify, name, accountType){
+        let identifyState = 1;
+        if(accountType > 0){
+            identifyState = 2;
+            identify = '';
+            name = '';
+        }
         identify = encrypt.encrypt(identify);
         name = encrypt.encrypt(name);
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
@@ -29,7 +65,8 @@ class UserInfoService extends Service{
             id : userId,
             identify,
             name,
-            is_identification: 1
+            identify_state: identifyState,
+            account_type: accountType
         };
         result = await antiAddictionKit.update('user_info', row);
         if(result.affectedRows > 0){
