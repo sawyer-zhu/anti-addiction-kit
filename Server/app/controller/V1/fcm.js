@@ -46,7 +46,7 @@ class FcmController extends Controller{
         if(info.identifyState == 0){
             day = 0;
         }else{
-            day = helper.getToady();
+            day = helper.getToday();
         }
         if(duration > 0){
             await this.ctx.service.userPlayDuration.updateDuration(duration, info.durationKey, day, lastTimestamp);
@@ -109,6 +109,11 @@ class FcmController extends Controller{
                 ctx.status = 400;
                 return ctx.body = {'error':'bad_request', 'error_description': 'miss paramter.'};
             }
+            if(!helper.validRealid(identify) || !helper.validRealname(name)){
+                ctx.status = 400;
+                return ctx.body = {'error':'bad_request', 'error_description': '请填写真实有效证件信息。'};
+            }
+
         }
         if(await this.ctx.service.userInfo.setIdentify(user.id, identify, name, accountType)){
             return ctx.body = { code:200, data: { age : helper.getAge(identify), accountType: accountType}} ;

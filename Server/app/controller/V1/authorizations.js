@@ -33,7 +33,7 @@ class AuthorizationsController extends Controller{
                 id: user.id
             }
             const accessToken = this.app.jwt.sign(userToken, this.app.jwt.secret)  //token签名
-            return ctx.body = {'code': 200, 'data': {'access_token': accessToken , 'birthday': helper.getBirthray(encrypt.decrypt(user.identify)), 'age': helper.getAge(encrypt.decrypt(user.identify)), 'accountType': user.account_type}};
+            return ctx.body = {'code': 200, 'data': {'access_token': accessToken , 'birthday': helper.getBirthday(encrypt.decrypt(user.identify)), 'age': helper.getAge(encrypt.decrypt(user.identify)), 'accountType': user.account_type}};
         }catch(error){
             ctx.status = 400;
             return ctx.body = {'error':'bad_request', 'error_description': 'Parse token error.'};
