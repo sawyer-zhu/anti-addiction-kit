@@ -67,10 +67,10 @@ class DashboardController extends Controller {
         let durationKey;
         if (userInfo.identify_state == 1){
             durationKey = userInfo.identify;
-            day = helper.getToady();
+            day = helper.getToday();
         }else if (userInfo.identify_state == 2){
             durationKey = userInfo.user_id;
-            day = helper.getToady();
+            day = helper.getToday();
         }else{
             durationKey = userInfo.user_id;
             day = 0;
@@ -79,7 +79,7 @@ class DashboardController extends Controller {
             return ctx.body = '剩余时长不能超过最大可玩时长';
         }
         if(userInfo !== null && duration > 0){
-            day = helper.getToady();
+            day = helper.getToday();
             const results = await antiAddictionKit.query('update user_play_durations set duration = ? where day = ? and duration_key = ?', [duration, day, durationKey]);
             if(results.affectedRows === 0){
                 await antiAddictionKit.insert('user_play_durations', {day: day, duration: duration, duration_key: durationKey, last_timestamp: helper.getNow()});
