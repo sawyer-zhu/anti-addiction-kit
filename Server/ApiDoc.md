@@ -44,6 +44,15 @@ data            | string        | 配置json
             nightStrictEnd: "08:00",//宵禁结束时间
             childCommonTime: 5400,//未成年游戏时长
             childHolidayTime: 10800,//未成年节假日游戏时长
+            description: {//提示文案
+                unIdentifyRemain: "您的游戏体验时间还剩余#分钟#，登记实名信息后可深度体验。",//未实名剩余时间
+                unIdentifyFirstLogin: "您当前未提交实名信息，根据国家相关规定，享有#分钟#游戏体验时间。登记实名信息后可深度体验。",//未实名初次登陆
+                unIdentifyLimit: "您的游戏体验时长已达#分钟#。登记实名信息后可深度体验。",//未实名游戏时间达到上限
+                identifyLimit: "您今日游戏时间已达#分钟#。根据国家相关规定，今日无法再进行游戏。请注意适当休息。",//实名游戏时间达到上限
+                identifyRemain: "您今日游戏时间还剩余#分钟#，请注意适当休息。",//实名剩余时间
+                nightStrictRemain: "距离健康保护时间还剩余#分钟#，请注意适当休息。",//宵禁剩余时间
+                nightStrictLimit: "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。",//宵禁
+            },
         },
     },
 }

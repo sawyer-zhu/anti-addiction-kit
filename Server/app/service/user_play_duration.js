@@ -102,7 +102,7 @@ class UserPlayDurationService extends Service{
                         if(remain_ngiht_start > clientReturnInterval.last && remain_ngiht_start <= clientReturnInterval.first){
                             description = '距离健康保护时间还剩余#' + Math.ceil(remain_ngiht_start/ 60) + '分钟#，请注意适当休息。';
                         }else if(remain_ngiht_start <= clientReturnInterval.last){
-                            description = '每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。';
+                            description = '根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。';
                         }else{
                             restrictType = 0;
                         }
