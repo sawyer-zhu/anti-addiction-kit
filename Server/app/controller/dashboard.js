@@ -6,11 +6,32 @@ const helper = require('../extend/help');
  * 测试后台，仅测试时使用
  */
 class DashboardController extends Controller {
-    async index() {
-        let title = "dashboard";
-        await this.ctx.render('dashboard',{
+    async remainTime() {
+        await this.ctx.render('remain_time',{
             title: '修改游戏时长'
         });
+    }
+    async showConfig(){
+        let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
+        let switchs = await antiAddictionKit.get('switchs', {id: 1});
+        await this.ctx.render('config',{
+            title: '修改配置',
+            switchs: switchs
+        });
+    }
+    async postEditConfig(ctx){
+        let body = ctx.request.body;
+        let start = body.nightStart;
+        let end = body.nightEnd;
+        const row = {
+            id: 1,
+            night_ban_time_start: start,
+            night_ban_time_end: end
+        }
+        let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
+        let result = await antiAddictionKit.update('switchs', row);
+        ctx.redirect('/dashboard/config');
+
     }
     async editRemainDuration(ctx){
         let body = ctx.request.body;

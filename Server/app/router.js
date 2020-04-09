@@ -15,9 +15,11 @@ module.exports = app => {
   router.post('/v1/fcm/authorizations', controller.v1.authorizations.index);
   router.get('/v1/fcm/get_config', controller.v1.fcm.getConfig);
 
-  router.get('/dashboard', controller.dashboard.index);//仅用于测试修改时长
+  router.get('/dashboard', controller.dashboard.remainTime);//仅用于测试修改时长
   router.post('/dashboard/edit_remain_duration', controller.dashboard.editRemainDuration);//仅用于测试修改时长
   router.get('/create_user_token', controller.dashboard.createUserToken);//仅用于测试生成token
+  router.get('/dashboard/config', controller.dashboard.showConfig);//修改配置
+  router.post('/dashboard/edit_config', controller.dashboard.postEditConfig);
 
 
 };
