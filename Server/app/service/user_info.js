@@ -1,5 +1,6 @@
 const Service = require('egg').Service;
 const encrypt = require('../extend/encrypt');
+const helper = require('../extend/help');
 
 class UserInfoService extends Service{
     async getUser(userInfo, identify = '', name = '', localUserInfo, accountType) {
@@ -15,10 +16,12 @@ class UserInfoService extends Service{
                             identifyState = 2;
                         }else{
                             if(localUser.identify && localUser.name){
-                                identify = encrypt.encrypt(localUser.identify);
-                                name = encrypt.encrypt(localUser.name);
-                                identifyState = 1;
-                                break;
+                                if(helper.validRealid(localUser.identify) && helper.validRealname(localUser.name)){
+                                    identify = encrypt.encrypt(localUser.identify);
+                                    name = encrypt.encrypt(localUser.name);
+                                    identifyState = 1;
+                                    break;
+                                }
                             }
                         }
                     }
