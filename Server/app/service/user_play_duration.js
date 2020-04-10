@@ -83,7 +83,11 @@ class UserPlayDurationService extends Service{
                     let remain_ngiht_start;
                     remainTime = switchs.shiming_user_duration - duration;//剩余时长
                     if(helper.getTimeStamp(switchs.night_ban_time_start) < helper.getTimeStamp(switchs.night_ban_time_end)){
-                        remain_ngiht_start = (helper.getTimeStamp('23:59') - helper.getNow()) + (helper.getTimeStamp(switchs.night_ban_time_start) - helper.getTimeStamp('00:00'));//距宵禁时长
+                        if(helper.getNow() > helper.getTimeStamp(switchs.night_ban_time_start)){
+                            remain_ngiht_start = (helper.getTimeStamp('23:59') - helper.getNow()) + (helper.getTimeStamp(switchs.night_ban_time_start) - helper.getTimeStamp('00:00'));//距宵禁时长
+                        }else{
+                            remain_ngiht_start = helper.getTimeStamp(switchs.night_ban_time_start) - helper.getNow();
+                        }
                     }else{
                         remain_ngiht_start = helper.getTimeStamp(switchs.night_ban_time_start) - helper.getNow();//距宵禁时长
                     }
