@@ -1,7 +1,34 @@
-##<center>AntiAddictionSDK_v1.0.2（Android)对接文档</center>
+##<center>AntiAddictionSDK_v1.1.0（Android)对接文档</center>
 
-###1.配置参数（采用默认值可跳过）
-#### （1）功能性参数列表如下：
+###接入方式
+
+针对 Android studio 项目，将 SDK 的 aar 库文件放入应用 module 的 libs 目录下，并在该 module 的 build.gradle 文件中进行配置，样例如下：
+
+```
+android{
+	...
+	repositories{
+		flatDir{
+			dirs 'libs'
+		}
+	}
+}
+dependencies{
+	...
+	implementation(name:'antiLib_v1.1.0',ext:'aar')
+}
+```
+###接入流程
+
+（1）在应用的主 Activity 中进行功能配置（采用默认值可跳过）和初始化，在初始化接口传递的回调对象参数中处理对应回调。  
+（2）如果游戏支持用户模块，在用户登录后调用登录接口，如果不支持用户模块，在用户正式进入游戏前，利用uuid或其他方式生成唯一标识符调用登录接口，传递给 SDK。  
+（3）在游戏启动和停止的地方调用时长统计对应接口  
+（4）在付费和聊天等场景下，调用 SDK 对应接口进行实名校验  
+（5）用户在游戏内选择登出后，调用 SDK 登出接口同步信息
+	
+###SDK 接口 API
+####1.配置参数（采用默认值可跳过）
+#####（1）功能性参数列表如下：
 
 参数名称 | 参数类型 | 参数默认值 | 参数说明 
 --- |--- |--- | ---
@@ -9,6 +36,7 @@ useSdkRealName | boolean | true | 是否使用 SDK 实名认证功能
 useSdkPaymentLimit | boolean | true | 是否使用 SDK 付费限制
 useSdkOnlineTimeLimit | boolean | true | 是否使用 SDK 在线时长限制
 showSwitchAccountButton | boolean | true | 是否显示切换账号按钮
+setHost | String | null | 设置服务端域名，若有效，使用联网模式，否则使用单机模式,例如 http://www.anti.test
 
 调用方式示例：
 
@@ -24,7 +52,7 @@ AntiAddictionKit.resetFunctionConfig(true,true,true);
 
 ```
 
-####（2）数据设置和外观参数
+#####（2）数据设置和外观参数
 调用方式如下：
 
 ```
@@ -42,9 +70,9 @@ nightStrictStart | int | 22 * 60 * 60 |未成年宵禁起始时间，默认晚�
 nightStrictEnd | int | 8 * 60 * 60 | 未成年宵禁截止时间，默认次日8点， 单位 秒
 childCommonTime | int | 90 * 60 | 未成年人非节假日每日游戏时长，默认1.5小时，单位 秒
 childHolidayTime | int | 3 * 60 * 60 | 未成年人节假日每日游戏时长，默认3小时，单位 秒
-teenPayLimit | int | 50 * 10 * 10 | 未成年人（8-15岁）每日充值限额，默认50元，单位 分
+teenPayLimit | int | 50 * 10 * 10 | 未成年人（8-15岁）单次充值限额，默认50元，单位 分
 teenMonthPayLimit | int | 300 * 10 * 10 | 未成年人（8-15岁）每月充值限额，默认300元，单位 分
-youngPayLimit | int | 100 * 10 * 10 | 未成年人（16-17岁）每日充值限额，默认100元，单位 分
+youngPayLimit | int | 100 * 10 * 10 | 未成年人（16-17岁）单次充值限额，默认100元，单位 分
 youngMonthPayLimit | int | 400 * 10 * 10 | 未成年人（16-17岁）每月充值限额，默认400元， 单位 分
 dialogBackground | String | #ffffff | sdk弹窗背景颜色
 dialogContentTextColor | String | #999999 | sdk弹框内容字体颜色
@@ -58,8 +86,8 @@ tipBackground | String | #ffffff | 提示浮窗背景颜色
 tipTextColor | String | #000000 | 提示浮窗字体颜色
 encodeString | String | test | 用户实名信息加密秘钥（AES）
 
-###2.初始化
-示例如下：
+####2.初始化
+该接口应尽早调用，建议在应用的主 Activity 的 onCreate 方法中调用。示例如下：
 
 ```
  AntiAddictionKit.init(activity,protectCallBack);
@@ -99,9 +127,9 @@ CALLBACK\_CODE\_AAK\_WINDOW\_DISMISS | 2500 | 额外弹窗显示，额外窗口�
 
 
 
-####注意：关于 "USER\_TYPE\_CHANGED" 的回调，触发时机可能不唯一，当用户在付费或其他需要实名的时候，完成实名过程都会触发相应回调，所以不建议在这两个回调中做UI相关或任何阻塞线程的事情。
+#####注意：关于 "USER\_TYPE\_CHANGED" 的回调，触发时机可能不唯一，当用户在付费或其他需要实名的时候，完成实名过程都会触发相应回调，所以不建议在这两个回调中做UI相关或任何阻塞线程的事情。另外初始化后默认成功，没有对应回调。
 
-###3.设置用户信息
+####3.设置用户信息
 <a name ="update_user"></a>
 
 相关接口参数说明:
@@ -123,18 +151,19 @@ USER\_TYPE\_TEEN | 2 | 未成年人（8-16岁）
 USER\_TYPE\_YOUNG | 3 | 未成年人（16-17岁）
 USER\_TYPE\_ADULT | 4 | 成年人
 
-####（1）登录
+#####（1）登录
 登录接口应只在游戏登录过程中、登出后以及收到回调 [”SWITCH\_ACCOUNT"](#callback) 时调用。示例如下:
 
 ```
  AntiAddictionKit.login("userid1",0);
 ```
-第一个参数为 userId , 第二个参数为 userType , 具体类型值参考 [上表](#登录类型) 。
-
+第一个参数为 userId , 第二个参数为 userType , 具体类型值参考 [上表](#登录类型) 。  
+userId 类型为字符串，用于表示用户唯一标识，除 null 和 ”“ 等特殊字符串外无其他限制。  
+userType 类型为 int，游戏如果不通过第三方实名，传递0即可，否则传递通过第三方获取的用户类型。
 <a name="更新用户类型"></a>
 
-####（2）更新用户类型
-当游戏通过第三方实名后，需要将实名信息更新到 SDK 中，具体示例如下：
+#####（2）更新用户类型
+当游戏通过第三方实名后，需要将实名信息更新到 SDK 中，否则不需要调用该接口。具体示例如下：
 
 ```
 AntiAddictionKit.updateUserType(1);
@@ -142,14 +171,14 @@ AntiAddictionKit.updateUserType(1);
 ```	 
 接口参数为 userType ,具体参考 [上表](#登录类型) 。
 
-####（3）登出
+#####（3）登出
 当用户在游戏内点击登出或退出账号时调用该接口，调用示例如下：
 
 ```
 AntiAddictionKit.logout();
 
 ```
-###4.付费
+####4.付费
 游戏在收到用户的付费请求后，调用 SDK 的对应接口来判断当前用户的付费行为是否被限制，示例如下：
 
 ```
@@ -167,7 +196,7 @@ AntiAddictionKit.logout();
 
 #####注意：如果用户在付费过程中需要打开第三方页面进行实名，实名完成后，游戏除了要调用 "updateUserType" [更新用户类型](#更新用户类型) , 还需再次调用 " checkPayLimit " 接口才能收到 [是否付费限制] (#callback) 的回调。
 
-###5.聊天
+####5.聊天
 游戏在需要聊天时，调用 SDK 接口判断当前用户是否实名，示例如下：
 
 ```
@@ -176,7 +205,7 @@ AntiAddictionKit.logout();
 当用户可以聊天时， SDK 会通过聊天回调 [CHAT\_NO\_LIMIT](#callback) 来通知游戏，否则就会去实名。如果此时需要打开第三方实名页，SDK 会调用 [OPEN\_REAL\_NAME](#callback) 回调，否则打开 SDK 的实名页面，如果实名失败就会调用[CHAT\_LIMIT](#callback) 回调，否则调用 [CHAT\_NO\_LIMIT](#callback)。
 #####注意：如果用户在判断聊天限制过程中需要打开第三方页面进行实名，实名完成后，游戏除了要调用 "updateUserType" [更新用户信息](#更新用户类型) , 还需再次调用 " checkChatLimit " 接口才能收到 [是否聊天限制] (#callback) 的回调。
 
-###6.时长统计
+####6.时长统计
 为保证用户的时长统计准确，游戏需要在运行的主 Activity 的方法中调用如下接口，示例如下：
 
 ```
@@ -194,16 +223,19 @@ AntiAddictionKit.logout();
 
 ```
 
-###7.获取用户类型
-SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户,会返回该用户的类型信息，否则会返回 -1 ，调用示例如下：
+####7.获取用户类型
+单机模式下，SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户,会返回该用户的类型信息，否则会返回 -1 。  
+联网模式下，用户登录后，调用该接口，会返回当前用户类型，否则返回 -1。  
+调用示例如下：
 
 ```
 AntiAddictionKit.getUserType("userId"); 
 ```
 参数是用户的唯一标识字符串，正常返回值参考[登录类型](#登录类型)。
 
-###8.打开实名窗口
-设置用户信息后，游戏可调用此接口打开实名窗口，示例如下：
+####8.打开实名窗口
+<font color=red>注意：当游戏除了时长和付费限制时，有其他场景需要主动打开实名窗口。则可以通过该接口让用户进行实名，否则不需要调用该接口。如果用户已实名，则该接口直接触发实名成功回调。</font>  
+当游戏在某些场景下需要主动打开实名窗口时，游戏可调用此接口打开实名窗口，示例如下：
 
 ```
 AntiAddictionKit.openRealName();

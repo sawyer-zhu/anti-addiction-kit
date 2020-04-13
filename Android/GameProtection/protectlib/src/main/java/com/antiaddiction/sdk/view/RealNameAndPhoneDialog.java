@@ -28,11 +28,17 @@ import android.widget.Toast;
 import com.antiaddiction.sdk.AntiAddictionCore;
 import com.antiaddiction.sdk.AntiAddictionPlatform;
 import com.antiaddiction.sdk.AntiAddictionKit;
+import com.antiaddiction.sdk.Callback;
 import com.antiaddiction.sdk.OnResultListener;
 import com.antiaddiction.sdk.net.NetUtil;
+import com.antiaddiction.sdk.service.UserService;
+import com.antiaddiction.sdk.utils.LogUtil;
 import com.antiaddiction.sdk.utils.Res;
 import com.antiaddiction.sdk.utils.RexCheckUtil;
 import com.antiaddiction.sdk.utils.UnitUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.regex.Pattern;
@@ -149,11 +155,14 @@ public class RealNameAndPhoneDialog extends BaseDialog {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String name = et_name.getText().toString();
-                String reg = "[^\u4E00-\u9FA5]";
+                String reg = "[^\u4e00-\u9fa5·]";
                 String valid = Pattern.compile(reg).matcher(name).replaceAll("").trim();
                 if (!TextUtils.equals(name, valid)) {
                     et_name.setText(valid);
-                    et_name.setSelection(valid.length());
+                    LogUtil.logd("valid = " + valid);
+                    if(valid.length() > 0) {
+                        et_name.setSelection(valid.length());
+                    }
                 }
             }
 
@@ -325,20 +334,50 @@ public class RealNameAndPhoneDialog extends BaseDialog {
     }
 
     private void onSubmit(String name, String phone, String identify) {
-        Toast.makeText(getContext(), "信息提交成功！", Toast.LENGTH_SHORT).show();
         if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
-            NetUtil.postSync("", "", new NetUtil.NetCallback() {
+            UserService.submitUserInfo(AntiAddictionCore.getCurrentUser().getUserId(), name, identify, phone, new Callback() {
                 @Override
-                public void onSuccess(String response) {
-                    dismiss();
+                public void onSuccess(JSONObject response) {
+                    try {
+                        int type = response.getInt("accountType");
+                        int age = response.optInt("age",0);
+                        if(type == 0 ){
+                            type = UserService.getUserTypeByAge(age);
+                        }
+                        AntiAddictionCore.resetUserInfo("", ""+type, "");
+                        if (onResultListener != null) {
+                            onResultListener.onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS, "");
+                        }
+                        dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onFail("");
+                    }
                 }
 
                 @Override
-                public void onFail(int code, String message) {
-
+                public void onFail(final String msg) {
+//                    if (onResultListener != null) {
+//                        onResultListener.onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_FAIL, "");
+//                    }
+                   // dismiss();
+                    AntiAddictionPlatform.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                             String message = "";
+                            try {
+                                JSONObject object = new JSONObject(msg);
+                                message = object.getString("error_description");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(getContext(), "实名失败！"+message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         }else {
+            Toast.makeText(getContext(), "信息提交成功！", Toast.LENGTH_SHORT).show();
             //次序很重要
             AntiAddictionCore.resetUserInfo(name, identify, phone);
             if (onResultListener != null) {
