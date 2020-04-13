@@ -452,7 +452,7 @@ public class AntiAddictionCore {
     }
 
     static String getSdkVersion() {
-        return "1.0.4.a";
+        return "1.1.0";
     }
 
     /**
