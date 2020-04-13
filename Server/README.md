@@ -22,11 +22,13 @@ function encryptUserInfo(data) {
 ## 部署
 
 ### 本地开发
-1.cp config.production.js config.local.js
-2.echo 'local' > env
-3.[创建数据库](database/anti_addiction_kit_server.sql)，配置config.local.js里的数据库账号密码，日志等。
-4.npm i
+
+1.cp config.production.js config.local.js  
+2.echo 'local' > env  
+3.[创建数据库](database/anti_addiction_kit_server.sql)，配置config.local.js里的数据库账号密码，日志等。  
+4.npm i  
 5.npm run dev
+6.访问 <http://localhost:7001/>  
 
 ### 线上部署
 
@@ -38,13 +40,13 @@ pm2 start server.js
 ## 测试后台（仅供测试使用）
 
 ### 修改游戏时长
-</dashboard>
+<http://localhost:7001/dashboard>
 
 ### 修改宵禁时间
-</dashboard/config>
+<http://localhost:7001//dashboard/config>
 
 ### 生成加密包含用户信息加密token
-</create_user_token>
+<http://localhost:7001//create_user_token>
 
 *注意：该后台仅在开发或测试的时候使用，正式上线后请删掉或者注释掉。*
 
