@@ -4,15 +4,11 @@ import UIKit
 class AlertController: BaseController {
     
     // MARK: - Public
-    convenience init(_ alertData: AlertData, isHsqjCheckCurrentPayLimit: Bool = false) {
+    convenience init(_ alertData: AlertData) {
         self.init()
         
         self.alertData = alertData
-        self.isHsqjCheckCurrentPayLimit = isHsqjCheckCurrentPayLimit
     }
-    
-    /// 是否 hsqj 直接通过`同步查询付费限制接口`即`checkCurrentPayLimit`自动打开的窗口，默认 false。 如果为 True 而且当前页面是付费限制提醒页面，那么 backGameButton 按下时不会给 hsqj 发送有付费限制的回调
-    private var isHsqjCheckCurrentPayLimit: Bool = false
     
     private var alertData: AlertData = AlertData()
     
@@ -98,6 +94,8 @@ class AlertController: BaseController {
         super.viewDidLoad()
         
         TimeService.stop()
+        TimeManager.inactivate()
+
         
         self.title = alertData.title
         
@@ -107,10 +105,10 @@ class AlertController: BaseController {
         view.addSubview(quitGameButton)
         view.addSubview(backGameButton)
         
-        updateSubviewLayout()
+        setupUI()
     }
     
-    private func updateSubviewLayout() {
+    private func setupUI() {
         title = alertData.title
         textView.attributedText = alertBody(alertData.body)
         
@@ -121,12 +119,24 @@ class AlertController: BaseController {
         }
         
         //判断用户类型 已实名即隐藏实名按钮
-        if let usr = User.shared, usr.type == .unknown {
-            authButton.isHidden = false
-            textView.addBottomConstraint(toView: view, constant: -106)
+        if let _ = AntiAddictionKit.configuration.host {
+            // 联网版
+            if let account = AccountManager.currentAccount, account.type == .unknown {
+                authButton.isHidden = false
+                textView.addBottomConstraint(toView: view, constant: -106)
+            } else {
+                authButton.isHidden = true
+                textView.addBottomConstraint(toView: view, constant: -64)
+            }
         } else {
-            authButton.isHidden = true
-            textView.addBottomConstraint(toView: view, constant: -64)
+            //单机版
+            if let usr = User.shared, usr.type == .unknown {
+                authButton.isHidden = false
+                textView.addBottomConstraint(toView: view, constant: -106)
+            } else {
+                authButton.isHidden = true
+                textView.addBottomConstraint(toView: view, constant: -64)
+            }
         }
         
         switch alertData.type {
@@ -227,10 +237,8 @@ extension AlertController {
         
         switch alertData.type {
         case .payLimitAlert:
-            if !isHsqjCheckCurrentPayLimit {
-                //如果是支付弹窗，返回游戏时给游戏发送有支付限制的通知
-                AntiAddictionKit.sendCallback(result: .hasPayLimit, message: "防沉迷限制，无法支付！")
-            }
+            //如果是支付弹窗，返回游戏时给游戏发送有支付限制的通知
+            AntiAddictionKit.sendCallback(result: .hasPayLimit, message: "防沉迷限制，无法支付！")
         case .timeLimitAlert:
             // TIPS: 当时间提示页面显示`进入游戏`按钮时，只会在游客登录时，所以直接显示用户登录成功
             // TODO: `进入游戏`按钮逻辑太粗暴，可以优化
@@ -238,6 +246,7 @@ extension AlertController {
         }
         
         TimeService.start()
+        TimeManager.activate()
     }
     
 }

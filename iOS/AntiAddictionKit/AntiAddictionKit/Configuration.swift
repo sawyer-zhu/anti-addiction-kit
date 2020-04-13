@@ -6,6 +6,9 @@ import Foundation
 @objc(Configuration)
 public final class Configuration: NSObject {
     
+    /// 联网服务器地址，默认值为 nil，仅通过 `setHost()`来设置
+    internal var host: String? = nil
+    
     /// AAKit 实名登记开关，默认值为 true
     public var useSdkRealName: Bool = true
     
@@ -18,51 +21,40 @@ public final class Configuration: NSObject {
     /// AAKit 切换账号按钮是否显示
     public var showSwitchAccountButton: Bool = true
     
-    /// 未成年人非节假日每日总时长
-    #if DEBUG
+    /// 未成年人非节假日每日总时长 单位秒
     public var minorCommonDayTotalTime: Int = 90 * 60
-    #else
-    public var minorCommonDayTotalTime: Int = 90 * 60
-    #endif
     
-    /// 未成年人节假日每日总时长
-    #if DEBUG
+    /// 未成年人节假日每日总时长 单位秒
     public var minorHolidayTotalTime: Int = 180 * 60
-    #else
-    public var minorHolidayTotalTime: Int = 180 * 60
-    #endif
     
-    /// 游客每日总时长（无节假日区分）
-    #if DEBUG
+    /// 游客每日总时长（无节假日区分）单位秒
     public var guestTotalTime: Int = 60 * 60
-    #else
-    public var guestTotalTime: Int = 60 * 60
-    #endif
     
-    /// 展示剩余游戏时间浮窗时的剩余时长
-    #if DEBUG
+    /// 第一次提醒剩余游戏时间时的剩余时长 单位秒
     public var firstAlertTipRemainTime: Int = 15 * 60
-    #else
-    public var firstAlertTipRemainTime: Int = 15 * 60
-    #endif
     
-    /// 展示倒计时浮窗时的剩余时长
-    #if DEBUG
+    /// 展示倒计时浮窗时的剩余时长 单位秒
     public var countdownAlertTipRemainTime: Int = 60
-    #else
-    public var countdownAlertTipRemainTime: Int = 60
-    #endif
-    
     
     /// 宵禁开始时间（整数，小时，24小时进制，默认22）
-    #if DEBUG
-    public var curfewHourStart: Int = 22
-    #else
-    public var curfewHourStart: Int = 22
-    #endif
+    public var curfewHourStart: Int = 22 {
+        didSet {
+            nightStrictStart = "\(curfewHourStart):00"
+        }
+    }
     
     /// 宵禁结束时间（整数，小时，24小时进制，默认8）
-    public var curfewHourEnd: Int = 8
+    public var curfewHourEnd: Int = 8 {
+        didSet {
+            nightStrictEnd = DateHelper.formatCurfewHourToHHmm(curfewHourEnd)
+        }
+    }
+    
+    /// 宵禁开始时间（字符串，格式为`小时:分钟`，24小时进制，默认`22:00`）方便配置具体到分钟
+    public var nightStrictStart: String = "22:00"
+    
+    /// 宵禁结束时间（整数，格式为`小时:分钟`，24小时进制，默认8）方便配置具体到分钟
+    public var nightStrictEnd: String = "8:00"
     
     /// 8-15岁单笔付费额度限制，单位分（默认5000分）
     public var singlePaymentAmountLimitJunior: Int = 50 * 100
