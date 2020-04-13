@@ -4,6 +4,11 @@ const helper = require('../../extend/help');
 
 class FcmController extends Controller{
 
+    /**
+     * 上传游戏时长记录
+     * @param ctx
+     * @returns {Promise.<Promise|*>}
+     */
     async setPlayLog(ctx){
         let info = ctx.userInfo;
         let body = ctx.request.body;
@@ -56,10 +61,19 @@ class FcmController extends Controller{
         return ctx.body = (result);
     }
 
+    /**
+     * 获取服务器时间戳
+     * @returns {Promise.<{timestamp: *}>}
+     */
     async getServerTime() {
         const { ctx } = this;
         return ctx.body = {'timestamp': helper.getNow()};
     }
+
+    /**
+     * 获取防沉迷配置
+     * @returns {Promise.<{code: number, data: {version: (*|string|string|string), config: {nightStrictStart: *, nightStrictEnd: *, childCommonTime: *, childHolidayTime: *, teenPayLimit: *, teenMonthPayLimit: *, youngPayLimit: *, youngMonthPayLimit: *, description: {unIdentifyRemain: string, unIdentifyFirstLogin: string, unIdentifyLimit: string, identifyLimit: string, identifyRemain: string, nightStrictRemain: string, nightStrictLimit: string}}}}>}
+     */
     async getConfig(){
         const { ctx } = this;
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
@@ -90,6 +104,11 @@ class FcmController extends Controller{
         return ctx.body = {'code' : 200 , 'data' : retuenData};
     }
 
+    /**
+     * 实名
+     * @param ctx
+     * @returns {Promise.<*>}
+     */
     async realUserInfo(ctx){
         let body = ctx.request.body;
         let name = body.name;
@@ -124,6 +143,7 @@ class FcmController extends Controller{
     }
 
     /**
+     * 检查是否能充值
      * amount 单位：分
      * @param ctx
      * @returns {Promise.<*>}
@@ -139,6 +159,7 @@ class FcmController extends Controller{
     }
 
     /**
+     * 提交充值记录
      * amount 单位：分
      * @param ctx
      * @returns {Promise.<{code: number, result: number}>}
