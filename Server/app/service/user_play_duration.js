@@ -1,7 +1,18 @@
 const Service = require('egg').Service;
 const helper = require('../extend/help');
 
+/**
+ * 时长相关
+ */
 class UserPlayDurationService extends Service{
+    /**
+     * 更新时长
+     * @param duration
+     * @param durationKey
+     * @param day
+     * @param lastTimestamp
+     * @returns {Promise.<void>}
+     */
     async updateDuration(duration, durationKey, day, lastTimestamp) {
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
         await antiAddictionKit.beginTransactionScope(async conn => {
@@ -11,6 +22,13 @@ class UserPlayDurationService extends Service{
             }
         }, this.ctx);
     }
+
+    /**
+     * 获取时长
+     * @param day
+     * @param durationKey
+     * @returns {Promise.<*>}
+     */
     async getDuration(day , durationKey){
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
         let durationResult;
@@ -23,6 +41,14 @@ class UserPlayDurationService extends Service{
 
         return durationResult;
     }
+
+    /**
+     * 防沉迷规则校验
+     * @param switchs
+     * @param duration
+     * @param identifyState
+     * @returns {Promise.<{code: number, description: string, remainTime: number, restrictType: number, title: string}>}
+     */
     async checkRule(switchs, duration, identifyState){
         let defaultHolidayJson;
         let clientReturnInterval = {'first': 20*60, 'last': 6*60};

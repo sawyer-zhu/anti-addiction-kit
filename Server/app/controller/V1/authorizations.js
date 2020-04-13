@@ -3,6 +3,11 @@ const encrypt = require('../../extend/encrypt');
 
 const Controller = require('egg').Controller;
 class AuthorizationsController extends Controller{
+    /**
+     * 用户授权，获取jwt token
+     * @param ctx
+     * @returns {Promise.<*>}
+     */
     async index(ctx){
         let body = ctx.request.body;
         let token = body.token;

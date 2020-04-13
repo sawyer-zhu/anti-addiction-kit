@@ -1,3 +1,8 @@
+/**
+ * 检查jwt token
+ * @param app
+ * @returns {checkToken}
+ */
 module.exports = app => {
     return async function checkToken(ctx, next) {
         let user;

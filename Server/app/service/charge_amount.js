@@ -1,10 +1,18 @@
 const Service = require('egg').Service;
 const helper = require('../extend/help');
 const encrypt = require('../extend/encrypt');
-
+/**
+ * 充值相关
+ */
 class ChargeAmountService extends Service {
 
 
+    /**
+     * 更新充值金额
+     * @param user
+     * @param amount
+     * @returns {Promise.<boolean>}
+     */
     async updateAmount(user, amount) {
         let month = helper.getMonth();
         let chargeKey;
@@ -29,6 +37,12 @@ class ChargeAmountService extends Service {
         return true;
     }
 
+    /**
+     * 检查是否能充值
+     * @param user
+     * @param amount
+     * @returns {Promise.<*>}
+     */
     async checkPay(user, amount) {
         const REASON = {
             1: {'title': '健康消费提醒', 'description' : '根据国家相关规定，当前您无法使用充值相关功能。'},

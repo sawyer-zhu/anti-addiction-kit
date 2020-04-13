@@ -2,7 +2,17 @@ const Service = require('egg').Service;
 const encrypt = require('../extend/encrypt');
 const helper = require('../extend/help');
 
+/**
+ * 用户信息相关
+ */
 class UserInfoService extends Service{
+    /**
+     * 获取用户
+     * @param userInfo
+     * @param localUserInfo
+     * @param accountType
+     * @returns {Promise.<*>}
+     */
     async getUser(userInfo, localUserInfo, accountType) {
         let identifyState = 0;
         let identify = '';
@@ -62,6 +72,15 @@ class UserInfoService extends Service{
         }
         return this._getUser(userId);
     }
+
+    /**
+     * 实名
+     * @param userId
+     * @param identify
+     * @param name
+     * @param accountType
+     * @returns {Promise.<*>}
+     */
     async setIdentify(userId, identify, name, accountType){
         let identifyState;
         if(identify.length != 0 && name.length != 0){
@@ -90,6 +109,12 @@ class UserInfoService extends Service{
         }
         return false;
     }
+
+    /**
+     * @param userId
+     * @returns {Promise.<*>}
+     * @private
+     */
     async _getUser(userId){
         let antiAddictionKit = this.app.mysql.get('anti_addiction_kit_server');
         let user = await antiAddictionKit.get('user_info', {id: userId});

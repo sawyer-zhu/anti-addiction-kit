@@ -1,5 +1,9 @@
 const helper = require('../extend/help');
-
+/**
+ * 防沉迷检查
+ * @param app
+ * @returns {fcm}
+ */
 module.exports = app => {
     return async function fcm(ctx, next) {
         let body = ctx.request.body;
