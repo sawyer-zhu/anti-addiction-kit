@@ -173,3 +173,5 @@ Unity/AntiAddictionLocal/Library/*
 Unity/AntiAddictionLocal/Temp/*
 Unity/AntiAddictionLocal/Logs/*
 Unity/AntiAddictionLocal/ProjectSettings/*
+
+.idea/*
