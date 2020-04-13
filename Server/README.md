@@ -28,7 +28,7 @@ function encryptUserInfo(data) {
 3. [创建数据库](database/anti_addiction_kit_server.sql)，配置config.local.js里的数据库账号密码，日志等。
 4. npm i
 5. npm run dev
-6. 访问 <http://localhost:7001/>
+6. 访问 <http://localhost:7001/>。
 
 ### 线上部署
 
