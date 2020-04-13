@@ -1,8 +1,10 @@
 package com.seraph.sdk;
 
+
+import com.antiaddiction.sdk.utils.AesUtil;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +14,14 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        try {
+            String pass = AesUtil.getEncrptStr("origin","pass");
+           System.out.print(" get pass  = " + pass);
+            String origin = AesUtil.getDecryptStr(pass,"pass");
+            System.out.print("get origin = " + origin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.print(" aes error = " + e.getMessage());
+        }
     }
 }

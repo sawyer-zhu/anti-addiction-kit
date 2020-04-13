@@ -19,10 +19,22 @@ public class TimeUtil {
         int startTime = AntiAddictionKit.getCommonConfig().getNightStrictStart();
         int endTime = AntiAddictionKit.getCommonConfig().getNightStrictEnd();
         int currentSecondTime = hour * 60 * 60 + min * 60 + second;
-        if(currentSecondTime > startTime || currentSecondTime < endTime){
-            return 0;
+        if(startTime > endTime) {
+            if (currentSecondTime > startTime || currentSecondTime < endTime || currentSecondTime == startTime || currentSecondTime == endTime) {
+                return 0;
+            } else {
+                return startTime - currentSecondTime;
+            }
         }else{
-            return startTime - currentSecondTime;
+            if(currentSecondTime > startTime && currentSecondTime < endTime || currentSecondTime == startTime || currentSecondTime == endTime){
+                return 0;
+            }else{
+                if(currentSecondTime < startTime){
+                    return startTime - currentSecondTime;
+                }else{
+                    return 24 * 3600 - currentSecondTime + startTime;
+                }
+            }
         }
     }
     //距离限制时长还有多久，单位秒
@@ -70,5 +82,14 @@ public class TimeUtil {
         }else{
             return str;
         }
+    }
+    //返回分钟,例如22：10返回22*3600 + 10 * 60
+    public static int getTimeByClock(String clock){
+        if(clock == null || clock.length() == 0){
+            return 0;
+        }
+        int hour = Integer.parseInt(dripZero(clock.substring(0,2)));
+        int min = Integer.parseInt(dripZero(clock.substring(3)));
+        return hour * 3600 + min * 60;
     }
 }

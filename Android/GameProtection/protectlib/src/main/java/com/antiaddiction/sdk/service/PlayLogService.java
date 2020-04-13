@@ -11,7 +11,14 @@ import com.antiaddiction.sdk.net.NetUtil;
 import com.antiaddiction.sdk.utils.LogUtil;
 import com.antiaddiction.sdk.utils.TimeUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayLogService {
     static void handlePlayLog(long startTime,long endTime,User user,Callback callback){
@@ -20,7 +27,7 @@ public class PlayLogService {
          checkUserState(startTime,endTime,user,callback);
     }
 
-    private static void checkUserState(long startTime, long endTime, User user, Callback callback){
+    public static void checkUserState(long startTime, long endTime, User user, Callback callback){
         if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
              checkUserStateByServer(startTime, endTime, user,callback,false);
         }else{
@@ -33,9 +40,9 @@ public class PlayLogService {
         }
     }
 
-    public static void checkUserStateSync(long startTime,long endTime,User user,Callback callback){
+    public static void checkUserStateByLogin(long startTime,long endTime,User user,Callback callback){
         if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
-            checkUserStateByServer(startTime, endTime, user, callback,true);
+            checkUserStateByServer(startTime, endTime, user, callback,false);
         }else{
             if(callback != null){
                 user.updateOnlineTime((int) (endTime - startTime));
@@ -47,6 +54,7 @@ public class PlayLogService {
     }
 
     private static JSONObject checkUserStateByLocal(User user,boolean isLogin){
+        LogUtil.logd("checkUserStateByLocal");
         JSONObject response = new JSONObject();
         int restrictType = 0; //1 宵禁 2 在线时长限制
         int remainTime = 0;
@@ -111,22 +119,60 @@ public class PlayLogService {
     }
 
     private static void checkUserStateByServer(long startTime, long endTime, User user, final Callback callback,boolean isSync){
-      NetUtil.NetCallback netCallback =  new NetUtil.NetCallback() {
+        LogUtil.logd(" checkUserStateByServer ");
+        JSONArray timeArray = new JSONArray();
+        JSONArray timesArray = new JSONArray();
+        timeArray.put(startTime);
+        timeArray.put(endTime);
+        timesArray.put(timeArray);
+        String params = null;
+        JSONObject timeJson = new JSONObject();
+        try {
+            timeJson.put("server_times",timesArray);
+            timeJson.put("local_times",timesArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        params = "play_logs="+timeJson;
+        NetUtil.NetCallback netCallback =  new NetUtil.NetCallback() {
             @Override
             public void onSuccess(String response) {
-                callback.onSuccess(null);
+                LogUtil.logd(" checkUserStateByServer success response = " + response);
+
+                try {
+                    JSONObject result = new JSONObject(response);
+                    if(result.getInt("code") == 200){
+                        Intent intent = new Intent("antisdk.time.click");
+                        intent.putExtra("time",result.getInt("remainTime"));
+                        AntiAddictionPlatform.getActivity().sendBroadcast(intent);
+                        callback.onSuccess(result);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    callback.onFail("");
+                }
             }
 
             @Override
             public void onFail(int code, String message) {
-                callback.onFail();
+                LogUtil.logd(" checkUserStateByServer fail code = " + code + " msg = " + message);
+                callback.onFail(message);
             }
         };
-      if(isSync){
-          NetUtil.postSync("","",netCallback);
+      Map<String,String> head = new HashMap<>();
+        try {
+            head.put("Authorization","Bearer " + URLEncoder.encode(user.getUserId(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if(isSync){
+          NetUtil.postSyncWithHead(ServerApi.PLAY_LOG.getApi(),params,head,netCallback);
       }else{
-          HttpUtil.postAsync("","",netCallback);
+          HttpUtil.postAsyncWithHead(ServerApi.PLAY_LOG.getApi(),params,head,netCallback);
       }
     }
+
+
 
 }

@@ -6,9 +6,13 @@ import android.util.Log;
 
 
 import com.antiaddiction.sdk.AntiAddictionCore;
+import com.antiaddiction.sdk.AntiAddictionKit;
 import com.antiaddiction.sdk.AntiAddictionPlatform;
 import com.antiaddiction.sdk.Callback;
+import com.antiaddiction.sdk.InterceptLink;
 import com.antiaddiction.sdk.entity.User;
+import com.antiaddiction.sdk.net.HttpUtil;
+import com.antiaddiction.sdk.net.NetUtil;
 import com.antiaddiction.sdk.utils.LogUtil;
 
 import org.json.JSONException;
@@ -31,9 +35,10 @@ public class CountTimeService {
     private static int limit_strict = 0; //限制类型 0 无限制 1 宵禁 2 限制时长
     private static String tipContent;
     private static String tipTitle;
-    private static Long startTimestamp;
+    private static long startTimestamp;
     private static long firstResumeSendTime = 0;
-    //记录上一次启动倒计时的时间戳，避免在计时期间用户切换到后台，暂停与后端时间同步,导致后端停止计时，下次请求时间错误，可能弹多次窗口
+    //记录上一次启动倒计时的时间戳，避免在计时期间用户切换到后台，暂停与后端时间同步,导致后端停止计时，下次请求时间错误，
+    // 可能弹多次窗口
     private static volatile long lastStartTimerTime = 0;
     //当触发倒计时期间向后端发送时间戳时，定时器发送下一次起始时间需要修改
     private static volatile long lastSendGameTimeStamp = 0;
@@ -54,13 +59,13 @@ public class CountTimeService {
                         long diff = lastStartTimerTime - tipTime;
                         diff = diff > 0 ? diff : 0;
                         long beginTimeStamp = currentTime / 1000 - diff;
-                        if (startTimestamp != null && startTimestamp > 0) {
+                        if ( startTimestamp > 0) {
                             beginTimeStamp = startTimestamp;
                         }
                         lastStartTimerTime = tipTime;
                         sendGameTimeToServer(beginTimeStamp, beginTimeStamp + diff,false);
                     } else {
-                        if (startTimestamp == null || startTimestamp <= 0) {
+                        if ( startTimestamp <= 0) {
                             startTimestamp = -1L;
                         }
                         //由于在一些计时点已经发过时间了，所以定时器可能再次发送时，不到2分钟，所以这里判断上次发送后
@@ -101,13 +106,23 @@ public class CountTimeService {
 
     public static void onResume() {
         logInfo(" onResume");
-
         if (hasLogin && !timerHasStarted) {
-            startTimer();
-            //记录开始发送时间戳，判断发送游戏时间时，是第一次发还是2分钟间隔后发的
-            //利用第一次发送的结果更新本地限制相关状态
-            firstResumeSendTime = new Date().getTime();
-            startTimestamp = firstResumeSendTime;
+           InterceptLink link = new InterceptLink() {
+                @Override
+                public void onNext() {
+                    startTimer();
+                    //记录开始发送时间戳，判断发送游戏时间时，是第一次发还是2分钟间隔后发的
+                    //利用第一次发送的结果更新本地限制相关状态
+                    firstResumeSendTime = new Date().getTime();
+                    // startTimestamp = firstResumeSendTime ;
+                }
+            };
+           if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+               getTimeFromServer(link);
+           }else{
+               link.onNext();
+           }
+
         }
 
     }
@@ -181,7 +196,7 @@ public class CountTimeService {
         long time = tipTime == -1 ? (lastStartTimerTime - seconds) : (lastStartTimerTime - tipTime);
         if (isLogout || (lastStartTimerTime > 0 && tipTime == -1 && seconds <= 0)) {
             long currentTime = new Date().getTime() / 1000;
-            if (startTimestamp == null || startTimestamp < 0) {
+            if ( startTimestamp < 0) {
                 startTimestamp = currentTime - time;
             }
             if(time > 0) {
@@ -238,7 +253,7 @@ public class CountTimeService {
             }
 
             @Override
-            public void onFail() {
+            public void onFail(String msg) {
 
             }
         });
@@ -316,10 +331,33 @@ public class CountTimeService {
         }
     }
 
+    private static void getTimeFromServer(final InterceptLink link){
+        HttpUtil.getAsync(ServerApi.SERVER_TIME.getApi(), new NetUtil.NetCallback() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    startTimestamp = new JSONObject(response).getInt("timestamp");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(link != null){
+                    link.onNext();
+                }
+            }
+
+            @Override
+            public void onFail(int code, String message) {
+                if(link != null){
+                    link.onNext();
+                }
+            }
+        });
+    }
+
     private static void setTimerForTip(final int min) {
         logInfo(" setTimerForTip min = " + min + " tipTime = " + tipTime + " hasStart = " + hasStartTipTimer);
         try {
-            if ((tipTime >= 0 && ((min > 60 && min <= 3 * 60) || min == 0)) || (min <= 17 * 60 && min > 15 * 60)) { //准备触发60秒或15分钟倒计时
+            if ((tipTime >= 0 && ((min > 60 && min <= 3 * 60) || min <= 0)) || (min <= 17 * 60 && min > 15 * 60)) { //准备触发60秒或15分钟倒计时
                 //重置倒计时
                 tipTime = min;
                 lastStartTimerTime = min;
