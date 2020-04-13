@@ -1,7 +1,7 @@
 const helper = require('../../extend/help');
 const encrypt = require('../../extend/encrypt');
-
 const Controller = require('egg').Controller;
+
 class AuthorizationsController extends Controller{
     /**
      * 用户授权，获取jwt token

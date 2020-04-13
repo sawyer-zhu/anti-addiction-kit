@@ -1,5 +1,4 @@
 const Controller = require('egg').Controller;
-
 const helper = require('../../extend/help');
 
 class FcmController extends Controller{
