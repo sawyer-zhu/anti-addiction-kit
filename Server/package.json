@@ -29,8 +29,8 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --env=production --workers=2 --title=egg-server-xdsdk-fcm-server",
-    "stop": "egg-scripts stop --title=egg-server-xdsdk-fcm-server",
+    "start": "egg-scripts start --env=production --workers=2 --title=egg-server-anti-addiction-kit-server",
+    "stop": "egg-scripts stop --title=egg-server-anti-addiction-kit-server",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
