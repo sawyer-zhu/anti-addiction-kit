@@ -5,8 +5,8 @@
 
 ## 接入需知
 
-1. 游戏方服务端需要生成一个包含用户唯一id的加密token给客户端调用接口，[代码](app/extend/help.js)。
-nodejs代码：
+1. 游戏方服务端需要生成一个包含用户唯一id的加密token给客户端调用接口，参考[代码](app/extend/help.js)。  
+示例：
 ````
 function encryptUserInfo(data) {
     let keyPath = path.join(__dirname, '../../config/key/public.pem');
