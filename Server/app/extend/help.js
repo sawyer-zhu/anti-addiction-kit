@@ -1,7 +1,6 @@
 /**
  * 公用方法
  */
-
 const fs = require('fs');
 const path = require('path');
 const NodeRSA = require('node-rsa');

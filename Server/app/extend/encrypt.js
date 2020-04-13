@@ -3,7 +3,6 @@
  * 加密方法可自行实现
  * @type {string}
  */
-
 var key = 'xxxxxxxxxxxxxxxx'//自行修改
 var crypto = require('crypto');
 var iv = '';
