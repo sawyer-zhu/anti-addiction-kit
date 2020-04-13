@@ -11,14 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <Button
-        android:text="登录1"
+        android:text="游客登录"
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:text="登录2"
+        android:text="5岁登录"
         android:id="@+id/login2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="成年人登录"
+        android:id="@+id/login3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -84,4 +89,61 @@
             android:text="显示浮窗"
             android:id="@+id/bt_float"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/netLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联网模式：关"/>
+        <Spinner
+            android:id="@+id/third_real_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/third_real"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第三方实名"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_id1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="userId30"/>
+        <EditText
+            android:layout_marginLeft="20dp"
+            android:id="@+id/et_id2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="userId40"/>
+        <EditText
+            android:layout_marginLeft="20dp"
+            android:id="@+id/et_id3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="userId50"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/pay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="付费100"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="50dp"
+        android:text="游客 18分钟 未成年非节假日 16分钟，节假日 20分钟 8-15岁月付费限额 150元 16-17岁月付费限额 200元 宵禁起始时间
+23点"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

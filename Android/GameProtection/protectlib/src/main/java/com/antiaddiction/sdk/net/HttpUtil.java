@@ -1,5 +1,7 @@
 package com.antiaddiction.sdk.net;
 
+import java.util.Map;
+
 public class HttpUtil {
 
     public static void postAsyncWithRetry(final String urlStr, final String body, final NetUtil.NetCallback netCallback) {
@@ -16,6 +18,14 @@ public class HttpUtil {
             @Override
             public void run() {
                 NetUtil.postSync(urlStr, body, callback);
+            }
+        });
+    }
+    public static void postAsyncWithHead(final String urlStr, final String body, final Map<String,String> head, final NetUtil.NetCallback callback) {
+        Async.runOnPool(new Runnable() {
+            @Override
+            public void run() {
+                NetUtil.postSyncWithHead(urlStr, body, head, callback);
             }
         });
     }
