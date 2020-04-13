@@ -119,6 +119,7 @@ class RealNameController: BaseController {
         super.viewDidLoad()
         
         TimeService.stop()
+        TimeManager.inactivate()
         
         title = "游戏实名登记"
         
@@ -208,6 +209,7 @@ extension RealNameController {
         realnameCancelledClosure?()
         
         TimeService.start()
+        TimeManager.activate()
     }
     
     
@@ -238,6 +240,13 @@ extension RealNameController {
         
         
         view.makeToastActivity(.center)
+        
+        //联网版
+        if let _ = AntiAddictionKit.configuration.host {
+            assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
+            assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
+//            Networking.setUserInfo(token: <#T##String#>, name: <#T##String#>, identify: <#T##String#>)
+        }
 
         if let _ = User.shared {
             
