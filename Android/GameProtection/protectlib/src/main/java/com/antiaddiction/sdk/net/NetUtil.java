@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 public class NetUtil {
 
@@ -44,16 +46,26 @@ public class NetUtil {
             }
         } catch (IOException e) {
             LogUtil.loge(" getSync error = " + e.getMessage());
+            netCallback.onFail(-1,"error = " + e.getMessage());
             return false;
         }
 
     }
 
-    public static boolean postSync(String urlStr, String body, NetCallback callback)  {
+    public static boolean postSync(String urlStr, String body, NetCallback callback){
+        return postSyncWithHead(urlStr,body,null,callback);
+    }
+
+    public static boolean postSyncWithHead(String urlStr, String body, Map<String,String> head, NetCallback callback)  {
         OutputStream outputStream = null;
         try {
             HttpURLConnection urlConnection = createHttpURLConnection(urlStr);
-            urlConnection.setRequestProperty("Content-Type", "application/json");
+            if(head != null){
+                for (String key : head.keySet()) {
+                    urlConnection.setRequestProperty(key, head.get(key));
+                }
+            }
+          //  urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("POST");
             outputStream = urlConnection.getOutputStream();
             if (body != null) {
@@ -74,6 +86,7 @@ public class NetUtil {
                 return false;
             }
         }catch (IOException e){
+            callback.onFail(-1,"error = " + e.getMessage());
             return false;
         }
         finally {
