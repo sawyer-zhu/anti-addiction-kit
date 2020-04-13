@@ -3,7 +3,7 @@
 基于[egg.js](https://eggjs.org/)开发，[api文档](ApiDoc.md)。
 
 
-## 接入需知
+## 接入须知
 
 1. 游戏方服务端需要生成一个包含用户唯一id的加密token给客户端调用接口，参考[代码](app/extend/help.js)。  
 示例：
