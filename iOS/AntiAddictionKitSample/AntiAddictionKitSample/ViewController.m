@@ -23,6 +23,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 @property (assign, nonatomic) BOOL isMainlandUser;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *userSegment;
 
+@property (assign, nonatomic) BOOL isSdkServerEnabled;
+
 @end
 
 @implementation ViewController
@@ -34,6 +36,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isSdkServerEnabled = NO;
     
     [self setupUI];
     
@@ -52,8 +56,6 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 }
 
 - (void)dealloc {
-//    [NSNotificationCenter.defaultCenter removeObserver:self name:onlineTimeNotificationName object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -260,6 +262,7 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     }];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [AntiAddictionKit setHost:[alert.textFields objectAtIndex:0].text];
+        self.isSdkServerEnabled = YES;
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
@@ -305,20 +308,26 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
         if (!userId || userId.length == 0) {
             userId = @"";
         }
-        [NetworkHelper getTokenWith:userId completionHandler:^(NSString * _Nullable token) {
-            if ([token length] > 0) {
-                [AntiAddictionKit login:token :userType];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.callbackLabel.text = [NSString stringWithFormat:@"用户[%@]已登录", token];
-                });
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.callbackLabel.text = @"登录前获取token失败";
-                });
-                 
-            }
-            
-        }];
+        
+        if (self.isSdkServerEnabled) {
+            [NetworkHelper getTokenWith:userId completionHandler:^(NSString * _Nullable token) {
+                if ([token length] > 0) {
+                    [AntiAddictionKit login:token :userType];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.callbackLabel.text = [NSString stringWithFormat:@"用户[%@]已登录", token];
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.callbackLabel.text = @"登录前获取token失败";
+                    });
+                     
+                }
+                
+            }];
+        } else {
+             [AntiAddictionKit login:userId :userType];
+        }
+        
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];

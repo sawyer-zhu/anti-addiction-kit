@@ -28,6 +28,8 @@
 		0009285124426EC3003EE32A /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0009285024426EC3003EE32A /* ChatManager.swift */; };
 		002CFC4B23C2E527009003AB /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002CFC4A23C2E527009003AB /* ChatService.swift */; };
 		002CFC5123C4357C009003AB /* RealNameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002CFC5023C4357C009003AB /* RealNameService.swift */; };
+		003123352445689300DB0FA3 /* Array+SafeIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003123342445689300DB0FA3 /* Array+SafeIndex.swift */; };
+		003123372445789300DB0FA3 /* String+Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003123362445789300DB0FA3 /* String+Regex.swift */; };
 		0032996323C59320004EF389 /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032996223C59320004EF389 /* UIApplication+.swift */; };
 		0032999123C5D0F6004EF389 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032999023C5D0F6004EF389 /* Crypto.swift */; };
 		0032999323C5D379004EF389 /* Data+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032999223C5D379004EF389 /* Data+Crypto.swift */; };
@@ -87,6 +89,8 @@
 		0009285024426EC3003EE32A /* ChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		002CFC4A23C2E527009003AB /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		002CFC5023C4357C009003AB /* RealNameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealNameService.swift; sourceTree = "<group>"; };
+		003123342445689300DB0FA3 /* Array+SafeIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+SafeIndex.swift"; sourceTree = "<group>"; };
+		003123362445789300DB0FA3 /* String+Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Regex.swift"; sourceTree = "<group>"; };
 		0032996223C59320004EF389 /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
 		0032999023C5D0F6004EF389 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		0032999223C5D379004EF389 /* Data+Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Crypto.swift"; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 				0058C82F23BB2EA000491E6D /* UIView+Constraints.swift */,
 				30EB508423BC8327007B817F /* UIView+Toast.swift */,
 				0032996223C59320004EF389 /* UIApplication+.swift */,
+				003123342445689300DB0FA3 /* Array+SafeIndex.swift */,
+				003123362445789300DB0FA3 /* String+Regex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 				30E9A81923BBD7F200718506 /* Logger.swift in Sources */,
 				0058C83423BB3DED00491E6D /* Container.swift in Sources */,
 				0032996323C59320004EF389 /* UIApplication+.swift in Sources */,
+				003123352445689300DB0FA3 /* Array+SafeIndex.swift in Sources */,
 				307AC382243E5DA800A1AA3F /* Account.swift in Sources */,
 				0058C83023BB2EA000491E6D /* UIView+Constraints.swift in Sources */,
 				C161D09923D06E83005B43F4 /* AntiAddictioniOSWrapper.mm in Sources */,
@@ -532,6 +539,7 @@
 				0058C82C23BB2B6600491E6D /* UIColor+.swift in Sources */,
 				30C4FDE923BCFAEF00060CE7 /* AntiAddictionKit+Private.swift in Sources */,
 				007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */,
+				003123372445789300DB0FA3 /* String+Regex.swift in Sources */,
 				002CFC4B23C2E527009003AB /* ChatService.swift in Sources */,
 				006291FB23F12B50000AD39E /* Configuration.swift in Sources */,
 				00952627243D9BCC000534A8 /* SwiftyJSON.swift in Sources */,

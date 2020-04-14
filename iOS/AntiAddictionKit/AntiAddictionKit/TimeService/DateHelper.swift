@@ -98,8 +98,11 @@ extension DateHelper {
     /// - Returns: 小时和分的整数集合 (小时: 22，分: 0)
     typealias NightStrictTimeSet = (hour: Int, minute: Int)
     class func timeSetFromNightStrictTimeString(_ timeString: String) -> NightStrictTimeSet {
-        let hString = String(timeString.prefix(2))
-        let mString = String(timeString.suffix(2))
+        //检查冒号的index
+        let array = timeString.components(separatedBy: ":")
+        assert(array.count == 2)
+        let hString: String = array[safe: 0] ?? "22"
+        let mString: String = array[safe: 1] ?? "0"
         let h: Int = Int(hString) ?? 22
         let m: Int = Int(mString) ?? 0
         return NightStrictTimeSet(hour: h, minute: m)
