@@ -10,25 +10,34 @@ struct LoginManager {
         let account = Account(id: id, type: AccountType.type(rawValue: type))
         
         // 如果本地有数据，则上传给服务器后删除
-        var allLocalUserInfo: [[String: Any]] = [[:]]
+        var allLocalUserInfo: [[String: Any]] = []
         let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
         for key in keys {
             if let storedUser = UserService.fetch(key) {
-                let userInfo: [String: Any] = ["name": storedUser.realName?.decrypt() ?? "",
+                let userInfo: [String: Any] = ["userId": storedUser.id,
+                                               "name": storedUser.realName?.decrypt() ?? "",
                                                "identify": storedUser.idCardNumber?.decrypt() ?? "",
                                                "phone": storedUser.phone?.decrypt() ?? "",
                                                "accountType": storedUser.type.rawValue]
                 allLocalUserInfo.append(userInfo)
-                UserService.delete(key)
-                Logger.debug("[\(key)]已有本地记录，删除本地数据并同步给服务器")
             }
         }
         
         // 以 id 换服务端 `token`
-        Networking.authorize(token: account.id, accountType: type, allLocalUserInfo: allLocalUserInfo) { (accessToken, accountType) in
+        Networking.authorize(token: account.id, accountType: type, allLocalUserInfo: allLocalUserInfo, suceessHandler: { (accessToken, accountType) in
             account.token = accessToken
-            account.type = AccountType.type(rawValue: accountType)
-        }
+            account.type = accountType
+            
+            //删除本地数据
+            for key in keys {
+                if let _ = UserService.fetch(key) {
+                    UserService.delete(key)
+                }
+            }
+        }, failureHandler: {
+            //失败则 默认成年人
+            account.type = .adult
+        })
         
         // 设置当前已登录用户
         AccountManager.currentAccount = account
