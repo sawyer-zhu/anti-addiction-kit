@@ -121,6 +121,9 @@ struct LoginManager {
             
         }
         else {
+            //如果拿不到token，则用户类型type设置为成年人
+            account.type = .adult
+            AccountManager.currentAccount = account
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             
             Logger.release("获取服务器 Token 失败，防沉迷功能关闭！")

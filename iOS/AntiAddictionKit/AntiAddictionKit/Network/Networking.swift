@@ -183,11 +183,13 @@ struct Networking {
     static func setUserInfo(token: String,
                             name: String,
                             identify: String,
+                            phone: String = "",
                             accountType: AccountType,
                             successHandler: ((_ accountType: AccountType) -> Void)? = nil,
                             failureHandler: (() -> Void)? = nil) {
         let userInfo: [String: Any] = ["name": name,
                                        "identify": identify,
+                                       "phone": phone,
                                        "accountType": accountType.rawValue]
         let header: [String: String] = ["Authorization": "Bearer \(token)"]
         let r = Just.post(baseUrl+setUserInfoUrl, data: userInfo, headers: header)

@@ -77,7 +77,7 @@ extension String {
     
     fileprivate func formattedCurfewNotice() -> String {
         let curfewStart = AntiAddictionKit.configuration.nightStrictStart
-        let curfewEnd = AntiAddictionKit.configuration.nightStrictStart
+        let curfewEnd = AntiAddictionKit.configuration.nightStrictEnd
         return "根据国家相关规定，每日 \(curfewStart) - 次日 \(curfewEnd) 为健康保护时段，当前无法进入游戏。"
     }
 }
