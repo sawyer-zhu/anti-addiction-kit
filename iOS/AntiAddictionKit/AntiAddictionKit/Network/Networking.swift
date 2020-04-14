@@ -21,18 +21,31 @@ struct Networking {
     private static let checkPaymentUrl = "/v1/fcm/check_pay" // POST
     private static let setPaymentUrl = "/v1/fcm/submit_pay" // POST
     
-    // 字典序列化成JSON字符串
-    private static func dictionaryJSONSerialize(_ dictionary: [String: Any]?) -> String {
-        do {
-            if let jsonDictionary = dictionary {
-                let jsonData = try JSONSerialization.data(withJSONObject: jsonDictionary, options: [])
-                let jsonString = String(data: jsonData, encoding: .ascii)
-                return jsonString ?? ""
-            }
-        } catch {}
-        return ""
+    /// 字典数组Array<Dictionary>序列化成JSON字符串
+    private static func arrayToJSONString(_ array: [[String: Any]]?) -> String {
+        var jsonString: String = ""
+        if let tryArray = array {
+            do {
+                try tryArray.forEach({ (userInfo) in
+                    let jsonData = try JSONSerialization.data(withJSONObject: userInfo, options: [])
+                    jsonString = String(data: jsonData, encoding: .ascii) ?? ""
+                })
+            } catch {}
+        }
+        return jsonString
     }
     
+    /// 字典Dictionary序列化成JSON字符串
+    private static func dictionaryToJSONString(_ dictionary: [String: Any]?) -> String {
+        var jsonString: String = ""
+        if let tryDictionary = dictionary {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: tryDictionary, options: [])
+                jsonString = String(data: jsonData, encoding: .ascii) ?? ""
+            } catch {}
+        }
+        return jsonString
+    }
     
     /// 获取防沉迷相关配置
     static func getSdkConfig() {
@@ -84,11 +97,11 @@ struct Networking {
     /// 获取服务器用户 token
     static func authorize(token: String,
                           accountType: Int = 0,
-                          localUserInfo: [String: Any]? = nil,
+                          allLocalUserInfo: [[String: Any]]? = nil,
                           completionHandler: ((_ accessToken: String, _ accountType: Int) -> Void)? = nil) {
         let form: [String: Any] = ["token": token,
                                    "accountType": accountType,
-                                   "local_user_info": dictionaryJSONSerialize(localUserInfo)]
+                                   "local_user_info": arrayToJSONString(allLocalUserInfo)]
         let r = Just.post(baseUrl+tokenUrl, data: form)
         
         var accessToken = ""
@@ -150,7 +163,7 @@ struct Networking {
                            failureHandler: (() -> Void)? = nil) {
         let playLogs: [String: Any] = ["server_times": [[serverTime.0, serverTime.1]],
                                        "local_times": [[localTime.0, localTime.1]]]
-        let formData: [String: Any] = ["play_logs": dictionaryJSONSerialize(playLogs)]
+        let formData: [String: Any] = ["play_logs": dictionaryToJSONString(playLogs)]
         let header: [String: String] = ["Authorization": "Bearer \(token)"]
         let r = Just.post(baseUrl+setPlayLogUrl, data: formData, headers: header)
         

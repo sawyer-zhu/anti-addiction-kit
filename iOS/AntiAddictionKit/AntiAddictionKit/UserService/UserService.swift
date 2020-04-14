@@ -93,7 +93,7 @@ extension UserService {
         }
         
         //用户时长限制类型 游客 未成年人 成年人
-        let limitLevel = TimeLimitLevel.limitLevelForUser(user)
+        let limitLevel = TimeLimitLevel.limitLevelForUser(theUser)
         
         //成年人 直接登录成功
         if limitLevel == .unlimited  {

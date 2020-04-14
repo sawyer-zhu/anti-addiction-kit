@@ -9,22 +9,23 @@ struct LoginManager {
         
         let account = Account(id: id, type: AccountType.type(rawValue: type))
         
-        var localUserInfo: [String: Any]? = nil
-        
         // 如果本地有数据，则上传给服务器后删除
-        if let storedUser = UserService.fetch(account.id) {
-            localUserInfo = ["name": storedUser.realName?.decrypt() ?? "",
-                             "identify": storedUser.idCardNumber?.decrypt() ?? "",
-                             "phone": storedUser.phone?.decrypt() ?? "",
-                             "accountType": storedUser.type.rawValue]
-            account.type = AccountType.type(rawValue: storedUser.type.rawValue)
-            UserService.delete(account.id) // 获取后删掉本地数据
-            Logger.debug("有本地记录，取值后删掉本地数据")
+        var allLocalUserInfo: [[String: Any]] = [[:]]
+        let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
+        for key in keys {
+            if let storedUser = UserService.fetch(key) {
+                let userInfo: [String: Any] = ["name": storedUser.realName?.decrypt() ?? "",
+                                               "identify": storedUser.idCardNumber?.decrypt() ?? "",
+                                               "phone": storedUser.phone?.decrypt() ?? "",
+                                               "accountType": storedUser.type.rawValue]
+                allLocalUserInfo.append(userInfo)
+                UserService.delete(key)
+                Logger.debug("[\(key)]已有本地记录，删除本地数据并同步给服务器")
+            }
         }
         
-        
         // 以 id 换服务端 `token`
-        Networking.authorize(token: account.id, accountType: type, localUserInfo: localUserInfo) { (accessToken, accountType) in
+        Networking.authorize(token: account.id, accountType: type, allLocalUserInfo: allLocalUserInfo) { (accessToken, accountType) in
             account.token = accessToken
             account.type = AccountType.type(rawValue: accountType)
         }

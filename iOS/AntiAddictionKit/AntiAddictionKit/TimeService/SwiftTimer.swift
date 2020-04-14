@@ -54,17 +54,20 @@ public class SwiftTimer {
         }
     }
     
-    public func startAndFire() {
-        if !isRunning {
-            //开始的时候就执行一次
-            handler(self)
-            internalTimer.resume()
-            isRunning = true
-        }
-    }
+//    public func startAndFire() {
+//        if !isRunning {
+//            //开始的时候就执行一次
+//            handler(self)
+//            internalTimer.resume()
+//            isRunning = true
+//        }
+//    }
     
-    public func start() {
+    public func start(fireOnceWhenStart: Bool = false) {
         if !isRunning {
+            if fireOnceWhenStart {
+                handler(self)
+            }
             internalTimer.resume()
             isRunning = true
         }

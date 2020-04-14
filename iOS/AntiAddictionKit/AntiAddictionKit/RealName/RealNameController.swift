@@ -297,6 +297,27 @@ extension RealNameController {
         
         //联网版
         if let _ = AntiAddictionKit.configuration.host {
+            
+            //如果兑换码有效则直接传成年人
+            //判断是否联网版
+            if isGeneratedCode {
+                assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
+                assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
+                //联网版直接传 成年人类型
+                if let account = AccountManager.currentAccount, let token = account.token {
+                    account.type = .adult
+                    AccountManager.currentAccount = account
+                    Networking.setUserInfo(token: token, name: name, identify: "", phone: phone, accountType: .adult, successHandler: { (newType) in
+                        account.type = .adult
+                        AccountManager.currentAccount = account
+                        self.authSucceed()
+                    }) {
+                        self.authFailed()
+                    }
+                }
+                return
+            }
+            
             assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
             assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
             if let account = AccountManager.currentAccount, let token = account.token {
@@ -338,11 +359,11 @@ extension RealNameController {
             } else {
                 //判断身份证是不是兑换码
                 if isGeneratedCode {
-                    //如果兑换码有效,更新用户为成人
+                    //如果兑换码有效,直接更新用户为成人
+                    //单机版
                     User.shared?.updateUserType(.adult)
                     UserService.saveCurrentUserInfo()
                     authSucceed()
-                    
                     return
                     
                 } else {
