@@ -38,17 +38,18 @@ struct TimeManager {
         
         
         //常规计时 定时器
-        if isLogin {
-            commonTimer.startAndFire()
-        } else {
-            commonTimer.start()
-        }
+        commonTimer.start(fireOnceWhenStart: isLogin)
+        
+        //倒计时计时器
+        countdownTimer?.start()
+        fiftyMinutesCountdownTimer?.start()
     }
     
     /// 暂停时长统计服务
     static func inactivate() {
         commonTimer.suspend()
         countdownTimer?.suspend()
+        fiftyMinutesCountdownTimer?.suspend()
     }
     
     private static let commonTimerInterval: Int = 120
@@ -109,6 +110,11 @@ struct TimeManager {
                                         return
                                     }
                                     // 游客15分钟弹窗
+                                    let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
+                                    if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
+                                        startFiftyMinutesCountdown(isCurfew: false, countdownBeginTime: remainTime)
+                                        return
+                                    }
                                     if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
                                         Logger.debug("游客15分钟提示")
                                         Router.openAlertTip(.lessThan15Minutes(.guest, isCurfew: false))
@@ -145,6 +151,11 @@ struct TimeManager {
                                         }
                                         
                                         //未成年人距离宵禁15分钟浮窗提醒
+                                        let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
+                                        if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
+                                            startFiftyMinutesCountdown(isCurfew: true, countdownBeginTime: remainTime)
+                                            return
+                                        }
                                         if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
                                             Logger.debug("未成年人距离宵禁15分钟浮窗提醒")
                                             Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: true))
@@ -174,6 +185,11 @@ struct TimeManager {
                                         }
                                         
                                         // 未成年人游戏剩余时长15分钟浮窗提醒
+                                        let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
+                                        if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
+                                            startFiftyMinutesCountdown(isCurfew: false, countdownBeginTime: remainTime)
+                                            return
+                                        }
                                         if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
                                             Logger.debug("未成年人每日游戏时间剩余15分钟提示")
                                             Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: false))
@@ -199,16 +215,18 @@ struct TimeManager {
     }
 
     // 启动倒计时的时间 (默认2m30s)
-    static var countdownBeginSeconds: Int = max(AntiAddictionKit.configuration.countdownAlertTipRemainTime, commonTimerInterval) + 30
-    static var countdownTimer: SwiftCountDownTimer? = nil
+    private static var countdownInterval: Int = 1
+    private static var countdownBeginSeconds: Int = max(AntiAddictionKit.configuration.countdownAlertTipRemainTime, commonTimerInterval) + 30
+    private static var countdownTimer: SwiftCountDownTimer? = nil
+    private static var fiftyMinutesCountdownTimer: SwiftCountDownTimer? = nil
     
-    
+    // 倒计时浮窗
     static func startCountdown(isCurfew: Bool) {
         //停止主要Timer
         commonTimer.suspend()
         
         //设置并执行倒计时Timer任务
-        countdownTimer = SwiftCountDownTimer(interval: .seconds(1), times: TimeManager.currentRemainTime, queue: .global()) { (cTimer, costTimes, leftTimes) in
+        countdownTimer = SwiftCountDownTimer(interval: .seconds(countdownInterval), times: TimeManager.currentRemainTime, queue: .global()) { (cTimer, costTimes, leftTimes) in
             
             //减少时间
             TimeManager.currentRemainTime -= 1
@@ -285,9 +303,10 @@ struct TimeManager {
                     Logger.info("未成年结束弹窗")
                     AntiAddictionKit.sendCallback(result: .noRemainTime, message: "未成年每日游戏时长限制")
                     Router.closeAlertTip()
+                    let body: String = isCurfew ? Notice.nightStrictLimit.content : Notice.childLimit(isHoliday: DateHelper.isHoliday(Date())).content
                     Router.openAlertController(AlertData(type: .timeLimitAlert,
                                                          title: Notice.title,
-                                                         body: Notice.childLimit(isHoliday: DateHelper.isHoliday(Date())).content,
+                                                         body: body,
                                                          remainTime: 0),
                     forceOpen: true)
                     return
@@ -301,6 +320,39 @@ struct TimeManager {
         //开始执行
         countdownTimer?.start()
     }
-    
+
+    // 15分钟倒计时浮窗，在大于15分钟的时候开始倒计时，等于15分钟时显示一次
+    static func startFiftyMinutesCountdown(isCurfew: Bool, countdownBeginTime: Int) {
+        assert(countdownBeginTime >= AntiAddictionKit.configuration.firstAlertTipRemainTime, "开始倒计时的时间必须大于等于需要首次展示浮窗的时间")
+        Logger.debug("开始15分钟提示的倒计时")
+        fiftyMinutesCountdownTimer = SwiftCountDownTimer(interval: .seconds(countdownInterval), times: countdownBeginTime, queue: .global()) { (fTimer, costTimes, leftTimes) in
+            if leftTimes == AntiAddictionKit.configuration.firstAlertTipRemainTime {
+                
+                guard let account = AccountManager.currentAccount else {
+                    fTimer.suspend()
+                    return
+                }
+                
+                if account.type == .unknown {
+                    Logger.debug("游客15分钟提示")
+                    Router.openAlertTip(.lessThan15Minutes(.guest))
+                    fTimer.suspend()
+                    return
+                }
+                else if account.type == .adult {
+                    fTimer.suspend()
+                    return
+                } else {
+                    Logger.debug("未成年15分钟提示")
+                    Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: isCurfew))
+                    fTimer.suspend()
+                    return
+                }
+                
+            }
+        }
+        
+        fiftyMinutesCountdownTimer?.start()
+    }
 }
 
