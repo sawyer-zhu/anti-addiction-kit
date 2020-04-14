@@ -235,6 +235,9 @@ struct TimeManager {
             postOnlineTimeNotification()
             #endif
             
+            /// 方便结束的那一次同步标记
+            var isTimeSynchronized: Bool = false
+            
             if leftTimes > 0 && leftTimes <= 60 {
                 guard let account = AccountManager.currentAccount, let token = account.token else { return }
                 if leftTimes == 60 {
@@ -252,6 +255,8 @@ struct TimeManager {
                         lastLocalTimestamp = newLocalTimestamp
                         lastServerTimestamp = newServerTimestamp
                     })
+                    
+                    isTimeSynchronized = true
                 }
                 
                 if account.type == .unknown {
@@ -271,8 +276,9 @@ struct TimeManager {
             
             if leftTimes == 0 {
                 guard let account = AccountManager.currentAccount, let token = account.token else { return }
-                let newServerTimestamp = lastServerTimestamp + 60
-                let newLocalTimestamp = lastLocalTimestamp + 60
+                let LastSyncInterval: Int = isTimeSynchronized ? 60 : costTimes
+                let newServerTimestamp = lastServerTimestamp + LastSyncInterval
+                let newLocalTimestamp = lastLocalTimestamp + LastSyncInterval
                 Networking.setPlayLog(token: token,
                                       serverTime: (lastServerTimestamp, newServerTimestamp),
                                       localTime: (lastLocalTimestamp, newLocalTimestamp), successHandler: {

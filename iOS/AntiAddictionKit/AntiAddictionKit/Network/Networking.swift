@@ -22,15 +22,22 @@ struct Networking {
     private static let setPaymentUrl = "/v1/fcm/submit_pay" // POST
     
     /// 字典数组Array<Dictionary>序列化成JSON字符串
-    private static func arrayToJSONString(_ array: [[String: Any]]?) -> String {
+    private static func dictionaryArrayToJSONString(_ array: [[String: Any]]?) -> String {
         var jsonString: String = ""
         if let tryArray = array {
+//            do {
+//                try tryArray.forEach({ (userInfo) in
+//                    let jsonData = try JSONSerialization.data(withJSONObject: userInfo, options: [])
+//                    jsonString.append(String(data: jsonData, encoding: .utf8) ?? "")
+//                })
+//            } catch {}
             do {
-                try tryArray.forEach({ (userInfo) in
-                    let jsonData = try JSONSerialization.data(withJSONObject: userInfo, options: [])
-                    jsonString = String(data: jsonData, encoding: .ascii) ?? ""
-                })
-            } catch {}
+                let jsonData = try JSONSerialization.data(withJSONObject: tryArray, options: [])
+                jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+            }
+            catch { jsonString = "[]" }
+        } else {
+            jsonString = "[]"
         }
         return jsonString
     }
@@ -41,7 +48,7 @@ struct Networking {
         if let tryDictionary = dictionary {
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: tryDictionary, options: [])
-                jsonString = String(data: jsonData, encoding: .ascii) ?? ""
+                jsonString = String(data: jsonData, encoding: .utf8) ?? ""
             } catch {}
         }
         return jsonString
@@ -97,24 +104,18 @@ struct Networking {
     /// 获取服务器用户 token
     static func authorize(token: String,
                           accountType: Int = 0,
-                          allLocalUserInfo: [[String: Any]]? = nil,
-                          completionHandler: ((_ accessToken: String, _ accountType: Int) -> Void)? = nil) {
+                          allLocalUserInfo: [[String: Any]] = [],
+                          suceessHandler: ((_ accessToken: String, _ accountType: AccountType) -> Void)? = nil,
+                          failureHandler: (() -> Void)? = nil) {
         let form: [String: Any] = ["token": token,
                                    "accountType": accountType,
-                                   "local_user_info": arrayToJSONString(allLocalUserInfo)]
+                                   "local_user_info": dictionaryArrayToJSONString(allLocalUserInfo)]
         let r = Just.post(baseUrl+tokenUrl, data: form)
-        
-        var accessToken = ""
-        var accountType = AccountType.adult
-        
-        // 保证 return 前必定调用 completionHandler
-        defer {
-            completionHandler?(accessToken, accountType.rawValue)
-        }
         
         guard let data = r.content, let httpCode = r.statusCode, httpCode == Int(200) else {
             
             Logger.debug(baseUrl+tokenUrl+networkRequestError)
+            failureHandler?()
             return
         }
         do {
@@ -122,14 +123,15 @@ struct Networking {
             if let code = json["code"].int, code == Int(200),
                 let token = json["data", "access_token"].string,
                 let type = json["data", "accountType"].int {
+                
                 Logger.debug(baseUrl+tokenUrl+networkRequestSuccess)
-                accessToken = token
-                accountType = AccountType.type(rawValue: type)
+                suceessHandler?(token, AccountType.type(rawValue: type))
                 return
             }
         } catch {}
         
         Logger.debug(baseUrl+tokenUrl+dataFormatError)
+        failureHandler?()
         return
     }
     
