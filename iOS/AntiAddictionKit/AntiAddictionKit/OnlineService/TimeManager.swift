@@ -106,13 +106,17 @@ struct TimeManager {
                                     }
                                     // 游客剩余时长1分钟倒计时浮窗
                                     if remainTime <= countdownBeginSeconds {
-                                        startCountdown(isCurfew: false)
+                                        DispatchQueue.main.async {
+                                            NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false])
+                                        }
                                         return
                                     }
                                     // 游客15分钟弹窗
                                     let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                     if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
-                                        startFiftyMinutesCountdown(isCurfew: false, countdownBeginTime: remainTime)
+                                        DispatchQueue.main.async {
+                                            NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
+                                        }
                                         return
                                     }
                                     if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
@@ -146,14 +150,18 @@ struct TimeManager {
                                         }
                                          //未成年人距离宵禁倒计时
                                         if remainTime <= countdownBeginSeconds {
-                                            startCountdown(isCurfew: true)
+                                            DispatchQueue.main.async {
+                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": true])
+                                            }
                                             return
                                         }
                                         
                                         //未成年人距离宵禁15分钟浮窗提醒
                                         let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                         if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
-                                            startFiftyMinutesCountdown(isCurfew: true, countdownBeginTime: remainTime)
+                                            DispatchQueue.main.async {
+                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": true, "countdownBeginTime": remainTime])
+                                            }
                                             return
                                         }
                                         if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
@@ -180,14 +188,18 @@ struct TimeManager {
                                         }
                                         // 未成年人游戏剩余时长倒计时启动
                                         if remainTime <= countdownBeginSeconds {
-                                            startCountdown(isCurfew: false)
+                                            DispatchQueue.main.async {
+                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false])
+                                            }
                                             return
                                         }
                                         
                                         // 未成年人游戏剩余时长15分钟浮窗提醒
                                         let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                         if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
-                                            startFiftyMinutesCountdown(isCurfew: false, countdownBeginTime: remainTime)
+                                            DispatchQueue.main.async {
+                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
+                                            }
                                             return
                                         }
                                         if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
@@ -216,7 +228,7 @@ struct TimeManager {
 
     // 启动倒计时的时间 (默认2m30s)
     private static var countdownInterval: Int = 1
-    private static var countdownBeginSeconds: Int = max(AntiAddictionKit.configuration.countdownAlertTipRemainTime, commonTimerInterval) + 30
+    private static var countdownBeginSeconds: Int = AntiAddictionKit.configuration.countdownAlertTipRemainTime + commonTimerInterval
     private static var countdownTimer: SwiftCountDownTimer? = nil
     private static var fiftyMinutesCountdownTimer: SwiftCountDownTimer? = nil
     
@@ -227,6 +239,8 @@ struct TimeManager {
         
         //设置并执行倒计时Timer任务
         countdownTimer = SwiftCountDownTimer(interval: .seconds(countdownInterval), times: TimeManager.currentRemainTime, queue: .global()) { (cTimer, costTimes, leftTimes) in
+            
+            Logger.debug("准备60s浮窗的倒计时任务 执行一次")
             
             //减少时间
             TimeManager.currentRemainTime -= 1
