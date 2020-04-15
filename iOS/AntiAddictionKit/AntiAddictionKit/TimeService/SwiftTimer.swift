@@ -8,7 +8,11 @@ public class SwiftTimer {
     
     private let internalTimer: DispatchSourceTimer
     
+    #if DEBUG
     private var isRunning = false
+    #else
+    public var isRunning = false
+    #endif
     
     public let repeats: Bool
     
@@ -155,7 +159,11 @@ public class SwiftCountDownTimer {
     
     private var leftTimes: Int
     
+    #if DEBUG
     private let originalTimes: Int
+    #else
+    public let originalTimes: Int
+    #endif
     
     private let handler: (SwiftCountDownTimer, _ costTimes: Int, _ leftTimes: Int) -> Void
     
