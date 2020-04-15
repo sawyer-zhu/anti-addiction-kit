@@ -1,6 +1,8 @@
 
 import Foundation
 
+internal let testToken = "ses0wchv9t66Nk0EO2/bb7YIYhTSui+NMBdWFeMQVLTGF7kUK67BmB+Z9o/gcI6ZxbJxjdlTq5WCkrqOybpxGPn8+cngA0TTHoNYmBlRiRemgwpb+b0gujP+qfnSKzguQGxSA/lPKRkp9PXXhS8vKJWb51StYiSN3Q91xTtFHmcx/dMoBf8SUrTyJeADi9/BxhlqCivZJeZAlcNM3/IYqBSym7XvprNOnrCrnc/3hmM+C+GQQUEBwfJxq314ufzMRrtFa5t2NKZMpbc5IYmR7Pn8NBrx1vpAm0ZFLIGzjYM+cm9+zrRXk9i6d+JnfZcBkZ9Ck7/H3iHbIpf/feAlfw=="
+
 /// AAKit 回调协议，回调接收方需遵循此协议。
 @objc
 public protocol AntiAddictionCallback: class {
@@ -32,16 +34,31 @@ public final class AntiAddictionKit: NSObject {
         configuration.useSdkPaymentLimit = useSdkPaymentLimit
     }
     
+    
+    /// 设置服务器地址，如果地址正确，则计时、实名、付费通过服务器统计；如果地址设置有误，则防沉迷都会失效。不设置，则默认开启本地防沉迷机制。
+    /// - Parameter host: 服务器根地址，例如 `https://gameapi.com`
+    public class func setHost(_ host: String) {
+        AntiAddictionKit.configuration.host = host
+        
+        Logger.debug("服务器Host已设置: \(host)")
+    }
+    
     /// AAKit 初始化方法
     /// - Parameter delegate: 接受回调的对象
     public class func `init`(_ delegate: AntiAddictionCallback) {
         
         if (AntiAddictionKit.sharedDelegate != nil) {
-            Logger.info("请勿重复初始化！")
+            Logger.release("请勿重复初始化！")
         } else {
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
-            Logger.info("初始化成功！")
+            
+            // 如果Host已设置，则获取服务端配置
+            if isServerEnabled {
+                Networking.getSdkConfig()
+            }
+            
+            Logger.release("初始化成功！")
         }
     }
     
@@ -52,8 +69,14 @@ public final class AntiAddictionKit: NSObject {
     public class func login(_ userId: String, _ userType: Int) {
         if !self.isKitInstalled() { return }
         
-        let user = User(id: userId, type: UserType.typeByRawValue(userType))
-        UserService.login(user)
+        // 如果Host已设置，则使用在线方式获取token
+        if isServerEnabled {
+            LoginManager.login(user: userId, type: userType)
+        } else {
+            let user = User(id: userId, type: UserType.typeByRawValue(userType))
+            UserService.login(user)
+        }
+        
     }
     
     /// 更新当前用户信息
@@ -62,14 +85,22 @@ public final class AntiAddictionKit: NSObject {
     public class func updateUserType( _ userType: Int) {
         if !self.isKitInstalled() { return }
         
-        UserService.updateUserType(UserType.typeByRawValue(userType))
+        if isServerEnabled {
+            AccountManager.updateAccountType(type: userType)
+        } else {
+            UserService.updateUserType(UserType.typeByRawValue(userType))
+        }
     }
     
     /// 退出用户登录
     public class func logout() {
         if !self.isKitInstalled() { return }
         
-        UserService.logout()
+        if isServerEnabled {
+            LoginManager.logout()
+        } else {
+            UserService.logout()
+        }
     }
     
     
@@ -78,7 +109,11 @@ public final class AntiAddictionKit: NSObject {
     public class func getUserType(_ userId: String) -> Int {
         if !self.isKitInstalled() { return -1 }
         
-        return UserService.getUserType(userId)
+        if isServerEnabled {
+            return AccountManager.getAccountType(id: userId).rawValue
+        } else {
+            return UserService.getUserType(userId)
+        }
     }
     
     
@@ -86,7 +121,12 @@ public final class AntiAddictionKit: NSObject {
     /// - Parameter amount: 支付金额，单位分
     public class func checkPayLimit(_ amount: Int) {
         if !self.isKitInstalled() { return }
-        PayService.canPurchase(amount)
+        
+        if isServerEnabled {
+            PaymentManager.check(amount: amount)
+        } else {
+            PayService.canPurchase(amount)
+        }
     }
     
     /// 设置已支付金额
@@ -94,14 +134,22 @@ public final class AntiAddictionKit: NSObject {
     public class func paySuccess(_ amount: Int) {
         if !self.isKitInstalled() { return }
         
-        PayService.didPurchase(amount)
+        if isServerEnabled {
+            PaymentManager.submit(amount: amount)
+        } else {
+            PayService.didPurchase(amount)
+        }
     }
     
     /// 查询当前用户能否聊天
     public class func checkChatLimit() {
         if !self.isKitInstalled() { return }
         
-        ChatService.checkChatLimit()
+        if isServerEnabled {
+            ChatManager.check()
+        } else {
+            ChatService.checkChatLimit()
+        }
     }
     
     /// 打开实名窗口，实名结果通过回调接受
@@ -125,7 +173,7 @@ public final class AntiAddictionKit: NSObject {
     //禁用初始化方法
     @available(*, unavailable)
     private override init() {
-        fatalError("AntiAddictionKit-init is unavailable")
+        fatalError("Class `AntiAddictionKit` init method is unavailable!")
     }
     
 }

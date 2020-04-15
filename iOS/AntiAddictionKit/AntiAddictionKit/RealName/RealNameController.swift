@@ -25,6 +25,10 @@ class RealNameController: BaseController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: - Private
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -119,6 +123,7 @@ class RealNameController: BaseController {
         super.viewDidLoad()
         
         TimeService.stop()
+        TimeManager.inactivate()
         
         title = "游戏实名登记"
         
@@ -131,6 +136,56 @@ class RealNameController: BaseController {
         view.addSubview(phoneTextField)
         
         updateSubviewLayout()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.nameTextFieldContentChange), name: UITextField.textDidChangeNotification, object: self.nameTextField)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.idCardTextFieldContentChange), name: UITextField.textDidChangeNotification, object: self.idCardTextField)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.phoneTextFieldContentChange), name: UITextField.textDidChangeNotification, object: self.phoneTextField)
+    }
+    
+    @objc func nameTextFieldContentChange() {
+        // 限制只能输入中文和`·`
+        if nameTextField.markedTextRange == nil  {
+            let cursorPostion = nameTextField.offset(from: nameTextField.endOfDocument,
+                                                        to: nameTextField.selectedTextRange!.end)
+            guard let text = nameTextField.text else { return }
+            nameTextField.text = text.regexReplace(pattern: "[^\\u4E00-\\u9FA5·]", replacement: "")
+            let targetPostion = nameTextField.position(from: nameTextField.endOfDocument,
+                                                   offset: cursorPostion)!
+            nameTextField.selectedTextRange = nameTextField.textRange(from: targetPostion,
+                                                              to: targetPostion)
+        }
+    }
+    
+    @objc func idCardTextFieldContentChange() {
+        // 限制只能输入 `0123456789a-zA-z`
+        if idCardTextField.markedTextRange == nil  {
+            let cursorPostion = idCardTextField.offset(from: idCardTextField.endOfDocument,
+                                                        to: idCardTextField.selectedTextRange!.end)
+            guard let text = idCardTextField.text else { return }
+            idCardTextField.text = text.regexReplace(pattern: "[^0123456789a-zA-Z]", replacement: "")
+            let targetPostion = idCardTextField.position(from: idCardTextField.endOfDocument,
+                                                   offset: cursorPostion)!
+            idCardTextField.selectedTextRange = idCardTextField.textRange(from: targetPostion,
+                                                              to: targetPostion)
+        }
+    }
+    
+    @objc func phoneTextFieldContentChange(notification: Notification) {
+        // 限制只能输入 `0123456789`
+        if phoneTextField.markedTextRange == nil  {
+            let cursorPostion = phoneTextField.offset(from: phoneTextField.endOfDocument,
+                                                        to: phoneTextField.selectedTextRange!.end)
+            guard let text = phoneTextField.text else { return }
+            phoneTextField.text = text.regexReplace(pattern: "[^0123456789]", replacement: "")
+            let targetPostion = phoneTextField.position(from: phoneTextField.endOfDocument,
+                                                   offset: cursorPostion)!
+            phoneTextField.selectedTextRange = phoneTextField.textRange(from: targetPostion,
+                                                              to: targetPostion)
+        }
     }
     
     private func updateSubviewLayout() {
@@ -208,6 +263,7 @@ extension RealNameController {
         realnameCancelledClosure?()
         
         TimeService.start()
+        TimeManager.activate()
     }
     
     
@@ -238,7 +294,45 @@ extension RealNameController {
         
         
         view.makeToastActivity(.center)
+        
+        //联网版
+        if let _ = AntiAddictionKit.configuration.host {
+            
+            //如果兑换码有效则直接传成年人
+            //判断是否联网版
+            if isGeneratedCode {
+                assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
+                assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
+                //联网版直接传 成年人类型
+                if let account = AccountManager.currentAccount, let token = account.token {
+                    account.type = .adult
+                    AccountManager.currentAccount = account
+                    Networking.setUserInfo(token: token, name: name, identify: "", phone: phone, accountType: .adult, successHandler: { (newType) in
+                        account.type = .adult
+                        AccountManager.currentAccount = account
+                        self.authSucceed()
+                    }) {
+                        self.authFailed()
+                    }
+                }
+                return
+            }
+            
+            assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
+            assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
+            if let account = AccountManager.currentAccount, let token = account.token {
+                Networking.setUserInfo(token: token, name: name, identify: idCard, phone: phone, accountType: account.type, successHandler: { (newType) in
+                    account.type = newType
+                    AccountManager.currentAccount = account
+                    self.authSucceed()
+                }) {
+                    self.authFailed()
+                }
+            }
+            return
+        }
 
+        // 单机版
         if let _ = User.shared {
             
             //根据身份证生日更新用户信息
@@ -265,11 +359,11 @@ extension RealNameController {
             } else {
                 //判断身份证是不是兑换码
                 if isGeneratedCode {
-                    //如果兑换码有效,更新用户为成人
+                    //如果兑换码有效,直接更新用户为成人
+                    //单机版
                     User.shared?.updateUserType(.adult)
                     UserService.saveCurrentUserInfo()
                     authSucceed()
-                    
                     return
                     
                 } else {
@@ -304,6 +398,12 @@ extension RealNameController {
             self.realnameSucceedClosure?()
             
             TimeService.start()
+            
+            if self.backButtonEnabled {
+                TimeManager.activate(isLogin: true)
+            } else {
+                TimeManager.activate()
+            }
         }
     }
     

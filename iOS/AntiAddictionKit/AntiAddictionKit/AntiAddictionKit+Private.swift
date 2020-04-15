@@ -33,7 +33,13 @@ enum AntiAddictionResult: Int {
 /// Private Methods
 extension AntiAddictionKit {
     
+    /// 接收 SDK 回调的对象
     static var sharedDelegate: AntiAddictionCallback?
+    
+    /// 服务器是否开启，通过Host是否设置来判断
+    static var isServerEnabled: Bool {
+        return (AntiAddictionKit.configuration.host != nil)
+    }
     
     class func isKitInstalled() -> Bool {
         if (AntiAddictionKit.sharedDelegate == nil) {
@@ -51,30 +57,57 @@ extension AntiAddictionKit {
     
     class func addNotificationListener() {
         
+        // MARK: - App 生命周期
+        
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) in
-            Logger.info("游戏开始活跃")
+            Logger.debug("游戏开始活跃")
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.start()
+            TimeManager.activate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { (notification) in
-            Logger.info("游戏开始不活跃")
+            Logger.debug("游戏开始不活跃")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
+            TimeManager.inactivate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { (notification) in
-            Logger.info("游戏进入后台")
+            Logger.debug("游戏进入后台")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
+            TimeManager.inactivate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { (notification) in
-            Logger.info("游戏即将关闭")
+            Logger.debug("游戏即将关闭")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
+            TimeManager.inactivate()
+        }
+        
+        // MARK: - 时长统计 主Timer通知倒计时timer启动 避免Timer Block 内容相互嵌套 导致线程任务互相等待造成阻塞。
+        
+        NotificationCenter.default.addObserver(forName: .startFiftyMinutesCountdownNotification, object: nil, queue: nil) { (notification) in
+            if let userInfo = notification.userInfo, let isCurfew = userInfo["isCurfew"] as? Bool, let countdownBeginTime = userInfo["countdownBeginTime"] as? Int {
+                Logger.debug("开始15分钟浮窗的倒计时")
+                TimeManager.startFiftyMinutesCountdown(isCurfew: isCurfew, countdownBeginTime: countdownBeginTime)
+            }
+        }
+        NotificationCenter.default.addObserver(forName: .startSixtySecondsCountdownNotification, object: nil, queue: nil) { (notification) in
+            if let userInfo = notification.userInfo, let isCurfew = userInfo["isCurfew"] as? Bool {
+                Logger.debug("开始1分钟浮窗的倒计时")
+                TimeManager.startCountdown(isCurfew: isCurfew)
+            }
+            
         }
 
     }
     
+}
+
+extension Notification.Name {
+    static let startSixtySecondsCountdownNotification: NSNotification.Name = NSNotification.Name("startSixtySecondsCountdownNotification")
+    static let startFiftyMinutesCountdownNotification: NSNotification.Name = NSNotification.Name("startFiftyMinutesCountdownNotification")
 }
