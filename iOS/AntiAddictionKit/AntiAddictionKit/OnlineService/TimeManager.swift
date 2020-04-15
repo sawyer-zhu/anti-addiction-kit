@@ -115,7 +115,7 @@ struct TimeManager {
                                     let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                     if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
                                         DispatchQueue.main.async {
-                                            NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
+                                            NotificationCenter.default.post(name: .startFiftyMinutesCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
                                         }
                                         return
                                     }
@@ -160,7 +160,7 @@ struct TimeManager {
                                         let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                         if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
                                             DispatchQueue.main.async {
-                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": true, "countdownBeginTime": remainTime])
+                                                NotificationCenter.default.post(name: .startFiftyMinutesCountdownNotification, object: nil, userInfo: ["isCurfew": true, "countdownBeginTime": remainTime])
                                             }
                                             return
                                         }
@@ -198,7 +198,7 @@ struct TimeManager {
                                         let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
                                         if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
                                             DispatchQueue.main.async {
-                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
+                                                NotificationCenter.default.post(name: .startFiftyMinutesCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
                                             }
                                             return
                                         }
