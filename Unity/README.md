@@ -1,4 +1,4 @@
-# 防沉迷 AntiAddictionSDK 对接文档
+# 防沉迷 AntiAddictionSDK Unity 对接文档
 AntiAddictionSDK 是为了遵循最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
 
 ## 1.接入SDK
@@ -17,11 +17,14 @@ Unity开发环境:2018.4.17f
 
 **检查 Unity 输出的 Xcode 工程**
 
-1. 确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Sign`
-2. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译
-3. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.framework`且已勾上`Code Sign On Copy`
-4. 添加依赖库 `libc++.tbd`
-5. 开始代码接入
+1. 请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.xcframework` 为 `Embed & Sign`。
+2. 如果编译报错找不到头文件或者模块，请确保 `Xcode`-`Build Settings` - `Framework Search Paths` 中的路径以保证 Xcode 正常编译。
+3. 确保 `Xcode` - `Build Phases` - `Embed Frameworks` 中存在 `AntiAddiction.xcframework` 且已勾上 `Code Sign On Copy`。
+4. 确保 Xcode 工程的 `Build Settings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即 `始终引入 Swift 标准库`，避免 App 启动时报错 `无法找到 Swift 标准库之类`。如果未设置，低于 iOS 13  版本的 iPhone 启动 App 时会因缺少 Swift 标准库而闪退。
+5. 添加依赖库 `libc++.tbd`
+6. 开始代码接入
+
+> 请确保以上步骤正确执行。
 
 ### 1.2 Android
 最低支持安卓版本 5.0。
