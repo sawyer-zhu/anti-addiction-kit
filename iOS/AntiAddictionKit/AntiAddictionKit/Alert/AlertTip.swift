@@ -77,7 +77,6 @@ final class AlertTip {
             break
         }
         
-        Logger.info("展示防沉迷浮窗")
         let attStr = type.attributedString
         DispatchQueue.main.async {
             NoticeViewPresenter.show(attStr)

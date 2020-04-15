@@ -31,7 +31,6 @@ extension PayService {
     // MARK: - Private
     private class func getPayLimitType(_ price: Int) -> PayLimitType {
         guard let user = User.shared else {
-            Logger.info("当前无已登录用户！")
             return .unAuthed(price)
         }
         switch user.type {

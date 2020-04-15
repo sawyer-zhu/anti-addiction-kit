@@ -58,22 +58,54 @@ extension DateHelper {
     /// 判断是否宵禁时间
     class func isCurfew(_ date: Date) -> Bool {
         let date = Date()
-        if let hour = date.component(.hour) {
-            let start = AntiAddictionKit.configuration.curfewHourStart
-            let end = AntiAddictionKit.configuration.curfewHourEnd
-            if (start <= hour || hour < end) {
+        if let hour = date.component(.hour), let minute = date.component(.minute) {
+            let curfewStart = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart)
+            let curfewEnd = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictEnd)
+            if (curfewStart.hour <= hour) || (hour < curfewEnd.hour) || (curfewStart.hour == hour && minute < curfewStart.minute) || (curfewEnd.hour == hour && minute < curfewEnd.minute) {
                 return true
             }
         }
         return false
     }
     
-    /// 距离下一次宵禁的时间间隔( return >= 0)
+    /// 获取距离下一次宵禁的时间间隔
+    /// - Returns: 单位为秒( return >= 0)
     class func intervalForNextCurfew() -> Int {
         //晚上22点的时间 = 24点-2小时
-        let start: Int = AntiAddictionKit.configuration.curfewHourStart
-        let interval: Int = max(Int(Date().dateFor(.endOfDay).timeIntervalSinceNow) - Int(24-start) * 60 * 60, 0)
+        let startHour = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart).hour
+        let startMinute = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart).minute
+        //宵禁时间与24点的时间查 单位秒
+        let curfewStartTo24HourInterval: Int = 24*60*60 - startHour*60*60 - startMinute*60
+        let nowTo24HourInterval: Int = Int(Date().dateFor(.endOfDay).timeIntervalSinceNow)
+        let interval: Int = max(nowTo24HourInterval - curfewStartTo24HourInterval, 0)
         return interval
+    }
+    
+    
+    /// 将整数小时 `22` 格式的字符串转化成 `时:分`格式，例如 22 -> 22:00
+    class func formatCurfewHourToHHmm(_ hour: Int) -> String {
+        var timeString = ""
+        if hour > 10 {
+            timeString = "\(hour):00"
+        } else {
+            timeString = "0\(hour):00"
+        }
+        return timeString
+    }
+    
+    /// 将时分 `22:00` 格式的字符串转化成(小时: 22，分: 0)，24小时制
+    /// - Parameter timeString: 防沉迷时间格式
+    /// - Returns: 小时和分的整数集合 (小时: 22，分: 0)
+    typealias NightStrictTimeSet = (hour: Int, minute: Int)
+    class func timeSetFromNightStrictTimeString(_ timeString: String) -> NightStrictTimeSet {
+        //检查冒号的index
+        let array = timeString.components(separatedBy: ":")
+        assert(array.count == 2)
+        let hString: String = array[safe: 0] ?? "22"
+        let mString: String = array[safe: 1] ?? "0"
+        let h: Int = Int(hString) ?? 22
+        let m: Int = Int(mString) ?? 0
+        return NightStrictTimeSet(hour: h, minute: m)
     }
     
     
