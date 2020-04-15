@@ -187,7 +187,11 @@ extension AlertController {
     @objc func switchButtonTapped() {
         Logger.info("用户点击切换账号")
         
-        UserService.logout()
+        if AntiAddictionKit.isServerEnabled {
+            LoginManager.logout()
+        } else {
+            UserService.logout()
+        }
         
         AntiAddictionKit.sendCallback(result: .logout, message: "用户切换账号！")
     }
