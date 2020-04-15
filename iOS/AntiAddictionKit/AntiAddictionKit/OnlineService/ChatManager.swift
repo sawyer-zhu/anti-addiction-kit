@@ -6,13 +6,12 @@ struct ChatManager {
     /// 联网版
     /// 检测是否可以聊天
     static func check() {
-        //检查是否实名
         if let _ = AntiAddictionKit.configuration.host {
             guard let account = AccountManager.currentAccount, let _ = account.token else {
-                AntiAddictionKit.sendCallback(result: .hasChatLimit, message: "当前无用户登录，无法聊天")
+                AntiAddictionKit.sendCallback(result: .hasChatLimit, message: "当前无已登录用户，无法聊天")
                 return
             }
-            
+            //检查是否实名
             if account.type == .unknown {
                 
                 //使用sdk实名
