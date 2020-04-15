@@ -6,6 +6,12 @@ struct PaymentManager {
     
     static func check(amount: Int) {
         
+        //如果未开启 付费限制，直接发送无限制回调
+        if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
+            AntiAddictionKit.sendCallback(result: .noPayLimit, message: "无支付限制")
+            return
+        }
+        
         if let account = AccountManager.currentAccount, let token = account.token {
             Networking.checkPayment(token: token, amount: amount) { (allow, title, description) in
                 if allow {

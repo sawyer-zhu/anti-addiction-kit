@@ -5,6 +5,7 @@ struct LoginManager {
     
     /// 游戏主动登录用户
     static func login(user id: String, type: Int) {
+        //登录前先退出(同时恢复某些 flag 登录前的初始值)
         LoginManager.logout()
         
         let account = Account(id: id, type: AccountType.type(rawValue: type))
@@ -42,10 +43,19 @@ struct LoginManager {
         // 设置当前已登录用户
         AccountManager.currentAccount = account
         
+        // 如果在线时长控制未开启，则直接登录成功
+        if !AntiAddictionKit.configuration.useSdkOnlineTimeLimit {
+            AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
+            return
+        }
+        
         // 有 token 则进获取时间限制，保证最终发送`登录成功`回调
         if let token = account.token {
             //  拿到 token 后获取防沉迷限制
             let ts: Int = Int(Date().timeIntervalSince1970)
+            
+            TimeManager.lastLocalTimestamp = ts
+            TimeManager.lastServerTimestamp = ts
             
             Networking.setPlayLog(token: token,
                                   serverTime: (ts, ts),
@@ -166,6 +176,7 @@ struct LoginManager {
         TimeManager.inactivate()
         AccountManager.currentAccount = nil
         // -----网络版----- end
+        TimeManager.isFirstLaunch = true
     }
     
     
