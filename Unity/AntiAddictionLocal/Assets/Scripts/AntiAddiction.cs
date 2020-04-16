@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using AOT;
 
 /*
-	version 1.0.7
+	version 1.1.0
  */
 namespace AntiAddiction.OpenSource
 {
@@ -98,6 +98,19 @@ namespace AntiAddiction.OpenSource
 								.Call<AndroidJavaObject>("useSdkPaymentLimit",config.useSdkPaymentLimit)
 								.Call<AndroidJavaObject>("useSdkOnlineTimeLimit",config.useSdkOnlineTimeLimit)
 								.Call<AndroidJavaObject>("showSwitchAccountButton",config.showSwitchAccountButton);
+			#else
+			#endif
+		}
+
+		/*
+			设置域名，设置之后开启联网模式
+			host：域名
+		 */
+		public static void setHost(string host) {
+			#if UNITY_IOS && !UNITY_EDITOR
+				AntiAddictionSetHost(host);
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+				AntiAddictionClass.CallStatic ("setHost", host);
 			#else
 			#endif
 		}
@@ -233,6 +246,9 @@ namespace AntiAddiction.OpenSource
 
         [DllImport("__Internal")]
         private static extern void AntiAddictionFunctionConfig(bool useSdkRealName,bool useSdkPaymentLimit,bool useSdkOnlineTimeLimit,bool showSwitchAccountButton);
+        
+		[DllImport("__Internal")]
+        private static extern void AntiAddictionSetHost(string host);
 
         [DllImport("__Internal")]
         private static extern void AntiAddictionLogin(string userId,int userType);
