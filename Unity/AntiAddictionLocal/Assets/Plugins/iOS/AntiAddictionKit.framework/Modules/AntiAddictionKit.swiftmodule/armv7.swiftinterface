@@ -45,6 +45,7 @@ extension Defaults {
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(AntiAddictionKit) final public class AntiAddictionKit : ObjectiveC.NSObject {
   @objc public static var configuration: AntiAddictionKit.Configuration
   @objc final public class func setFunctionConfig(_ useSdkRealName: Swift.Bool = true, _ useSdkPaymentLimit: Swift.Bool = true, _ useSdkOnlineTimeLimit: Swift.Bool = true)
+  @objc final public class func setHost(_ host: Swift.String)
   @objc final public class func `init`(_ delegate: AntiAddictionKit.AntiAddictionCallback)
   @objc final public class func login(_ userId: Swift.String, _ userType: Swift.Int)
   @objc final public class func updateUserType(_ userType: Swift.Int)
@@ -59,6 +60,11 @@ extension Defaults {
 }
 @objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class Appearance : ObjectiveC.NSObject {
   @objc deinit
+}
+extension Collection {
+  public subscript(safe index: Self.Index) -> Self.Iterator.Element? {
+    get
+  }
 }
 extension UIView {
   @discardableResult
@@ -430,13 +436,370 @@ public var Just: AntiAddictionKit.JustOf<AntiAddictionKit.HTTP>
   @objc final public var guestTotalTime: Swift.Int
   @objc final public var firstAlertTipRemainTime: Swift.Int
   @objc final public var countdownAlertTipRemainTime: Swift.Int
-  @objc final public var curfewHourStart: Swift.Int
-  @objc final public var curfewHourEnd: Swift.Int
+  @objc final public var curfewHourStart: Swift.Int {
+    @objc get
+    @objc set(value)
+  }
+  @objc final public var curfewHourEnd: Swift.Int {
+    @objc get
+    @objc set(value)
+  }
+  @objc final public var nightStrictStart: Swift.String
+  @objc final public var nightStrictEnd: Swift.String
   @objc final public var singlePaymentAmountLimitJunior: Swift.Int
   @objc final public var mouthTotalPaymentAmountLimitJunior: Swift.Int
   @objc final public var singlePaymentAmountLimitSenior: Swift.Int
   @objc final public var mouthTotalPaymentAmountLimitSenior: Swift.Int
   @objc deinit
+}
+public enum SwiftyJSONError : Swift.Int, Swift.Error {
+  case unsupportedType
+  case indexOutOfBounds
+  case elementTooDeep
+  case wrongType
+  case notExist
+  case invalidJSON
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension SwiftyJSONError : Foundation.CustomNSError {
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+public enum Type : Swift.Int {
+  case number
+  case string
+  case bool
+  case array
+  case dictionary
+  case null
+  case unknown
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct JSON {
+  public init(data: Foundation.Data, options opt: Foundation.JSONSerialization.ReadingOptions = []) throws
+  public init(_ object: Any)
+  public init(parseJSON jsonString: Swift.String)
+  public mutating func merge(with other: AntiAddictionKit.JSON) throws
+  public func merged(with other: AntiAddictionKit.JSON) throws -> AntiAddictionKit.JSON
+  public var type: AntiAddictionKit.`Type` {
+    get
+  }
+  public var error: AntiAddictionKit.SwiftyJSONError? {
+    get
+  }
+  public var object: Any {
+    get
+    set(newValue)
+  }
+  @available(*, unavailable, renamed: "null")
+  public static var nullJSON: AntiAddictionKit.JSON {
+    get
+  }
+  public static var null: AntiAddictionKit.JSON {
+    get
+  }
+}
+public enum Index<T> : Swift.Comparable {
+  case array(Swift.Int)
+  case dictionary(Swift.DictionaryIndex<Swift.String, T>)
+  case null
+  public static func == (lhs: AntiAddictionKit.Index<T>, rhs: AntiAddictionKit.Index<T>) -> Swift.Bool
+  public static func < (lhs: AntiAddictionKit.Index<T>, rhs: AntiAddictionKit.Index<T>) -> Swift.Bool
+}
+public typealias JSONIndex = AntiAddictionKit.Index<AntiAddictionKit.JSON>
+public typealias JSONRawIndex = AntiAddictionKit.Index<Any>
+extension JSON : Swift.Collection {
+  public typealias Index = AntiAddictionKit.JSONRawIndex
+  public var startIndex: AntiAddictionKit.JSON.Index {
+    get
+  }
+  public var endIndex: AntiAddictionKit.JSON.Index {
+    get
+  }
+  public func index(after i: AntiAddictionKit.JSON.Index) -> AntiAddictionKit.JSON.Index
+  public subscript(position: AntiAddictionKit.JSON.Index) -> (Swift.String, AntiAddictionKit.JSON) {
+    get
+  }
+  public typealias Element = (Swift.String, AntiAddictionKit.JSON)
+  public typealias Iterator = Swift.IndexingIterator<AntiAddictionKit.JSON>
+  public typealias SubSequence = Swift.Slice<AntiAddictionKit.JSON>
+  public typealias Indices = Swift.DefaultIndices<AntiAddictionKit.JSON>
+}
+public enum JSONKey {
+  case index(Swift.Int)
+  case key(Swift.String)
+}
+public protocol JSONSubscriptType {
+  var jsonKey: AntiAddictionKit.JSONKey { get }
+}
+extension Int : AntiAddictionKit.JSONSubscriptType {
+  public var jsonKey: AntiAddictionKit.JSONKey {
+    get
+  }
+}
+extension String : AntiAddictionKit.JSONSubscriptType {
+  public var jsonKey: AntiAddictionKit.JSONKey {
+    get
+  }
+}
+extension JSON {
+  public subscript(path: [AntiAddictionKit.JSONSubscriptType]) -> AntiAddictionKit.JSON {
+    get
+    set(newValue)
+  }
+  public subscript(path: AntiAddictionKit.JSONSubscriptType...) -> AntiAddictionKit.JSON {
+    get
+    set(newValue)
+  }
+}
+extension JSON : Swift.ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift.StringLiteralType)
+  public init(extendedGraphemeClusterLiteral value: Swift.StringLiteralType)
+  public init(unicodeScalarLiteral value: Swift.StringLiteralType)
+  public typealias StringLiteralType = Swift.StringLiteralType
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.StringLiteralType
+  public typealias UnicodeScalarLiteralType = Swift.StringLiteralType
+}
+extension JSON : Swift.ExpressibleByIntegerLiteral {
+  public init(integerLiteral value: Swift.IntegerLiteralType)
+  public typealias IntegerLiteralType = Swift.IntegerLiteralType
+}
+extension JSON : Swift.ExpressibleByBooleanLiteral {
+  public init(booleanLiteral value: Swift.BooleanLiteralType)
+  public typealias BooleanLiteralType = Swift.BooleanLiteralType
+}
+extension JSON : Swift.ExpressibleByFloatLiteral {
+  public init(floatLiteral value: Swift.FloatLiteralType)
+  public typealias FloatLiteralType = Swift.FloatLiteralType
+}
+extension JSON : Swift.ExpressibleByDictionaryLiteral {
+  public init(dictionaryLiteral elements: (Swift.String, Any)...)
+  public typealias Key = Swift.String
+  public typealias Value = Any
+}
+extension JSON : Swift.ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: Any...)
+  public typealias ArrayLiteralElement = Any
+}
+extension JSON : Swift.RawRepresentable {
+  public init?(rawValue: Any)
+  public var rawValue: Any {
+    get
+  }
+  public func rawData(options opt: Foundation.JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Foundation.Data
+  public func rawString(_ encoding: Swift.String.Encoding = .utf8, options opt: Foundation.JSONSerialization.WritingOptions = .prettyPrinted) -> Swift.String?
+  public func rawString(_ options: [AntiAddictionKit.writingOptionsKeys : Any]) -> Swift.String?
+  public typealias RawValue = Any
+}
+extension JSON : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension JSON {
+  public var array: [AntiAddictionKit.JSON]? {
+    get
+  }
+  public var arrayValue: [AntiAddictionKit.JSON] {
+    get
+  }
+  public var arrayObject: [Any]? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var dictionary: [Swift.String : AntiAddictionKit.JSON]? {
+    get
+  }
+  public var dictionaryValue: [Swift.String : AntiAddictionKit.JSON] {
+    get
+  }
+  public var dictionaryObject: [Swift.String : Any]? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var bool: Swift.Bool? {
+    get
+    set(newValue)
+  }
+  public var boolValue: Swift.Bool {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var string: Swift.String? {
+    get
+    set(newValue)
+  }
+  public var stringValue: Swift.String {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var number: Foundation.NSNumber? {
+    get
+    set(newValue)
+  }
+  public var numberValue: Foundation.NSNumber {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var null: Foundation.NSNull? {
+    get
+    set(newValue)
+  }
+  public func exists() -> Swift.Bool
+}
+extension JSON {
+  public var url: Foundation.URL? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var double: Swift.Double? {
+    get
+    set(newValue)
+  }
+  public var doubleValue: Swift.Double {
+    get
+    set(newValue)
+  }
+  public var float: Swift.Float? {
+    get
+    set(newValue)
+  }
+  public var floatValue: Swift.Float {
+    get
+    set(newValue)
+  }
+  public var int: Swift.Int? {
+    get
+    set(newValue)
+  }
+  public var intValue: Swift.Int {
+    get
+    set(newValue)
+  }
+  public var uInt: Swift.UInt? {
+    get
+    set(newValue)
+  }
+  public var uIntValue: Swift.UInt {
+    get
+    set(newValue)
+  }
+  public var int8: Swift.Int8? {
+    get
+    set(newValue)
+  }
+  public var int8Value: Swift.Int8 {
+    get
+    set(newValue)
+  }
+  public var uInt8: Swift.UInt8? {
+    get
+    set(newValue)
+  }
+  public var uInt8Value: Swift.UInt8 {
+    get
+    set(newValue)
+  }
+  public var int16: Swift.Int16? {
+    get
+    set(newValue)
+  }
+  public var int16Value: Swift.Int16 {
+    get
+    set(newValue)
+  }
+  public var uInt16: Swift.UInt16? {
+    get
+    set(newValue)
+  }
+  public var uInt16Value: Swift.UInt16 {
+    get
+    set(newValue)
+  }
+  public var int32: Swift.Int32? {
+    get
+    set(newValue)
+  }
+  public var int32Value: Swift.Int32 {
+    get
+    set(newValue)
+  }
+  public var uInt32: Swift.UInt32? {
+    get
+    set(newValue)
+  }
+  public var uInt32Value: Swift.UInt32 {
+    get
+    set(newValue)
+  }
+  public var int64: Swift.Int64? {
+    get
+    set(newValue)
+  }
+  public var int64Value: Swift.Int64 {
+    get
+    set(newValue)
+  }
+  public var uInt64: Swift.UInt64? {
+    get
+    set(newValue)
+  }
+  public var uInt64Value: Swift.UInt64 {
+    get
+    set(newValue)
+  }
+}
+extension JSON : Swift.Comparable {
+}
+public func == (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func <= (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func >= (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func > (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func < (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public enum writingOptionsKeys {
+  case jsonSerialization
+  case castNilToNSNull
+  case maxObjextDepth
+  case encoding
+  public static func == (a: AntiAddictionKit.writingOptionsKeys, b: AntiAddictionKit.writingOptionsKeys) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+extension JSON : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
 }
 extension UIView {
   public func makeToast(_ message: Swift.String?, duration: Foundation.TimeInterval = ToastManager.shared.duration, position: AntiAddictionKit.ToastPosition = ToastManager.shared.position, title: Swift.String? = nil, image: UIKit.UIImage? = nil, style: AntiAddictionKit.ToastStyle = ToastManager.shared.style, completion: ((Swift.Bool) -> Swift.Void)? = nil)
@@ -541,7 +904,7 @@ public class SwiftTimer {
   public static func repeaticTimer(interval: Dispatch.DispatchTimeInterval, leeway: Dispatch.DispatchTimeInterval = .seconds(0), queue: Dispatch.DispatchQueue = .main, handler: @escaping AntiAddictionKit.SwiftTimer.SwiftTimerHandler) -> AntiAddictionKit.SwiftTimer
   @objc deinit
   public func fire()
-  public func start()
+  public func start(fireOnceWhenStart: Swift.Bool = false)
   public func suspend()
   public func rescheduleRepeating(interval: Dispatch.DispatchTimeInterval)
   public func rescheduleHandler(handler: @escaping AntiAddictionKit.SwiftTimer.SwiftTimerHandler)
@@ -552,7 +915,7 @@ extension SwiftTimer {
   public static func cancelThrottlingTimer(identifier: Swift.String)
 }
 public class SwiftCountDownTimer {
-  public init(interval: Dispatch.DispatchTimeInterval, times: Swift.Int, queue: Dispatch.DispatchQueue = .main, handler: @escaping (AntiAddictionKit.SwiftCountDownTimer, Swift.Int) -> Swift.Void)
+  public init(interval: Dispatch.DispatchTimeInterval, times: Swift.Int, queue: Dispatch.DispatchQueue = .main, handler: @escaping (AntiAddictionKit.SwiftCountDownTimer, Swift.Int, Swift.Int) -> Swift.Void)
   public func start()
   public func suspend()
   public func reCountDown()

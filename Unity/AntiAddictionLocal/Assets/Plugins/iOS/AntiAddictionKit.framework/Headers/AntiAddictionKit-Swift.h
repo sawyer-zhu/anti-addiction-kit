@@ -236,6 +236,10 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param useSdkOnlineTimeLimit 在线时长限制开关，默认值为 true
 ///
 + (void)setFunctionConfig:(BOOL)useSdkRealName :(BOOL)useSdkPaymentLimit :(BOOL)useSdkOnlineTimeLimit;
+/// 设置服务器地址，如果地址正确，则计时、实名、付费通过服务器统计；如果地址设置有误，则防沉迷都会失效。不设置，则默认开启本地防沉迷机制。
+/// \param host 服务器根地址，例如 <code>https://gameapi.com</code>
+///
++ (void)setHost:(NSString * _Nonnull)host;
 /// AAKit 初始化方法
 /// \param delegate 接受回调的对象
 ///
@@ -296,14 +300,24 @@ SWIFT_CLASS_NAMED("Configuration")
 @property (nonatomic) BOOL useSdkPaymentLimit;
 /// AAKit 切换账号按钮是否显示
 @property (nonatomic) BOOL showSwitchAccountButton;
+/// 未成年人非节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorCommonDayTotalTime;
+/// 未成年人节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorHolidayTotalTime;
+/// 游客每日总时长（无节假日区分）单位秒
 @property (nonatomic) NSInteger guestTotalTime;
+/// 第一次提醒剩余游戏时间时的剩余时长 单位秒
 @property (nonatomic) NSInteger firstAlertTipRemainTime;
+/// 展示倒计时浮窗时的剩余时长 单位秒
 @property (nonatomic) NSInteger countdownAlertTipRemainTime;
+/// 宵禁开始时间（整数，小时，24小时进制，默认22）
 @property (nonatomic) NSInteger curfewHourStart;
 /// 宵禁结束时间（整数，小时，24小时进制，默认8）
 @property (nonatomic) NSInteger curfewHourEnd;
+/// 宵禁开始时间（字符串，格式为<code>小时:分钟</code>，24小时进制，默认<code>22:00</code>）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictStart;
+/// 宵禁结束时间（整数，格式为<code>小时:分钟</code>，24小时进制，默认8）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictEnd;
 /// 8-15岁单笔付费额度限制，单位分（默认5000分）
 @property (nonatomic) NSInteger singlePaymentAmountLimitJunior;
 /// 8-15岁每月总付费额度限制，单位分（默认20000分）
@@ -349,6 +363,8 @@ SWIFT_CLASS("_TtC16AntiAddictionKit10HTTPResult")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
+
+
 
 
 
@@ -608,6 +624,10 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param useSdkOnlineTimeLimit 在线时长限制开关，默认值为 true
 ///
 + (void)setFunctionConfig:(BOOL)useSdkRealName :(BOOL)useSdkPaymentLimit :(BOOL)useSdkOnlineTimeLimit;
+/// 设置服务器地址，如果地址正确，则计时、实名、付费通过服务器统计；如果地址设置有误，则防沉迷都会失效。不设置，则默认开启本地防沉迷机制。
+/// \param host 服务器根地址，例如 <code>https://gameapi.com</code>
+///
++ (void)setHost:(NSString * _Nonnull)host;
 /// AAKit 初始化方法
 /// \param delegate 接受回调的对象
 ///
@@ -668,14 +688,24 @@ SWIFT_CLASS_NAMED("Configuration")
 @property (nonatomic) BOOL useSdkPaymentLimit;
 /// AAKit 切换账号按钮是否显示
 @property (nonatomic) BOOL showSwitchAccountButton;
+/// 未成年人非节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorCommonDayTotalTime;
+/// 未成年人节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorHolidayTotalTime;
+/// 游客每日总时长（无节假日区分）单位秒
 @property (nonatomic) NSInteger guestTotalTime;
+/// 第一次提醒剩余游戏时间时的剩余时长 单位秒
 @property (nonatomic) NSInteger firstAlertTipRemainTime;
+/// 展示倒计时浮窗时的剩余时长 单位秒
 @property (nonatomic) NSInteger countdownAlertTipRemainTime;
+/// 宵禁开始时间（整数，小时，24小时进制，默认22）
 @property (nonatomic) NSInteger curfewHourStart;
 /// 宵禁结束时间（整数，小时，24小时进制，默认8）
 @property (nonatomic) NSInteger curfewHourEnd;
+/// 宵禁开始时间（字符串，格式为<code>小时:分钟</code>，24小时进制，默认<code>22:00</code>）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictStart;
+/// 宵禁结束时间（整数，格式为<code>小时:分钟</code>，24小时进制，默认8）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictEnd;
 /// 8-15岁单笔付费额度限制，单位分（默认5000分）
 @property (nonatomic) NSInteger singlePaymentAmountLimitJunior;
 /// 8-15岁每月总付费额度限制，单位分（默认20000分）
@@ -721,6 +751,8 @@ SWIFT_CLASS("_TtC16AntiAddictionKit10HTTPResult")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
+
+
 
 
 
@@ -980,6 +1012,10 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) Configuration * _Nonnu
 /// \param useSdkOnlineTimeLimit 在线时长限制开关，默认值为 true
 ///
 + (void)setFunctionConfig:(BOOL)useSdkRealName :(BOOL)useSdkPaymentLimit :(BOOL)useSdkOnlineTimeLimit;
+/// 设置服务器地址，如果地址正确，则计时、实名、付费通过服务器统计；如果地址设置有误，则防沉迷都会失效。不设置，则默认开启本地防沉迷机制。
+/// \param host 服务器根地址，例如 <code>https://gameapi.com</code>
+///
++ (void)setHost:(NSString * _Nonnull)host;
 /// AAKit 初始化方法
 /// \param delegate 接受回调的对象
 ///
@@ -1040,14 +1076,24 @@ SWIFT_CLASS_NAMED("Configuration")
 @property (nonatomic) BOOL useSdkPaymentLimit;
 /// AAKit 切换账号按钮是否显示
 @property (nonatomic) BOOL showSwitchAccountButton;
+/// 未成年人非节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorCommonDayTotalTime;
+/// 未成年人节假日每日总时长 单位秒
 @property (nonatomic) NSInteger minorHolidayTotalTime;
+/// 游客每日总时长（无节假日区分）单位秒
 @property (nonatomic) NSInteger guestTotalTime;
+/// 第一次提醒剩余游戏时间时的剩余时长 单位秒
 @property (nonatomic) NSInteger firstAlertTipRemainTime;
+/// 展示倒计时浮窗时的剩余时长 单位秒
 @property (nonatomic) NSInteger countdownAlertTipRemainTime;
+/// 宵禁开始时间（整数，小时，24小时进制，默认22）
 @property (nonatomic) NSInteger curfewHourStart;
 /// 宵禁结束时间（整数，小时，24小时进制，默认8）
 @property (nonatomic) NSInteger curfewHourEnd;
+/// 宵禁开始时间（字符串，格式为<code>小时:分钟</code>，24小时进制，默认<code>22:00</code>）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictStart;
+/// 宵禁结束时间（整数，格式为<code>小时:分钟</code>，24小时进制，默认8）方便配置具体到分钟
+@property (nonatomic, copy) NSString * _Nonnull nightStrictEnd;
 /// 8-15岁单笔付费额度限制，单位分（默认5000分）
 @property (nonatomic) NSInteger singlePaymentAmountLimitJunior;
 /// 8-15岁每月总付费额度限制，单位分（默认20000分）
@@ -1093,6 +1139,8 @@ SWIFT_CLASS("_TtC16AntiAddictionKit10HTTPResult")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
+
+
 
 
 
