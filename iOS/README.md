@@ -1,4 +1,4 @@
-# 游戏防沉迷 AntiAddictionKit iOS 对接文档
+# 游戏防沉迷 AntiAddictionKit (iOS) 对接文档
 `AntiAddictionKit` 是为了遵循最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
 
 ## 接入要求
@@ -9,9 +9,9 @@
 
 > 说明：`AntiAddictionKit` iOS 模块由 Swift 编写，但接口同时支持 Swift 或 Objective-C 使用，文档中代码示例同时包含 Swift 与  Objective-C 两种示例，可根据自身项目语言类型参考。
 >
-> `AntiAddictionKit.xcframework` 包含 `i386`, `x86_64`,`armv7`, `armv7s`, `arm64` 等多种架构
+> `AntiAddictionKit.xcframework` 同时包含 `i386`, `x86_64`,`armv7`, `armv7s`, `arm64` 等多种真机和模拟器架构
 >
-> `.xcframework` 是 WWDC 2019 推出的替代原来使用 `lipo create` 合并成 `Fat Framework` 的全新格式，其使用方法与原`.framework` 基本相同
+> `.xcframework` 是 WWDC 2019 推出的 Framework 替代品，自带模拟器和真机架构，其使用方法与原`.framework` 基本相同，而且无需在生成 Release 时去除模拟器架构（Xcode 自动去除）。
 
 1. 下载最新的 [Release](https://github.com/xindong/anti-addiction-kit/releases) 中的 `AntiAddictionKitiOS.zip`文件解压得到`AntiAddictionKit.xcframework`。
 2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.xcframework` 为 `Embed & Sign`。
