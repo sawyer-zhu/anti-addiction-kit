@@ -3,15 +3,10 @@ import UIKit
 
 class BaseController: UIViewController {
     
-    private var _title: String? = nil
     public override var title: String? {
-        get {
-            return _title
-        }
-        set(new) {
-            _title = new
+        didSet {
             DispatchQueue.main.async {
-                self.titleLabel.text = new
+                self.titleLabel.text = self.title
             }
         }
     }

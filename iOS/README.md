@@ -14,11 +14,12 @@
 > `.xcframework` 是 WWDC 2019 推出的替代原来使用 `lipo create` 合并成 `Fat Framework` 的全新格式，其使用方法与原`.framework` 基本相同
 
 1. 下载最新的 [Release](https://github.com/xindong/anti-addiction-kit/releases) 中的 `AntiAddictionKitiOS.zip`文件解压得到`AntiAddictionKit.xcframework`。
-2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.xcframework`为`Embed & Sign`。
-3. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译。
-4. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.xcframework`且已勾上`Code Sign On Copy`。
-5. 添加依赖库 `libc++.tbd`
-6. 开始代码接入
+2. 直接拖入现有游戏的 Xcode 工程，请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.xcframework` 为 `Embed & Sign`。
+3. 如果编译报错找不到头文件或者模块，请确保 `Xcode`-`Build Settings` - `Framework Search Paths` 中的路径以保证 Xcode 正常编译。
+4. 确保 `Xcode` - `Build Phases` - `Embed Frameworks` 中存在 `AntiAddiction.xcframework` 且已勾上 `Code Sign On Copy`。
+5. 确保 Xcode 工程的 `Build Settings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即 `始终引入 Swift 标准库`，避免 App 启动时报错 `无法找到 Swift 标准库之类`。如果未设置，低于 iOS 13  版本的 iPhone 启动 App 时会因缺少 Swift 标准库而闪退。
+6. 添加依赖库 `libc++.tbd`
+7. 开始代码接入
 
 > 请确保以上步骤正确执行。
  
@@ -34,6 +35,10 @@ import AntiAddictionKit
 // or
 #import "AntiAddictionKit/AntiAddictionKit-Swift.h";
 ```
+
+## 单机版 vs 联网版
+如果你已通过 `AntiAddictionKit-Server` 组件架设自有防沉迷服务器，可通过 `setHost("https://yourserver.com")`来开启联网版。
+请保证 `setHost()`中服务器地址的有效性，若无效，则防沉迷功能会形同虚设。联网版与单机版是独立的，通过 `host` 是否设置来判，`host`默认为空，即单机版。 
 
 ## 1. SDK 配置（采用默认值可跳过）
 ### 1.1 主要功能配置：
