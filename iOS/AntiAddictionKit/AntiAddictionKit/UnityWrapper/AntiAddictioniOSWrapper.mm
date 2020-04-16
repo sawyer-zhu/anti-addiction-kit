@@ -44,6 +44,11 @@ extern "C" {
 //        [AntiAddictionKit setFunctionConfig:useSdkRealName :useSdkPaymentLimit :useSdkOnlineTimeLimit];
     }
     
+    void AntiAddictionSetHost(const char *host) {
+        NSString *hostString = [NSString stringWithUTF8String:host];
+        [AntiAddictionKit setHost:hostString];
+    }
+    
     void AntiAddictionLogin(const char *userId,int userType) {
         NSString *aaUserId = [NSString stringWithUTF8String:userId];
         [AntiAddictionKit login:aaUserId :userType];
