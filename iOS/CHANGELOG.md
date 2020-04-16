@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0 (2020-04-14)
+1. iOS 增加联网版本，游戏通过`Anti-Addiction-Kit/Server` 模块自建防沉迷在线服务后，客户端通过 `setHost` 接口实现防沉迷系统由服务器部署并下发到 SDK 控制。单机版和联网版是独立的，互不干扰。
+2. 增强单机版稳定性
+
 ## 1.0.7 (2020-04-07)
 1. iOS 使用全新的 AntiAddictionKit.xcframework 接入，方便快捷
 2. 更新 iOS 文档

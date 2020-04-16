@@ -16,9 +16,9 @@ class Router {
         self.isContainerPresented = false
     }
     
-    public class func openAlertController(_ data: AlertData, forceOpen: Bool = true, isHsqjCheckCurrentPayLimit: Bool = false) {
+    public class func openAlertController(_ data: AlertData, forceOpen: Bool = true) {
         DispatchQueue.main.async {
-            let alertController = AlertController(data, isHsqjCheckCurrentPayLimit: isHsqjCheckCurrentPayLimit)
+            let alertController = AlertController(data)
             Router.openViewController(vc: alertController, forceOpen: forceOpen)
         }
     }

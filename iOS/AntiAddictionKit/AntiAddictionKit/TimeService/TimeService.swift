@@ -13,17 +13,14 @@ final class TimeService {
     class func start() {
         
         if AntiAddictionKit.configuration.useSdkOnlineTimeLimit == false {
-            Logger.info("游戏未开启防沉迷时长统计")
             return
         }
         
         guard User.shared != nil else {
-            Logger.info("无用户，无法启动防沉迷时长统计")
             return
         }
         
         if Router.isContainerPresented || Container.shared().isBeingPresented {
-            Logger.info("防沉迷页面正在展示，无需统计")
             return
         }
         
@@ -31,7 +28,6 @@ final class TimeService {
         
         //成年人
         if limitLevel == .unlimited  {
-            Logger.info("成年用户，无需统计时长")
             return
         }
         
@@ -40,7 +36,7 @@ final class TimeService {
             User.shared!.clearOnlineTime()
         }
         
-        Logger.info("防沉迷时长统计开始")
+        Logger.info("本地防沉迷时长统计开始")
         
         mainTimer.start()
     }
@@ -55,8 +51,6 @@ final class TimeService {
     /// 主 Timer
     private static var mainTimer: SwiftTimer = SwiftTimer(interval: .seconds(Int(kTimerInterval)), repeats: true, queue: .global()) { (mTimer) in
         
-        Logger.info("Main Timer 任务执行一次！")
-        
         guard User.shared != nil else {
             Logger.info("当前无登录用户，Timer 已暂停！")
             mTimer.suspend()
@@ -67,14 +61,14 @@ final class TimeService {
         
         //成年人
         if limitLevel == .unlimited  {
-            Logger.info("成年用户，无需统计时长！")
             mTimer.suspend()
             return
         }
         
         User.shared!.onlineTimeIncrease(kTimerInterval)
+        #if DEBUG // 给demo发送时间
         postOnlineTimeNotification()
-        
+        #endif
         //游客
         if limitLevel == .guest {
         //游客不区分节假日
@@ -87,7 +81,6 @@ final class TimeService {
             
             // 没时间了
             if remainSeconds <= 0 {
-                Logger.info("游客用户，没时间了，弹窗")
                 mTimer.suspend()
                 Router.closeAlertTip()
                 
@@ -105,14 +98,12 @@ final class TimeService {
             
             //小于设定时间（默认1分钟），倒计时浮窗
             if remainSeconds > 0 && remainSeconds <= AntiAddictionKit.configuration.countdownAlertTipRemainTime  {
-                Logger.info("游客倒计时提示")
                 Router.openAlertTip(.lessThan60seconds(.guest, remainSeconds))
                 return
             }
             
             //15分钟时弹出 AlertTip
             if (remainSeconds) == AntiAddictionKit.configuration.firstAlertTipRemainTime {
-                Logger.info("游客15分钟提示")
                 Router.openAlertTip(.lessThan15Minutes(.guest, isCurfew: false))
                 return
             }
@@ -127,8 +118,6 @@ final class TimeService {
             //如果是宵禁，无法游戏，给游戏发送无游戏时间通知
             if DateHelper.isCurfew(Date()) {
                 //宵禁无法进入
-                Logger.info("当前为宵禁时间，弹窗")
-                
                 AntiAddictionKit.sendCallback(result: .noRemainTime, message: "宵禁时间，无法进入游戏！")
                 
                 let content = AlertType.TimeLimitAlertContent.minorGameOver(isCurfew: true)
@@ -160,7 +149,6 @@ final class TimeService {
             
             //没时间了，直接弹窗
             if (minimumRemainSeconds <= 0) {
-                Logger.info("未成年用户，没时间了，弹窗")
                 mTimer.suspend()
                 Router.closeAlertTip()
                 
@@ -177,14 +165,12 @@ final class TimeService {
             
             //小于设定间隔，启动 countdown timer
             if minimumRemainSeconds > 0 && minimumRemainSeconds <= AntiAddictionKit.configuration.countdownAlertTipRemainTime  {
-                Logger.info("未成年倒计时提示")
                 Router.openAlertTip(.lessThan60seconds(.minor, minimumRemainSeconds, isCurfew: isCurfew))
                 return
             }
             
             //判断15分钟
             if (minimumRemainSeconds == AntiAddictionKit.configuration.firstAlertTipRemainTime) {
-                Logger.info("未成年15分钟提示")
                 Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: isCurfew))
                 return
             }
@@ -212,12 +198,18 @@ enum TimeLimitLevel {
     }
 }
 
-extension TimeService {
-    
-    /// Debug: - 给 DEMO 发送玩家当前游戏时间
-    class func postOnlineTimeNotification() {
-        if let user = User.shared {
-            NotificationCenter.default.post(name: NSNotification.Name("NSNotification.Name.totalOnlineTime"), object: nil, userInfo: ["userId": user.id, "totalOnlineTime": user.totalOnlineTime])
-        }
+
+/// Debug: - 给 DEMO 发送玩家当前游戏时间
+internal func postOnlineTimeNotification() {
+    #if DEBUG
+    if let user = User.shared {
+        NotificationCenter.default.post(name: NSNotification.Name("NSNotification.Name.totalOnlineTime"), object: nil, userInfo: ["userId": user.id, "totalOnlineTime": user.totalOnlineTime])
+        return
     }
+    
+    if let account = AccountManager.currentAccount {
+        NotificationCenter.default.post(name: NSNotification.Name("NSNotification.Name.totalOnlineTime"), object: nil, userInfo: ["userId": account.id, "totalOnlineTime": TimeManager.currentRemainTime])
+        return
+    }
+    #endif
 }

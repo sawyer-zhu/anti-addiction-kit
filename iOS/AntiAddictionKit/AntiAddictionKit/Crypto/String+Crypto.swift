@@ -17,13 +17,6 @@ extension String {
         }
     }
     
-    
-    
-    func isPromoteIDCardNumber() -> Bool {
-        
-        
-        return false
-    }
 }
 
 class AAKitIDNumberGenerator {
