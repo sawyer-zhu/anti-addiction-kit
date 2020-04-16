@@ -1,25 +1,30 @@
-# 防沉迷 AntiAddictionSDK Unity 对接文档
+# 防沉迷 AntiAddictionKit (Unity) 对接文档
 AntiAddictionSDK 是为了遵循最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
 
+# 说明
+Unity 模块是通过引入 iOS 和 Android 模块后增加桥接文件打包出的 `.unitypackage`，方便以 Unity 开发的游戏直接引入。其他引擎/平台的游戏可以通过 iOS/Android 原生的方式接入，详见 iOS/Android 各模块接入文档。
+
 ## 1.接入SDK
-Unity开发环境:2018.4.17f
+Unity 开发环境:2018.4.17f
 
 导入 `AntiAddictionForUnity.unitypackage`
-
-
 
 ### 1.1 iOS
 - iOS Deployment Target 最低支持 iOS 8.0
 - Xcode 11 编译 
 
-<p style="color:red"> 注意：</p>
- unitypackge中默认iOS平台framework为真机架构，如需模拟器架构请在release包中提供的`AntiAddictionKit.xcframework`中找到并替换。Xcode11支持支持导入xcframework，会在构建时使用所包含的框架或库的正确平台版本。导出Xcode工程以后，可以使用`AntiAddictionKit.xcframework`替换`AntiAddictionKit.framework`,并做好以下配置即可。
+>注意:  
+>`unitypackge`中默认 iOS 平台 `AntiAddictionKit.framework` 为真机设备架构，如需生成模拟器包进行测试，请下载仓库 Release 目录中提供的 `AntiAddictionKitiOS.zip` 并解压后在目录`/AntiAddictionKit.xcframework/ios-i386_x86_64-simulator/`中找到 i386 和 x86 架构的 `AntiAddictionKit.framework` 并替换。
+>
+> `.xcframework` 是 WWDC 2019 推出的 Framework 替代品，自带模拟器和真机架构，其使用方法与原`.framework` 基本相同
+> `AntiAddictionKit.xcframework` 同时包含 `i386`, `x86_64`,`armv7`, `armv7s`, `arm64` 等多种真机和模拟器架构
+>
 
 **检查 Unity 输出的 Xcode 工程**
 
-1. 请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.xcframework` 为 `Embed & Sign`。
+1. 请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.framework` 为 `Embed & Sign`。
 2. 如果编译报错找不到头文件或者模块，请确保 `Xcode`-`Build Settings` - `Framework Search Paths` 中的路径以保证 Xcode 正常编译。
-3. 确保 `Xcode` - `Build Phases` - `Embed Frameworks` 中存在 `AntiAddiction.xcframework` 且已勾上 `Code Sign On Copy`。
+3. 确保 `Xcode` - `Build Phases` - `Embed Frameworks` 中存在 `AntiAddiction.framework` 且已勾上 `Code Sign On Copy`。
 4. 确保 Xcode 工程的 `Build Settings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即 `始终引入 Swift 标准库`，避免 App 启动时报错 `无法找到 Swift 标准库之类`。如果未设置，低于 iOS 13  版本的 iPhone 启动 App 时会因缺少 Swift 标准库而闪退。
 5. 添加依赖库 `libc++.tbd`
 6. 开始代码接入
