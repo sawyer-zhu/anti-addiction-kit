@@ -1,26 +1,35 @@
-# 心动内部版 防沉迷 AntiAddictionSDK 对接文档
+# 心动内部版 AntiAddictionKit (Unity) 对接文档
 AntiAddictionSDK 是为了遵循最新防沉迷政策而编写的一个集实名登记、防沉迷时长限制、付费限制三部分功能的组件，方便国内游戏团队快速接入游戏实现防沉迷功能从而符合政策规定。
 
 # 说明
-Unity 模块是通过引入 iOS 和 Android 模块后增加 wrapper 文件打包出的 `.unitypackage`，方便以 Unity 开发的游戏直接引入。其他引擎/平台的游戏可以通过 iOS/Android 原生的方式接入，详见 iOS/Android 模块文档。
+Unity 模块是通过引入 iOS 和 Android 模块后增加桥接文件打包出的 `.unitypackage`，方便以 Unity 开发的游戏直接引入。其他引擎/平台的游戏可以通过 iOS/Android 原生的方式接入，详见 iOS/Android 各模块接入文档。
 
 ## 1.接入SDK
-Unity开发环境:2018.4.17f
+Unity 开发环境:2018.4.17f
 
 导入 `AntiAddictionForUnity.unitypackage`
 
-> 注：提供的 `AntiAddictionForUnity.unitypackage/Assets/Plugins/iOS` 中的 `AntiAddiction.framework` 只包含 iOS 真机架构。如需要模拟器测试，则需自行下载 Repo  Release 中提供的 `AntiAddictionKitiOS.zip`，然后解压得到`AntiAddictionKit.xcframework`，`ios-i386_x86_64-simulator`和`ios-armv7_armv7s_arm64`文件夹中的`AntiAddictionKit.framework`分别为模拟器和 iOS 真机的Framework，按需替换。
-
 ### 1.1 iOS
 - iOS Deployment Target 最低支持 iOS 8.0
-- 要求 Xcode 11 编译 (App Store 强制要求使用 Xcode 11 打包提交)
+- Xcode 11 编译 
+
+>注意:  
+>`unitypackge`中默认 iOS 平台 `AntiAddictionKit.framework` 为真机设备架构，如需生成模拟器包进行测试，请下载仓库 Release 目录中提供的 `AntiAddictionKitiOS.zip` 并解压后在目录`/AntiAddictionKit.xcframework/ios-i386_x86_64-simulator/`中找到 i386 和 x86 架构的 `AntiAddictionKit.framework` 并替换。
+>
+> `.xcframework` 是 WWDC 2019 推出的 Framework 替代品，自带模拟器和真机架构，其使用方法与原`.framework` 基本相同
+> `AntiAddictionKit.xcframework` 同时包含 `i386`, `x86_64`,`armv7`, `armv7s`, `arm64` 等多种真机和模拟器架构
+>
 
 **检查 Unity 输出的 Xcode 工程**
-1. 确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content`中的 `AntiAddictionKit.framework`为`Embed & Sign`
-2. 如果编译报错找不到头文件或者模块，请确保`Xcode`-`Build Settings`- `Framework Search Paths`中的路径以保证 Xcode 编译
-3. 确保`Xcode`-`Build Phases`- `Embed Frameworks`中存在`AntiAddiction.framework`且已勾上`Code Sign On Copy`
-4. 添加依赖库 `libc++.tbd`
-5. 开始代码接入
+
+1. 请确保设置 `Xcode` - `General` - `Frameworks, Libraries, and Embedded Content` 中的 `AntiAddictionKit.framework` 为 `Embed & Sign`。
+2. 如果编译报错找不到头文件或者模块，请确保 `Xcode`-`Build Settings` - `Framework Search Paths` 中的路径以保证 Xcode 正常编译。
+3. 确保 `Xcode` - `Build Phases` - `Embed Frameworks` 中存在 `AntiAddiction.framework` 且已勾上 `Code Sign On Copy`。
+4. 确保 Xcode 工程的 `Build Settings` 的 `Always Embed Swift Standard Libraries` 为 `Yes`，即 `始终引入 Swift 标准库`，避免 App 启动时报错 `无法找到 Swift 标准库之类`。如果未设置，低于 iOS 13  版本的 iPhone 启动 App 时会因缺少 Swift 标准库而闪退。
+5. 添加依赖库 `libc++.tbd`
+6. 开始代码接入
+
+> 请确保以上步骤正确执行。
 
 ### 1.2 Android
 最低支持安卓版本 5.0。
@@ -31,7 +40,7 @@ Unity开发环境:2018.4.17f
 **以下使用需要SDK命名空间下**
 
 ```
-namespace AntiAddiction.StandAlone
+namespace AntiAddiction.OpenSource
 ```
 
 ### 2.1 功能配置（采用默认值可跳过）
@@ -68,7 +77,7 @@ AntiAddictionConfig config = new AntiAddictionConfig.Builder ()
 .ShowSwitchAccountButton (false)		// 是否显示切换账号按钮
 .Build ();
 
-AntiAddiction.StandAlone.AntiAddiction.fuctionConfig(config);
+AntiAddiction.OpenSource.AntiAddiction.fuctionConfig(config);
 ```
 
 
@@ -87,7 +96,7 @@ public void onAntiAddictionHandler (int resultCode,string msg){
 }
 // 设置回调
 onAntiAddictionResult += onAntiAddictionHandler;
-AntiAddiction.StandAlone.AntiAddiction.init(onAntiAddictionResult);
+AntiAddiction.OpenSource.AntiAddiction.init(onAntiAddictionResult);
 ```
 
 回调中会返回对应的回调类型码 resultCode 和相应信息 message：
@@ -139,7 +148,7 @@ USER\_TYPE\_ADULT | 4 | 通过第三方获取，值为成年人（18岁及以上
 调用示例：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.login("12345",4);
+AntiAddiction.OpenSource.AntiAddiction.login("12345",4);
 ```
 该接口中共有两个参数，第一个是用户的唯一标识，类型为字符串，第二个代表当前用户的类型.参考上表
 
@@ -149,7 +158,7 @@ AntiAddiction.StandAlone.AntiAddiction.login("12345",4);
 具体示例如下：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.udpateUserType(4);
+AntiAddiction.OpenSource.AntiAddiction.udpateUserType(4);
 ```
 
 #### 3.3登出
@@ -158,7 +167,7 @@ AntiAddiction.StandAlone.AntiAddiction.udpateUserType(4);
 调用示例如下：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.logout();
+AntiAddiction.OpenSource.AntiAddiction.logout();
 ```
 
 
@@ -166,14 +175,14 @@ AntiAddiction.StandAlone.AntiAddiction.logout();
 游戏在收到用户的付费请求后，调用 SDK 的对应接口来判断当前用户的付费行为是否被限制，示例如下：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.checkPayLimit(100);
+AntiAddiction.OpenSource.AntiAddiction.checkPayLimit(100);
 ```
 
 接口参数表示付费的金额，单位为分（例如1元道具=100分）。当用户可以发起付费时，SDK 会调用回调 [PAY\_NO\_LIMIT](#回调类型) 通知游戏,否则调用 [PAY\_LIMIT](#回调类型);   
 当用户完成付费行为时，游戏需要通知 SDK ，更新用户状态，示例如下：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.paySuccess(100);
+AntiAddiction.OpenSource.AntiAddiction.paySuccess(100);
 ```
 参数为本次充值的金额，单位为分。
 
@@ -183,7 +192,7 @@ AntiAddiction.StandAlone.AntiAddiction.paySuccess(100);
 游戏在需要聊天时，调用 SDK 接口判断当前用户是否实名，示例如下：
 
 ```
- AntiAddiction.StandAlone.AntiAddiction.checkChatLimit();
+ AntiAddiction.OpenSource.AntiAddiction.checkChatLimit();
 ```
 当用户可以聊天时， SDK 会通过聊天回调 [CHAT\_NO\_LIMIT](#回调类型) 来通知游戏，否则就会去实名。如果此时需要打开第三方实名页，SDK 会调用 [OPEN\_REAL\_NAME](#回调类型) 回调，否则打开 SDK 的实名页面，如果实名失败就会调用[CHAT\_LIMIT](#回调类型) 回调，否则调用 [CHAT\_NO\_LIMIT](#回调类型)。
 
@@ -200,11 +209,11 @@ AntiAddiction.StandAlone.AntiAddiction.paySuccess(100);
 void OnApplicationPause(bool pauseStatus){
 	if (pauseStatus)
 	{
-		AntiAddiction.StandAlone.AntiAddiction.onStop();
+		AntiAddiction.OpenSourceAntiAddiction.onStop();
 
 	}else
 	{
-		AntiAddiction.StandAlone.AntiAddiction.onResume();
+		AntiAddiction.OpenSource.AntiAddiction.onResume();
 
 	}
 }
@@ -215,7 +224,7 @@ void OnApplicationPause(bool pauseStatus){
 SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户，会返回该用户的正常类型信息（0，1，2，3，4），否则返回 -1。调用示例如下：
 
 ```
-int userType = AntiAddiction.StandAlone.AntiAddiction.getUserType("12345");
+int userType = AntiAddiction.OpenSource.AntiAddiction.getUserType("12345");
 
 ```
 参数是用户的唯一标识字符串，返回值参考[用户类型](#用户类型)。
@@ -224,6 +233,6 @@ int userType = AntiAddiction.StandAlone.AntiAddiction.getUserType("12345");
 设置用户信息后，游戏可调用此接口打开实名窗口，示例如下：
 
 ```
-AntiAddiction.StandAlone.AntiAddiction.openRealName();
+AntiAddiction.OpenSource.AntiAddiction.openRealName();
 ```
 调用后结果会通过[实名相关回调](#callback)返回。

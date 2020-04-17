@@ -13,14 +13,22 @@ struct Logger {
         #endif
     }
     
-    /// 业务逻辑 log
+    /// 业务流程 log
     static func info(_ items: Any...) {
         #if DEBUG
         let s = items.reduce("") { result, next in
             return result + String(describing: next)
         }
-        Swift.print("[AntiAddictionAKit] \(s)")
+        Swift.print("[AntiAddictionKit] \(s)")
         #endif
+    }
+    
+    /// 输出日志
+    static func release(_ items: Any...) {
+        let s = items.reduce("") { result, next in
+            return result + String(describing: next)
+        }
+        Swift.print("[AntiAddictionKit] \(s)")
     }
     
 }

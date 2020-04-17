@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AntiAddiction.StandAlone
+namespace AntiAddiction.OpenSource
 {
     public class AntiAddictionConfig
     {

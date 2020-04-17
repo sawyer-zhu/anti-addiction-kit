@@ -1,8 +1,7 @@
 package com.antiaddiction.sdk;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -12,6 +11,7 @@ import android.os.Message;
 
 import com.antiaddiction.sdk.dao.UserDao;
 import com.antiaddiction.sdk.entity.User;
+import com.antiaddiction.sdk.service.ConfigService;
 import com.antiaddiction.sdk.service.CountTimeService;
 import com.antiaddiction.sdk.service.PayStrictService;
 import com.antiaddiction.sdk.service.PlayLogService;
@@ -120,6 +120,9 @@ public class AntiAddictionCore {
         AntiAddictionCore.activity = activity;
         AntiAddictionCore.protectCallBack = protectCallBack;
         AntiAddictionPlatform.setActivity(activity);
+        if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()) {
+            ConfigService.getConfigFromServer();
+        }
         inited = true;
         checkDebug();
     }
@@ -147,26 +150,57 @@ public class AntiAddictionCore {
         if (null != userId) {
             //登录
             if (currentUser == null) {
-                currentUser = UserDao.getUser(activity, userId);
-                //本地未存储用户信息
-                if (null == currentUser) {
-                    currentUser = new User(userId);
-                    currentUser.setAccountType(userType);
-                } else {
-                    if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName() && currentUser.getAccountType() != userType) {
+                if(!AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()) {
+                    currentUser = UserDao.getUser(activity, userId);
+                    //本地未存储用户信息
+                    if (null == currentUser) {
+                        currentUser = new User(userId);
                         currentUser.setAccountType(userType);
-                        resetUserState();
+                    } else {
+                        if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName() && currentUser.getAccountType() != userType) {
+                            currentUser.setAccountType(userType);
+                            resetUserState();
+                        }
                     }
+                    LogUtil.logd("getUser info = " + getCurrentUser().toJsonString());
+                    checkUser();
+                }else{
+                    UserService.getUserInfo(userId, userType,new Callback() {
+                        @Override
+                        public void onSuccess(JSONObject response) {
+                            try {
+                                currentUser = new User(response.optString("access_token"));
+                                int accountType = response.getInt("accountType");
+                                if(accountType == 0){
+                                    accountType = UserService.getUserTypeByAge(response.optInt("age",0));
+                                }
+                               // currentUser.setBirthday(response.getString("birthday"));
+                                currentUser.setAccountType(accountType);
+                                checkUser();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                LogUtil.logd("phrase user auth error");
+                                onFail(e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onFail(String msg) {
+                            LogUtil.logd("login fail");
+                            //创建一个假成年用户
+                            currentUser = new User("");
+                            currentUser.setAccountType(AntiAddictionKit.USER_TYPE_ADULT);
+                            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "登录服务失败");
+                        }
+                    });
                 }
-                LogUtil.logd("getUser info = " + getCurrentUser().toJsonString());
-                checkUser();
             } else {
-                if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
-                    if (getCurrentUser().getUserId().equals(userId) && getCurrentUser().getAccountType() != userType) {
-                        resetUserInfo(userType);
-                        getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
-                    }
-                }
+//                if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
+//                    if (getCurrentUser().getUserId().equals(userId) && getCurrentUser().getAccountType() != userType) {
+//                        resetUserInfo(userType);
+//                        getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
+//                    }
+//                }
             }
         }
     }
@@ -177,6 +211,9 @@ public class AntiAddictionCore {
             if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
                 if (getCurrentUser().getAccountType() != userType) {
                     resetUserInfo(userType);
+                    if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+                        UserService.submitUserType(currentUser.getUserId(),userType,null);
+                    }
                 }
             }
         }
@@ -185,8 +222,10 @@ public class AntiAddictionCore {
     static void onResume() {
         //checkInited();
         LogUtil.logd("onResume");
-        if (getCurrentUser() != null && getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
-            CountTimeService.onResume();
+        if(AntiAddictionKit.getFunctionConfig().getUseSdkOnlineTimeLimit()) {
+            if (getCurrentUser() != null && getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
+                CountTimeService.onResume();
+            }
         }
     }
 
@@ -203,7 +242,12 @@ public class AntiAddictionCore {
         checkInited();
         LogUtil.logd("PaySuccess");
         if (getCurrentUser() != null) {
-            getCurrentUser().updatePayMonthNum(num);
+            if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
+                PayStrictService.submitPaySuccess(currentUser.getUserId(),num);
+            }else {
+                getCurrentUser().updatePayMonthNum(num);
+                saveUserInfo();
+            }
         }
     }
 
@@ -242,7 +286,11 @@ public class AntiAddictionCore {
                     getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, AntiAddictionKit.TIP_OPEN_BY_PAY_LIMIT);
                 }
             } else {
-                checkPayInMainThread(num);
+                if(getCurrentUser().getAccountType() == AntiAddictionKit.USER_TYPE_ADULT) {
+                    getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT, "");
+                }else {
+                    checkPayInMainThread(num);
+                }
             }
         }
     }
@@ -338,7 +386,7 @@ public class AntiAddictionCore {
                         }
 
                         @Override
-                        public void onFail() {
+                        public void onFail(String msg) {
 
                         }
                     });
@@ -384,29 +432,43 @@ public class AntiAddictionCore {
         if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
             getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, "");
         } else {
-            RealNameAndPhoneDialog.openRealNameAndPhoneDialog(2, new OnResultListener() {
-                @Override
-                public void onResult(int type, String msg) {
-                    if (type == AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS) {
-                        getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_USER_TYPE_CHANGED, "");
-                        getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS, "");
-                    } else {
-                        getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_FAIL, "");
+            String identify = currentUser.getIdentify();
+            if(identify != null && identify.length() > 0 ){
+                getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS, "");
+            }else {
+                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(2, new OnResultListener() {
+                    @Override
+                    public void onResult(int type, String msg) {
+                        if (type == AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS) {
+                            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_USER_TYPE_CHANGED, "");
+                            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS, "");
+                        } else {
+                            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_FAIL, "");
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
     static String getSdkVersion() {
-        return "1.0.3";
+        return "1.1.0";
     }
 
     /**
      * 检查用户防沉迷状态
      */
     private static void checkUser() {
-        PlayLogService.checkUserStateSync(0, 0, getCurrentUser(), new Callback() {
+        if(getCurrentUser() == null){
+            //用户信息获取失败，直接返回
+            return;
+        }
+        if(getCurrentUser().getAccountType() == AntiAddictionKit.USER_TYPE_ADULT) {
+            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
+            return;
+        }
+;
+        PlayLogService.checkUserState(0, 0, getCurrentUser(), new Callback() {
             @Override
             public void onSuccess(JSONObject strictData) {
                 boolean needShowRealName = AntiAddictionKit.getFunctionConfig().getUseSdkRealName();
@@ -417,7 +479,33 @@ public class AntiAddictionCore {
                         final String content = strictData.optString("description");
                         final int remainTime = strictData.getInt("remainTime");
                         if (restrictType == 0) {
-                            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
+                            if(getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_UNKNOWN) {
+                                getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
+                            }else{
+                                //处理游客登录提示
+                                String tip = AntiAddictionKit.getCommonConfig().getUnIdentifyFirstLogin();
+                                if(remainTime < AntiAddictionKit.getCommonConfig().getGuestTime()){
+                                    tip = AntiAddictionKit.getCommonConfig().getUnIdentifyRemain();
+                                }
+                                int min = remainTime / 60;
+                                StringBuilder stringBuilder = new StringBuilder(tip);
+                                stringBuilder.insert(stringBuilder.indexOf("#")+1,min);
+                                AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_ENTER_NO_LIMIT, title,
+                                        stringBuilder.toString(), 2, new OnResultListener() {
+                                            @Override
+                                            public void onResult(int type, String msg) {
+                                                if (type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT) {
+                                                    logout();
+                                                } else {
+                                                    if (type != 0) {
+                                                        getCallBack().onResult(type, msg);
+                                                    }
+                                                    getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
+                                                }
+                                            }
+                                        }, needShowRealName);
+
+                            }
                         } else {
                             if (restrictType == 1) {
                                 if (remainTime <= 0) {
@@ -498,7 +586,8 @@ public class AntiAddictionCore {
             }
 
             @Override
-            public void onFail() {
+            public void onFail(String msg) {
+                getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
 
             }
         });
@@ -514,35 +603,41 @@ public class AntiAddictionCore {
      */
     public static void resetUserInfo(String name, String identify, String phone) {
         if (getCurrentUser() != null) {
-            User user = getCurrentUser();
-            user.setUserName(name);
-            user.setIdentify(identify);
-            user.setPhone(phone);
-            //是否是邀请码
-            if (identify.length() >= 15) {
-                int age = RexCheckUtil.getAgeFromIdentify(identify);
-                user.setAccountType(UserService.getUserTypeByAge(age));
-                user.setBirthday(RexCheckUtil.getBirthdayFromIdentify(identify));
-            } else {
-                user.setAccountType(AntiAddictionKit.USER_TYPE_ADULT);
-            }
-            try {
-                //RSA加密
+            if(!AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()) {
+                User user = getCurrentUser();
+                user.setUserName(name);
+                user.setIdentify(identify);
+                user.setPhone(phone);
+                //是否是邀请码
+                if (identify.length() >= 15) {
+                    int age = RexCheckUtil.getAgeFromIdentify(identify);
+                    user.setAccountType(UserService.getUserTypeByAge(age));
+                    user.setBirthday(RexCheckUtil.getBirthdayFromIdentify(identify));
+                } else {
+                    user.setAccountType(AntiAddictionKit.USER_TYPE_ADULT);
+                }
+                try {
+                    //RSA加密
 //                String publicKey = AntiAddictionKit.Config.getRsaPublicString().length() == 0 ?
 //                        RsaUtil.getBase64Encode(RsaUtil.generateRSAKeyPair().getPublic().getEncoded()):
 //                        AntiAddictionKit.Config.getRsaPublicString();
 //                user.setIdentify(RsaUtil.encryptData(user.getIdentify().getBytes(),RsaUtil.loadPublicKey(publicKey)));
 //                user.setPhone(RsaUtil.encryptData(user.getPhone().getBytes(),RsaUtil.loadPublicKey(publicKey)));
-                //AES加密
-                String passwd = AntiAddictionKit.getCommonConfig().getEncodeString().length() > 0 ? AntiAddictionKit.getCommonConfig().getEncodeString() : "test";
-                user.setIdentify(AesUtil.getEncrptStr(user.getIdentify(), passwd));
-                user.setPhone(AesUtil.getEncrptStr(user.getPhone(), passwd));
-                LogUtil.logd(" identify = " + AesUtil.getDecryptStr(user.getIdentify(), passwd));
-            } catch (Exception e) {
-                e.printStackTrace();
+                    //AES加密
+                    String passwd = AntiAddictionKit.getCommonConfig().getEncodeString().length() > 0 ? AntiAddictionKit.getCommonConfig().getEncodeString() : "test";
+                    user.setIdentify(AesUtil.getEncrptStr(user.getIdentify(), passwd));
+                    user.setPhone(AesUtil.getEncrptStr(user.getPhone(), passwd));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                resetGameLimitInfo();
+                saveUserInfo();
+            }else{
+                //从服务端获取只有年龄
+                int type = Integer.parseInt(identify);
+                getCurrentUser().setAccountType(type);
+                resetGameLimitInfo();
             }
-            resetGameLimitInfo();
-            saveUserInfo();
         }
     }
 
@@ -575,8 +670,10 @@ public class AntiAddictionCore {
      * 重要节点保存用户信息
      */
     public static void saveUserInfo() {
-        if (getCurrentUser() != null) {
-            UserDao.saveUser(AntiAddictionPlatform.getActivity(), getCurrentUser());
+        if (!AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()) {
+            if (getCurrentUser() != null) {
+                UserDao.saveUser(AntiAddictionPlatform.getActivity(), getCurrentUser());
+            }
         }
     }
 

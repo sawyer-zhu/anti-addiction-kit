@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.antiaddiction.sdk.utils.LogUtil;
+import com.antiaddiction.sdk.utils.TimeUtil;
+
+import org.json.JSONObject;
 
 public class AntiAddictionKit {
     //用户类型
@@ -46,6 +49,7 @@ public class AntiAddictionKit {
             return;
         }
         AntiAddictionCore.init(activity, protectCallBack);
+        LogUtil.setIsDebug(true);
     }
 
     /**
@@ -184,8 +188,7 @@ public class AntiAddictionKit {
         private boolean useSdkPaymentLimit = true;
         private boolean useSdkOnlineTimeLimit = true;
         private boolean showSwitchAccountButton = true;
-        private boolean supportSumbitToServer = false;
-        private String server_dns=null;
+        private String server_host=null;
         private FunctionConfig(){}
         private static FunctionConfig getInstance(){
             return INSTANCE;
@@ -211,13 +214,16 @@ public class AntiAddictionKit {
             return INSTANCE;
         }
 
-        public FunctionConfig supportSumbitToServer(boolean support,String dns){
-            if(support && (dns == null || dns.length() == 0)){
-                throw new RuntimeException("invalid dns");
+        public FunctionConfig setHost(String host){
+            if(host != null &&  !host.contains("http")){
+                throw new RuntimeException("invalid host");
             }
-            INSTANCE.supportSumbitToServer = support;
-            INSTANCE.server_dns = dns;
+            INSTANCE.server_host = host;
             return INSTANCE;
+        }
+
+        public  String getHost(){
+            return INSTANCE.server_host;
         }
 
         public boolean getUseSdkOnlineTimeLimit(){
@@ -236,7 +242,7 @@ public class AntiAddictionKit {
         }
 
         public boolean getSupportSubmitToServer(){
-            return INSTANCE.supportSumbitToServer;
+            return INSTANCE.server_host != null;
         }
     }
    
@@ -277,6 +283,14 @@ public class AntiAddictionKit {
         //安全设置
         //aes 密匙
         private String encodeString = "test";
+        private String version = "0.0.1";
+        private String unIdentifyFirstLogin ="您的游戏体验时间还剩余#分钟#，登记实名信息后可深度体验。";
+        private String unIdentifyRemain = "您当前未提交实名信息，根据国家相关规定，享有#分钟#游戏体验时间。登记实名信息后可深度体验。";
+        private String unIdentifyLimit = "您的游戏体验时长已达#分钟#。登记实名信息后可深度体验。";
+        private String identifyLimit = "您今日游戏时间已达#分钟#。根据国家相关规定，今日无法再进行游戏。请注意适当休息。";
+        private String identifyRemain = "您今日游戏时间还剩余#分钟#，请注意适当休息。";
+        private String nightStrictRemain = "距离健康保护时间还剩余#分钟#，请注意适当休息。";
+        private String nightStrictLimit = "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。";
 
         private CommonConfig(){
         }
@@ -320,8 +334,8 @@ public class AntiAddictionKit {
             return INSTANCE;
         }
 
-        public CommonConfig youngPayLimit(int youngMonthPayLimit){
-            INSTANCE.teenMonthPayLimit = youngMonthPayLimit;
+        public CommonConfig youngPayLimit(int youngPayLimit){
+            INSTANCE.youngPayLimit = youngPayLimit;
             return INSTANCE;
         }
 
@@ -456,6 +470,46 @@ public class AntiAddictionKit {
 
         public String getEncodeString(){
             return INSTANCE.encodeString;
+        }
+
+        public String getUnIdentifyFirstLogin(){
+            return INSTANCE.unIdentifyFirstLogin;
+        }
+
+        public String getUnIdentifyRemain(){
+            return INSTANCE.unIdentifyRemain;
+        }
+
+        public void praseJson(JSONObject config) {
+            if (config != null) {
+                try {
+                    //if (!config.getString("version").equals(INSTANCE.version)) {
+                        INSTANCE.version = config.getString("version");
+                        LogUtil.logd("update config version = " + INSTANCE.version);
+                        JSONObject data = config.getJSONObject("config");
+                        // INSTANCE.guestTime = data.optInt("guestTime", 60 * 60);
+                        INSTANCE.childCommonTime = data.optInt("childCommonTime", 30 * 60);
+                        INSTANCE.nightStrictStart = TimeUtil.getTimeByClock(data.optString("nightStrictStart", "22:00"));
+                        INSTANCE.nightStrictEnd = TimeUtil.getTimeByClock(data.optString("nightStrictEnd", "08:00"));
+                        INSTANCE.childHolidayTime = data.optInt("childHolidayTime", 3 * 60 * 60);
+                        INSTANCE.teenMonthPayLimit = data.optInt("teenMonthPayLimit",200 * 10 * 10);
+                        INSTANCE.teenPayLimit = data.optInt("teenPayLimit",50 *10 * 10);
+                        INSTANCE.youngPayLimit = data.optInt("youngPayLimit",100 *10 * 10);
+                        INSTANCE.youngMonthPayLimit = data.optInt("youngMonthPayLimit",400 * 10 * 10);
+                        JSONObject description = data.getJSONObject("description");
+                        INSTANCE.unIdentifyRemain = description.getString("unIdentifyRemain");
+                        INSTANCE.unIdentifyFirstLogin = description.getString("unIdentifyFirstLogin");
+                        INSTANCE.unIdentifyLimit = description.getString("unIdentifyLimit");
+                        INSTANCE.identifyLimit = description.getString("identifyLimit");
+                        INSTANCE.identifyRemain = description.getString("identifyRemain");
+                        INSTANCE.nightStrictRemain = description.getString("nightStrictRemain");
+                        INSTANCE.nightStrictLimit = description.getString("nightStrictLimit");
+                  //  }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 

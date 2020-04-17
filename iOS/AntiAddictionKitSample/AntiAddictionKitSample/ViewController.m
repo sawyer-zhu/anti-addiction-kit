@@ -2,6 +2,7 @@
 
 #import "ViewController.h"
 #import "ButtonViewCell.h"
+#import "NetworkHelper.h"
 @import AntiAddictionKit;
 //#import "AntiAddictionKit/AntiAddictionKit-Swift.h"
 //#import "AntiAddictionKit/AntiAddictionKit.h"
@@ -22,6 +23,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 @property (assign, nonatomic) BOOL isMainlandUser;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *userSegment;
 
+@property (assign, nonatomic) BOOL isSdkServerEnabled;
+
 @end
 
 @implementation ViewController
@@ -34,11 +37,16 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.isSdkServerEnabled = NO;
+    
     [self setupUI];
     
     [self addNotificationListener];
     
     self.isSdkInitialized = NO;
+    
+    // 设置服务器地址
+//    [AntiAddictionKit setHost:@"http://172.26.129.132:7001"];
     
     //显示切换账号按钮
 //    AntiAddictionKit.configuration.showSwitchAccountButton = NO;
@@ -48,8 +56,6 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 }
 
 - (void)dealloc {
-//    [NSNotificationCenter.defaultCenter removeObserver:self name:onlineTimeNotificationName object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -70,8 +76,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
-    // NSString *appBuildVersion = [infoDic objectForKey:@"CFBundleVersion"];
-    _nameLabel.text = [NSString stringWithFormat:@"防沉迷DEMO %@", appVersion];
+     NSString *appBuildVersion = [infoDic objectForKey:@"CFBundleVersion"];
+    _nameLabel.text = [NSString stringWithFormat:@"DEMO %@(%@)", appVersion, appBuildVersion];
 }
 
 - (CGRect)actionsViewRect {
@@ -83,7 +89,7 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 }
 
 - (CGSize)buttonSize {
-    return CGSizeMake(150, 60);
+    return CGSizeMake(310, 80);
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -152,10 +158,11 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 // MARK: - Actions
 - (NSArray *)buttonArray {
     return @[
-        @[@"功能配置（可选）：实名/付费/时长）", @"configSdkFunctions"],
-        @[@"时长配置（可选）", @"configSdkTimeLimit"],
-        @[@"初始化✅", @"initSdk"],
-        @[@"登录用户\n（id，type）", @"login"],
+        @[@"功能配置❓可选\n(实名/付费/时长)\n不设置即默认值）", @"configSdkFunctions"],
+        @[@"时长配置❓可选\n不设置即默认值", @"configSdkTimeLimit"],
+        @[@"设置服务器Host❓\n(单机模式不填,联网模式必填)\n(单机/联网两种模式独立存在，判断条件=Host是否在初始化前设置。)", @"setServerHost"],
+        @[@"初始化‼️\n(联网版=1.设置服务器 2.初始化)。\n(若先初始化，即为单机版。)", @"initSdk"],
+        @[@"登录用户‼️\n(强制)\n（id，type）", @"login"],
         @[@"退出登录", @"logout"],
         @[@"更新用户类型\n（type）", @"updateUserType"],
         @[@"获取用户类型\n（id）", @"getUserType"],
@@ -246,6 +253,24 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     [self presentViewController:alert animated:true completion:nil];
 }
 
+- (void)setServerHost {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"服务器Host" message:@"例如https://gameapi.com\n\n默认不设置=单机版，\n\n一旦设置，则视为联网版\n\n地址填写错误会导致联网版防沉迷机制失效。" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.placeholder = @"例如https://gameapi.com";
+        textField.text = @"http://172.26.129.132:7001";
+    }];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [AntiAddictionKit setHost:[alert.textFields objectAtIndex:0].text];
+        self.isSdkServerEnabled = YES;
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:okAction];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:true completion:nil];
+}
+
 - (void)initSdk {
     [AntiAddictionKit init:self];
     
@@ -283,10 +308,26 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
         if (!userId || userId.length == 0) {
             userId = @"";
         }
-        [AntiAddictionKit login:userId :userType];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.callbackLabel.text = [NSString stringWithFormat:@"用户[%@]已登录", userId];
-        });
+        
+        if (self.isSdkServerEnabled) {
+            [NetworkHelper getTokenWith:userId completionHandler:^(NSString * _Nullable token) {
+                if ([token length] > 0) {
+                    [AntiAddictionKit login:token :userType];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.callbackLabel.text = [NSString stringWithFormat:@"用户[%@]已登录", token];
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.callbackLabel.text = @"登录前获取token失败";
+                    });
+                     
+                }
+                
+            }];
+        } else {
+             [AntiAddictionKit login:userId :userType];
+        }
+        
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
