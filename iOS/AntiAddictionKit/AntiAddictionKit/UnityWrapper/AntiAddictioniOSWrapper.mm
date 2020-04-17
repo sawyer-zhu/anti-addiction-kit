@@ -67,6 +67,10 @@ extern "C" {
         return (int)[AntiAddictionKit getUserType:aaUserId];
     }
     
+    int AntiAddictionCheckCurrentPayLimit(int amount){
+        return (int)[AntiAddictionKit checkCurrentPayLimit:amount];
+    }
+    
     void AntiAddictionCheckPayLimit(int amount){
         [AntiAddictionKit checkPayLimit:amount];
     }

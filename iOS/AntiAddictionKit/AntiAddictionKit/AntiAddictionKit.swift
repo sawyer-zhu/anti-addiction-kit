@@ -129,6 +129,15 @@ public final class AntiAddictionKit: NSObject {
         }
     }
     
+    /// 查询能否支付，直接返回支付限制相关回调类型 raw value，特殊情况使用
+    /// - Parameter amount: 支付金额，单位分
+    public class func checkCurrentPayLimit(_ amount: Int) -> Int {
+        if isServerEnabled {
+            return PaymentManager.checkCurrentPayLimit(amount)
+        } else {
+            return PayService.checkCurrentPayLimit(amount)
+        }
+    }
     
     /// 查询能否支付
     /// - Parameter amount: 支付金额，单位分
