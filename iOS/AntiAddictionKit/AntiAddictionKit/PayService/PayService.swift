@@ -9,6 +9,12 @@ final class PayService {
     /// - Parameter price: 道具价格
     public class func canPurchase(_ price: Int) {
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.sendCallback(result: .noPayLimit, message: "无支付限制")
+            return
+        }
+        
         if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
             let limitType = PayLimitType.unlimited
             limitType.notify()
