@@ -1,0 +1,926 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.2 (swiftlang-1103.0.32.1 clang-1103.0.32.29)
+// swift-module-flags: -target arm64-apple-ios8.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name AntiAddictionKit
+@_exported import AntiAddictionKit
+import CommonCrypto
+import Foundation
+import ObjectiveC
+import Swift
+import UIKit
+public enum AlertType {
+  case timeLimitAlert
+  case payLimitAlert
+  public static func == (a: AntiAddictionKit.AlertType, b: AntiAddictionKit.AlertType) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public struct AlertData {
+}
+@_hasMissingDesignatedInitializers public class DefaultsKey {
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class Key<ValueType> : AntiAddictionKit.DefaultsKey where ValueType : Swift.Decodable, ValueType : Swift.Encodable {
+  public init(_ key: Swift.String)
+  @objc deinit
+}
+final public class Defaults {
+  public static var shared: AntiAddictionKit.Defaults
+  public init(userDefaults: Foundation.UserDefaults = UserDefaults.standard)
+  final public func clear<ValueType>(_ key: AntiAddictionKit.Key<ValueType>) where ValueType : Swift.Decodable, ValueType : Swift.Encodable
+  final public func has<ValueType>(_ key: AntiAddictionKit.Key<ValueType>) -> Swift.Bool where ValueType : Swift.Decodable, ValueType : Swift.Encodable
+  final public func get<ValueType>(for key: AntiAddictionKit.Key<ValueType>) -> ValueType? where ValueType : Swift.Decodable, ValueType : Swift.Encodable
+  final public func set<ValueType>(_ value: ValueType, for key: AntiAddictionKit.Key<ValueType>) where ValueType : Swift.Decodable, ValueType : Swift.Encodable
+  final public func removeAll(bundle: Foundation.Bundle = Bundle.main)
+  @objc deinit
+}
+extension Defaults {
+  final public func get<ValueType>(for key: AntiAddictionKit.Key<ValueType>) -> ValueType? where ValueType : Swift.Decodable, ValueType : Swift.Encodable, ValueType : Swift.RawRepresentable, ValueType.RawValue : Swift.Decodable, ValueType.RawValue : Swift.Encodable
+  final public func set<ValueType>(_ value: ValueType, for key: AntiAddictionKit.Key<ValueType>) where ValueType : Swift.Decodable, ValueType : Swift.Encodable, ValueType : Swift.RawRepresentable, ValueType.RawValue : Swift.Decodable, ValueType.RawValue : Swift.Encodable
+}
+@objc public protocol AntiAddictionCallback : AnyObject {
+  @objc func onAntiAddictionResult(_ code: Swift.Int, _ message: Swift.String)
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(AntiAddictionKit) final public class AntiAddictionKit : ObjectiveC.NSObject {
+  @objc public static var configuration: AntiAddictionKit.Configuration
+  @objc final public class func setFunctionConfig(_ useSdkRealName: Swift.Bool = true, _ useSdkPaymentLimit: Swift.Bool = true, _ useSdkOnlineTimeLimit: Swift.Bool = true)
+  @objc final public class func setHost(_ host: Swift.String)
+  @objc final public class func `init`(_ delegate: AntiAddictionKit.AntiAddictionCallback)
+  @objc final public class func login(_ userId: Swift.String, _ userType: Swift.Int)
+  @objc final public class func updateUserType(_ userType: Swift.Int)
+  @objc final public class func logout()
+  @objc final public class func getUserType(_ userId: Swift.String) -> Swift.Int
+  @objc final public class func checkPayLimit(_ amount: Swift.Int)
+  @objc final public class func paySuccess(_ amount: Swift.Int)
+  @objc final public class func checkChatLimit()
+  @objc final public class func openRealName()
+  @objc final public class func generateIDCode() -> Swift.String
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class Appearance : ObjectiveC.NSObject {
+  @objc deinit
+}
+extension Collection {
+  public subscript(safe index: Self.Index) -> Self.Iterator.Element? {
+    get
+  }
+}
+extension UIView {
+  @discardableResult
+  public func fillSuperView(_ edges: UIKit.UIEdgeInsets = UIEdgeInsets.zero) -> [UIKit.NSLayoutConstraint]
+  @discardableResult
+  public func addLeadingConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .leading, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addTrailingConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .trailing, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addLeftConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .left, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addRightConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .right, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addTopConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .top, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addBottomConstraint(toView view: UIKit.UIView?, attribute: UIKit.NSLayoutConstraint.Attribute = .bottom, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addCenterXYConstraint(toView view: UIKit.UIView?, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> [UIKit.NSLayoutConstraint]
+  @discardableResult
+  public func addCenterXConstraint(toView view: UIKit.UIView?, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addCenterYConstraint(toView view: UIKit.UIView?, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addWidthAndHeightConstraint(toView view: UIKit.UIView? = nil, relation: UIKit.NSLayoutConstraint.Relation = .equal, width: CoreGraphics.CGFloat = 0.0, height: CoreGraphics.CGFloat = 0.0) -> [UIKit.NSLayoutConstraint]
+  @discardableResult
+  public func addWidthConstraint(toView view: UIKit.UIView? = nil, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  @discardableResult
+  public func addHeightConstraint(toView view: UIKit.UIView? = nil, relation: UIKit.NSLayoutConstraint.Relation = .equal, constant: CoreGraphics.CGFloat = 0.0) -> UIKit.NSLayoutConstraint
+  public func removeAllConstraints()
+}
+public struct User : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public enum DateFormatType {
+  case isoYear
+  case isoYearMonth
+  case isoDate
+  case isoDateTime
+  case isoDateTimeSec
+  case isoDateTimeMilliSec
+  case dotNet
+  case rss
+  case altRSS
+  case httpHeader
+  case standard
+  case custom(Swift.String)
+}
+extension DateFormatType : Swift.Equatable {
+  public static func == (lhs: AntiAddictionKit.DateFormatType, rhs: AntiAddictionKit.DateFormatType) -> Swift.Bool
+}
+public enum TimeZoneType {
+  case local
+  case `default`
+  case utc
+  case custom(Swift.Int)
+}
+public enum RelativeTimeStringType {
+  case nowPast
+  case nowFuture
+  case secondsPast
+  case secondsFuture
+  case oneMinutePast
+  case oneMinuteFuture
+  case minutesPast
+  case minutesFuture
+  case oneHourPast
+  case oneHourFuture
+  case hoursPast
+  case hoursFuture
+  case oneDayPast
+  case oneDayFuture
+  case daysPast
+  case daysFuture
+  case oneWeekPast
+  case oneWeekFuture
+  case weeksPast
+  case weeksFuture
+  case oneMonthPast
+  case oneMonthFuture
+  case monthsPast
+  case monthsFuture
+  case oneYearPast
+  case oneYearFuture
+  case yearsPast
+  case yearsFuture
+  public static func == (a: AntiAddictionKit.RelativeTimeStringType, b: AntiAddictionKit.RelativeTimeStringType) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum DateComparisonType {
+  case isToday
+  case isTomorrow
+  case isYesterday
+  case isSameDay(as: Foundation.Date)
+  case isThisWeek
+  case isNextWeek
+  case isLastWeek
+  case isSameWeek(as: Foundation.Date)
+  case isThisMonth
+  case isNextMonth
+  case isLastMonth
+  case isSameMonth(as: Foundation.Date)
+  case isThisYear
+  case isNextYear
+  case isLastYear
+  case isSameYear(as: Foundation.Date)
+  case isInTheFuture
+  case isInThePast
+  case isEarlier(than: Foundation.Date)
+  case isLater(than: Foundation.Date)
+  case isWeekday
+  case isWeekend
+}
+public enum DateComponentType {
+  case second
+  case minute
+  case hour
+  case day
+  case weekday
+  case nthWeekday
+  case week
+  case month
+  case year
+  public static func == (a: AntiAddictionKit.DateComponentType, b: AntiAddictionKit.DateComponentType) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum DateForType {
+  case startOfDay
+  case endOfDay
+  case startOfWeek
+  case endOfWeek
+  case startOfMonth
+  case endOfMonth
+  case tomorrow
+  case yesterday
+  case nearestMinute(minute: Swift.Int)
+  case nearestHour(hour: Swift.Int)
+}
+public enum DateStyleType {
+  case short
+  case medium
+  case long
+  case full
+  case weekday
+  case shortWeekday
+  case veryShortWeekday
+  case month
+  case shortMonth
+  case veryShortMonth
+  public static func == (a: AntiAddictionKit.DateStyleType, b: AntiAddictionKit.DateStyleType) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+extension DispatchTime : Swift.ExpressibleByIntegerLiteral {
+  public init(integerLiteral value: Swift.Int)
+  public typealias IntegerLiteralType = Swift.Int
+}
+extension DispatchTime : Swift.ExpressibleByFloatLiteral {
+  public init(floatLiteral value: Swift.Double)
+  public typealias FloatLiteralType = Swift.Double
+}
+public enum HTTPFile {
+  case url(Foundation.URL, Swift.String?)
+  case data(Swift.String, Foundation.Data, Swift.String?)
+  case text(Swift.String, Swift.String, Swift.String?)
+}
+public enum HTTPMethod : Swift.String {
+  case delete
+  case get
+  case head
+  case options
+  case patch
+  case post
+  case put
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol URLComponentsConvertible {
+  var urlComponents: Foundation.URLComponents? { get }
+}
+extension String : AntiAddictionKit.URLComponentsConvertible {
+  public var urlComponents: Foundation.URLComponents? {
+    get
+  }
+}
+extension URL : AntiAddictionKit.URLComponentsConvertible {
+  public var urlComponents: Foundation.URLComponents? {
+    get
+  }
+}
+@objc final public class HTTPResult : ObjectiveC.NSObject {
+  final public var content: Foundation.Data?
+  final public var response: Foundation.URLResponse?
+  final public var error: Swift.Error?
+  final public var request: Foundation.URLRequest? {
+    get
+  }
+  final public var task: Foundation.URLSessionTask?
+  final public var encoding: Swift.String.Encoding
+  final public var JSONReadingOptions: Foundation.JSONSerialization.ReadingOptions
+  final public var reason: Swift.String {
+    get
+  }
+  final public var isRedirect: Swift.Bool {
+    get
+  }
+  final public var isPermanentRedirect: Swift.Bool {
+    get
+  }
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  public init(data: Foundation.Data?, response: Foundation.URLResponse?, error: Swift.Error?, task: Foundation.URLSessionTask?)
+  final public var json: Any? {
+    get
+  }
+  final public var statusCode: Swift.Int? {
+    get
+  }
+  final public var text: Swift.String? {
+    get
+  }
+  final public var headers: AntiAddictionKit.CaseInsensitiveDictionary<Swift.String, Swift.String> {
+    get
+    set(value)
+  }
+  final public var cookies: [Swift.String : Foundation.HTTPCookie] {
+    get
+    set(value)
+  }
+  final public var ok: Swift.Bool {
+    get
+  }
+  final public var url: Foundation.URL? {
+    get
+  }
+  final public var links: [Swift.String : [Swift.String : Swift.String]] {
+    get
+    set(value)
+  }
+  final public func cancel()
+  @objc deinit
+  @objc override dynamic public init()
+}
+public struct CaseInsensitiveDictionary<Key, Value> : Swift.Collection, Swift.ExpressibleByDictionaryLiteral where Key : Swift.Hashable {
+  public typealias Element = (key: Key, value: Value)
+  public typealias Index = Swift.DictionaryIndex<Key, Value>
+  public var startIndex: AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Index {
+    get
+  }
+  public var endIndex: AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Index {
+    get
+  }
+  public func index(after: AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Index) -> AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Index
+  public var count: Swift.Int {
+    get
+  }
+  public var isEmpty: Swift.Bool {
+    get
+  }
+  public init(dictionaryLiteral elements: (Key, Value)...)
+  public init(dictionary: [Key : Value])
+  public subscript(position: AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Index) -> AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>.Element {
+    get
+  }
+  public subscript(key: Key) -> Value? {
+    get
+    set(newValue)
+  }
+  public func makeIterator() -> Swift.DictionaryIterator<Key, Value>
+  public var keys: Swift.Dictionary<Key, Value>.Keys {
+    get
+  }
+  public var values: Swift.Dictionary<Key, Value>.Values {
+    get
+  }
+  public typealias Iterator = Swift.DictionaryIterator<Key, Value>
+  public typealias SubSequence = Swift.Slice<AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>>
+  public typealias Indices = Swift.DefaultIndices<AntiAddictionKit.CaseInsensitiveDictionary<Key, Value>>
+}
+public typealias Credentials = (username: Swift.String, password: Swift.String)
+public typealias TaskProgressHandler = (AntiAddictionKit.HTTPProgress) -> Swift.Void
+public struct JustSessionDefaults {
+  public var JSONReadingOptions: Foundation.JSONSerialization.ReadingOptions
+  public var JSONWritingOptions: Foundation.JSONSerialization.WritingOptions
+  public var headers: [Swift.String : Swift.String]
+  public var multipartBoundary: Swift.String
+  public var credentialPersistence: Foundation.URLCredential.Persistence
+  public var encoding: Swift.String.Encoding
+  public var cachePolicy: Foundation.NSURLRequest.CachePolicy
+  public init(JSONReadingOptions: Foundation.JSONSerialization.ReadingOptions = JSONSerialization.ReadingOptions(rawValue: 0), JSONWritingOptions: Foundation.JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0), headers: [Swift.String : Swift.String] = [:], multipartBoundary: Swift.String = "Ju5tH77P15Aw350m3", credentialPersistence: Foundation.URLCredential.Persistence = .forSession, encoding: Swift.String.Encoding = String.Encoding.utf8, cachePolicy: Foundation.NSURLRequest.CachePolicy = .reloadIgnoringLocalCacheData)
+}
+public struct HTTPProgress {
+  public enum `Type` {
+    case upload
+    case download
+    public static func == (a: AntiAddictionKit.HTTPProgress.`Type`, b: AntiAddictionKit.HTTPProgress.`Type`) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public let type: AntiAddictionKit.HTTPProgress.`Type`
+  public let bytesProcessed: Swift.Int64
+  public let bytesExpectedToProcess: Swift.Int64
+  public var chunk: Foundation.Data?
+  public var percent: Swift.Float {
+    get
+  }
+}
+public protocol JustAdaptor {
+  func request(_ method: AntiAddictionKit.HTTPMethod, url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any], data: [Swift.String : Any], json: Any?, headers: [Swift.String : Swift.String], files: [Swift.String : AntiAddictionKit.HTTPFile], auth: AntiAddictionKit.Credentials?, cookies: [Swift.String : Swift.String], redirects: Swift.Bool, timeout: Swift.Double?, urlQuery: Swift.String?, requestBody: Foundation.Data?, asyncProgressHandler: AntiAddictionKit.TaskProgressHandler?, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)?) -> AntiAddictionKit.HTTPResult
+  init(session: Foundation.URLSession?, defaults: AntiAddictionKit.JustSessionDefaults?)
+}
+public struct JustOf<Adaptor> where Adaptor : AntiAddictionKit.JustAdaptor {
+  public init(session: Foundation.URLSession? = nil, defaults: AntiAddictionKit.JustSessionDefaults? = nil)
+}
+extension JustOf {
+  @discardableResult
+  public func request(_ method: AntiAddictionKit.HTTPMethod, url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func delete(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func get(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func head(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func options(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func patch(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func post(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+  @discardableResult
+  public func put(_ url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any] = [:], data: [Swift.String : Any] = [:], json: Any? = nil, headers: [Swift.String : Swift.String] = [:], files: [Swift.String : AntiAddictionKit.HTTPFile] = [:], auth: (Swift.String, Swift.String)? = nil, cookies: [Swift.String : Swift.String] = [:], allowRedirects: Swift.Bool = true, timeout: Swift.Double? = nil, urlQuery: Swift.String? = nil, requestBody: Foundation.Data? = nil, asyncProgressHandler: (AntiAddictionKit.TaskProgressHandler)? = nil, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)? = nil) -> AntiAddictionKit.HTTPResult
+}
+@objc final public class HTTP : ObjectiveC.NSObject, Foundation.URLSessionDelegate, AntiAddictionKit.JustAdaptor {
+  public init(session: Foundation.URLSession? = nil, defaults: AntiAddictionKit.JustSessionDefaults? = nil)
+  final public func synthesizeRequest(_ method: AntiAddictionKit.HTTPMethod, url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any], data: [Swift.String : Any], json: Any?, headers: AntiAddictionKit.CaseInsensitiveDictionary<Swift.String, Swift.String>, files: [Swift.String : AntiAddictionKit.HTTPFile], auth: AntiAddictionKit.Credentials?, timeout: Swift.Double?, urlQuery: Swift.String?, requestBody: Foundation.Data?) -> Foundation.URLRequest?
+  final public func request(_ method: AntiAddictionKit.HTTPMethod, url: AntiAddictionKit.URLComponentsConvertible, params: [Swift.String : Any], data: [Swift.String : Any], json: Any?, headers: [Swift.String : Swift.String], files: [Swift.String : AntiAddictionKit.HTTPFile], auth: AntiAddictionKit.Credentials?, cookies: [Swift.String : Swift.String], redirects: Swift.Bool, timeout: Swift.Double?, urlQuery: Swift.String?, requestBody: Foundation.Data?, asyncProgressHandler: AntiAddictionKit.TaskProgressHandler?, asyncCompletionHandler: ((AntiAddictionKit.HTTPResult) -> Swift.Void)?) -> AntiAddictionKit.HTTPResult
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension HTTP : Foundation.URLSessionTaskDelegate, Foundation.URLSessionDataDelegate {
+  @objc final public func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
+  @objc final public func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, willPerformHTTPRedirection response: Foundation.HTTPURLResponse, newRequest request: Foundation.URLRequest, completionHandler: @escaping (Foundation.URLRequest?) -> Swift.Void)
+  @objc final public func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didSendBodyData bytesSent: Swift.Int64, totalBytesSent: Swift.Int64, totalBytesExpectedToSend: Swift.Int64)
+  @objc final public func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive data: Foundation.Data)
+  @objc final public func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didCompleteWithError error: Swift.Error?)
+}
+public var Just: AntiAddictionKit.JustOf<AntiAddictionKit.HTTP>
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(Configuration) final public class Configuration : ObjectiveC.NSObject {
+  @objc final public var useSdkRealName: Swift.Bool
+  @objc final public var useSdkOnlineTimeLimit: Swift.Bool
+  @objc final public var useSdkPaymentLimit: Swift.Bool
+  @objc final public var showSwitchAccountButton: Swift.Bool
+  @objc final public var minorCommonDayTotalTime: Swift.Int
+  @objc final public var minorHolidayTotalTime: Swift.Int
+  @objc final public var guestTotalTime: Swift.Int
+  @objc final public var firstAlertTipRemainTime: Swift.Int
+  @objc final public var countdownAlertTipRemainTime: Swift.Int
+  @objc final public var curfewHourStart: Swift.Int {
+    @objc get
+    @objc set(value)
+  }
+  @objc final public var curfewHourEnd: Swift.Int {
+    @objc get
+    @objc set(value)
+  }
+  @objc final public var nightStrictStart: Swift.String
+  @objc final public var nightStrictEnd: Swift.String
+  @objc final public var singlePaymentAmountLimitJunior: Swift.Int
+  @objc final public var mouthTotalPaymentAmountLimitJunior: Swift.Int
+  @objc final public var singlePaymentAmountLimitSenior: Swift.Int
+  @objc final public var mouthTotalPaymentAmountLimitSenior: Swift.Int
+  @objc deinit
+}
+public enum SwiftyJSONError : Swift.Int, Swift.Error {
+  case unsupportedType
+  case indexOutOfBounds
+  case elementTooDeep
+  case wrongType
+  case notExist
+  case invalidJSON
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension SwiftyJSONError : Foundation.CustomNSError {
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+public enum Type : Swift.Int {
+  case number
+  case string
+  case bool
+  case array
+  case dictionary
+  case null
+  case unknown
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct JSON {
+  public init(data: Foundation.Data, options opt: Foundation.JSONSerialization.ReadingOptions = []) throws
+  public init(_ object: Any)
+  public init(parseJSON jsonString: Swift.String)
+  public mutating func merge(with other: AntiAddictionKit.JSON) throws
+  public func merged(with other: AntiAddictionKit.JSON) throws -> AntiAddictionKit.JSON
+  public var type: AntiAddictionKit.`Type` {
+    get
+  }
+  public var error: AntiAddictionKit.SwiftyJSONError? {
+    get
+  }
+  public var object: Any {
+    get
+    set(newValue)
+  }
+  @available(*, unavailable, renamed: "null")
+  public static var nullJSON: AntiAddictionKit.JSON {
+    get
+  }
+  public static var null: AntiAddictionKit.JSON {
+    get
+  }
+}
+public enum Index<T> : Swift.Comparable {
+  case array(Swift.Int)
+  case dictionary(Swift.DictionaryIndex<Swift.String, T>)
+  case null
+  public static func == (lhs: AntiAddictionKit.Index<T>, rhs: AntiAddictionKit.Index<T>) -> Swift.Bool
+  public static func < (lhs: AntiAddictionKit.Index<T>, rhs: AntiAddictionKit.Index<T>) -> Swift.Bool
+}
+public typealias JSONIndex = AntiAddictionKit.Index<AntiAddictionKit.JSON>
+public typealias JSONRawIndex = AntiAddictionKit.Index<Any>
+extension JSON : Swift.Collection {
+  public typealias Index = AntiAddictionKit.JSONRawIndex
+  public var startIndex: AntiAddictionKit.JSON.Index {
+    get
+  }
+  public var endIndex: AntiAddictionKit.JSON.Index {
+    get
+  }
+  public func index(after i: AntiAddictionKit.JSON.Index) -> AntiAddictionKit.JSON.Index
+  public subscript(position: AntiAddictionKit.JSON.Index) -> (Swift.String, AntiAddictionKit.JSON) {
+    get
+  }
+  public typealias Element = (Swift.String, AntiAddictionKit.JSON)
+  public typealias Iterator = Swift.IndexingIterator<AntiAddictionKit.JSON>
+  public typealias SubSequence = Swift.Slice<AntiAddictionKit.JSON>
+  public typealias Indices = Swift.DefaultIndices<AntiAddictionKit.JSON>
+}
+public enum JSONKey {
+  case index(Swift.Int)
+  case key(Swift.String)
+}
+public protocol JSONSubscriptType {
+  var jsonKey: AntiAddictionKit.JSONKey { get }
+}
+extension Int : AntiAddictionKit.JSONSubscriptType {
+  public var jsonKey: AntiAddictionKit.JSONKey {
+    get
+  }
+}
+extension String : AntiAddictionKit.JSONSubscriptType {
+  public var jsonKey: AntiAddictionKit.JSONKey {
+    get
+  }
+}
+extension JSON {
+  public subscript(path: [AntiAddictionKit.JSONSubscriptType]) -> AntiAddictionKit.JSON {
+    get
+    set(newValue)
+  }
+  public subscript(path: AntiAddictionKit.JSONSubscriptType...) -> AntiAddictionKit.JSON {
+    get
+    set(newValue)
+  }
+}
+extension JSON : Swift.ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift.StringLiteralType)
+  public init(extendedGraphemeClusterLiteral value: Swift.StringLiteralType)
+  public init(unicodeScalarLiteral value: Swift.StringLiteralType)
+  public typealias StringLiteralType = Swift.StringLiteralType
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.StringLiteralType
+  public typealias UnicodeScalarLiteralType = Swift.StringLiteralType
+}
+extension JSON : Swift.ExpressibleByIntegerLiteral {
+  public init(integerLiteral value: Swift.IntegerLiteralType)
+  public typealias IntegerLiteralType = Swift.IntegerLiteralType
+}
+extension JSON : Swift.ExpressibleByBooleanLiteral {
+  public init(booleanLiteral value: Swift.BooleanLiteralType)
+  public typealias BooleanLiteralType = Swift.BooleanLiteralType
+}
+extension JSON : Swift.ExpressibleByFloatLiteral {
+  public init(floatLiteral value: Swift.FloatLiteralType)
+  public typealias FloatLiteralType = Swift.FloatLiteralType
+}
+extension JSON : Swift.ExpressibleByDictionaryLiteral {
+  public init(dictionaryLiteral elements: (Swift.String, Any)...)
+  public typealias Key = Swift.String
+  public typealias Value = Any
+}
+extension JSON : Swift.ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: Any...)
+  public typealias ArrayLiteralElement = Any
+}
+extension JSON : Swift.RawRepresentable {
+  public init?(rawValue: Any)
+  public var rawValue: Any {
+    get
+  }
+  public func rawData(options opt: Foundation.JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Foundation.Data
+  public func rawString(_ encoding: Swift.String.Encoding = .utf8, options opt: Foundation.JSONSerialization.WritingOptions = .prettyPrinted) -> Swift.String?
+  public func rawString(_ options: [AntiAddictionKit.writingOptionsKeys : Any]) -> Swift.String?
+  public typealias RawValue = Any
+}
+extension JSON : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension JSON {
+  public var array: [AntiAddictionKit.JSON]? {
+    get
+  }
+  public var arrayValue: [AntiAddictionKit.JSON] {
+    get
+  }
+  public var arrayObject: [Any]? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var dictionary: [Swift.String : AntiAddictionKit.JSON]? {
+    get
+  }
+  public var dictionaryValue: [Swift.String : AntiAddictionKit.JSON] {
+    get
+  }
+  public var dictionaryObject: [Swift.String : Any]? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var bool: Swift.Bool? {
+    get
+    set(newValue)
+  }
+  public var boolValue: Swift.Bool {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var string: Swift.String? {
+    get
+    set(newValue)
+  }
+  public var stringValue: Swift.String {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var number: Foundation.NSNumber? {
+    get
+    set(newValue)
+  }
+  public var numberValue: Foundation.NSNumber {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var null: Foundation.NSNull? {
+    get
+    set(newValue)
+  }
+  public func exists() -> Swift.Bool
+}
+extension JSON {
+  public var url: Foundation.URL? {
+    get
+    set(newValue)
+  }
+}
+extension JSON {
+  public var double: Swift.Double? {
+    get
+    set(newValue)
+  }
+  public var doubleValue: Swift.Double {
+    get
+    set(newValue)
+  }
+  public var float: Swift.Float? {
+    get
+    set(newValue)
+  }
+  public var floatValue: Swift.Float {
+    get
+    set(newValue)
+  }
+  public var int: Swift.Int? {
+    get
+    set(newValue)
+  }
+  public var intValue: Swift.Int {
+    get
+    set(newValue)
+  }
+  public var uInt: Swift.UInt? {
+    get
+    set(newValue)
+  }
+  public var uIntValue: Swift.UInt {
+    get
+    set(newValue)
+  }
+  public var int8: Swift.Int8? {
+    get
+    set(newValue)
+  }
+  public var int8Value: Swift.Int8 {
+    get
+    set(newValue)
+  }
+  public var uInt8: Swift.UInt8? {
+    get
+    set(newValue)
+  }
+  public var uInt8Value: Swift.UInt8 {
+    get
+    set(newValue)
+  }
+  public var int16: Swift.Int16? {
+    get
+    set(newValue)
+  }
+  public var int16Value: Swift.Int16 {
+    get
+    set(newValue)
+  }
+  public var uInt16: Swift.UInt16? {
+    get
+    set(newValue)
+  }
+  public var uInt16Value: Swift.UInt16 {
+    get
+    set(newValue)
+  }
+  public var int32: Swift.Int32? {
+    get
+    set(newValue)
+  }
+  public var int32Value: Swift.Int32 {
+    get
+    set(newValue)
+  }
+  public var uInt32: Swift.UInt32? {
+    get
+    set(newValue)
+  }
+  public var uInt32Value: Swift.UInt32 {
+    get
+    set(newValue)
+  }
+  public var int64: Swift.Int64? {
+    get
+    set(newValue)
+  }
+  public var int64Value: Swift.Int64 {
+    get
+    set(newValue)
+  }
+  public var uInt64: Swift.UInt64? {
+    get
+    set(newValue)
+  }
+  public var uInt64Value: Swift.UInt64 {
+    get
+    set(newValue)
+  }
+}
+extension JSON : Swift.Comparable {
+}
+public func == (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func <= (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func >= (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func > (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public func < (lhs: AntiAddictionKit.JSON, rhs: AntiAddictionKit.JSON) -> Swift.Bool
+public enum writingOptionsKeys {
+  case jsonSerialization
+  case castNilToNSNull
+  case maxObjextDepth
+  case encoding
+  public static func == (a: AntiAddictionKit.writingOptionsKeys, b: AntiAddictionKit.writingOptionsKeys) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+extension JSON : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension UIView {
+  public func makeToast(_ message: Swift.String?, duration: Foundation.TimeInterval = ToastManager.shared.duration, position: AntiAddictionKit.ToastPosition = ToastManager.shared.position, title: Swift.String? = nil, image: UIKit.UIImage? = nil, style: AntiAddictionKit.ToastStyle = ToastManager.shared.style, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  public func makeToast(_ message: Swift.String?, duration: Foundation.TimeInterval = ToastManager.shared.duration, point: CoreGraphics.CGPoint, title: Swift.String?, image: UIKit.UIImage?, style: AntiAddictionKit.ToastStyle = ToastManager.shared.style, completion: ((Swift.Bool) -> Swift.Void)?)
+  public func showToast(_ toast: UIKit.UIView, duration: Foundation.TimeInterval = ToastManager.shared.duration, position: AntiAddictionKit.ToastPosition = ToastManager.shared.position, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  public func showToast(_ toast: UIKit.UIView, duration: Foundation.TimeInterval = ToastManager.shared.duration, point: CoreGraphics.CGPoint, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  public func hideToast()
+  public func hideToast(_ toast: UIKit.UIView)
+  public func hideAllToasts(includeActivity: Swift.Bool = false, clearQueue: Swift.Bool = true)
+  public func clearToastQueue()
+  public func makeToastActivity(_ position: AntiAddictionKit.ToastPosition)
+  public func makeToastActivity(_ point: CoreGraphics.CGPoint)
+  public func hideToastActivity()
+  public func toastViewForMessage(_ message: Swift.String?, title: Swift.String?, image: UIKit.UIImage?, style: AntiAddictionKit.ToastStyle) throws -> UIKit.UIView
+}
+public struct ToastStyle {
+  public init()
+  public var backgroundColor: UIKit.UIColor
+  public var titleColor: UIKit.UIColor
+  public var messageColor: UIKit.UIColor
+  public var maxWidthPercentage: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  public var maxHeightPercentage: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  public var horizontalPadding: CoreGraphics.CGFloat
+  public var verticalPadding: CoreGraphics.CGFloat
+  public var cornerRadius: CoreGraphics.CGFloat
+  public var titleFont: UIKit.UIFont
+  public var messageFont: UIKit.UIFont
+  public var titleAlignment: UIKit.NSTextAlignment
+  public var messageAlignment: UIKit.NSTextAlignment
+  public var titleNumberOfLines: Swift.Int
+  public var messageNumberOfLines: Swift.Int
+  public var displayShadow: Swift.Bool
+  public var shadowColor: UIKit.UIColor
+  public var shadowOpacity: Swift.Float {
+    get
+    set(value)
+  }
+  public var shadowRadius: CoreGraphics.CGFloat
+  public var shadowOffset: CoreGraphics.CGSize
+  public var imageSize: CoreGraphics.CGSize
+  public var activitySize: CoreGraphics.CGSize
+  public var fadeDuration: Foundation.TimeInterval
+  public var activityIndicatorColor: UIKit.UIColor
+  public var activityBackgroundColor: UIKit.UIColor
+}
+@_hasMissingDesignatedInitializers public class ToastManager {
+  public static var shared: AntiAddictionKit.ToastManager
+  public var style: AntiAddictionKit.ToastStyle
+  public var isTapToDismissEnabled: Swift.Bool
+  public var isQueueEnabled: Swift.Bool
+  public var duration: Foundation.TimeInterval
+  public var position: AntiAddictionKit.ToastPosition
+  @objc deinit
+}
+public enum ToastPosition {
+  case top
+  case center
+  case bottom
+  public static func == (a: AntiAddictionKit.ToastPosition, b: AntiAddictionKit.ToastPosition) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public struct HashidsOptions {
+}
+public protocol HashidsGenerator {
+  associatedtype Char
+  func encode(_ value: Swift.Int64...) -> Swift.String?
+  func encode(_ values: [Swift.Int64]) -> Swift.String?
+  func encode(_ value: Swift.Int...) -> Swift.String?
+  func encode(_ values: [Swift.Int]) -> Swift.String?
+  func decode(_ value: Swift.String!) -> [Swift.Int]
+  func decode(_ value: [Self.Char]) -> [Swift.Int]
+  func decode64(_ value: Swift.String) -> [Swift.Int64]
+  func decode64(_ value: [Self.Char]) -> [Swift.Int64]
+}
+public typealias Hashids = AntiAddictionKit.Hashids_<Swift.UInt32>
+open class Hashids_<T> : AntiAddictionKit.HashidsGenerator where T : Swift.UnsignedInteger {
+  public typealias Char = T
+  public init(salt: Swift.String!, minHashLength: Swift.UInt = 0, alphabet: Swift.String? = nil)
+  open func encode(_ value: Swift.Int64...) -> Swift.String?
+  open func encode(_ values: [Swift.Int64]) -> Swift.String?
+  open func encode(_ value: Swift.Int...) -> Swift.String?
+  open func encode(_ values: [Swift.Int]) -> Swift.String?
+  open func decode(_ value: Swift.String!) -> [Swift.Int]
+  open func decode(_ value: [AntiAddictionKit.Hashids_<T>.Char]) -> [Swift.Int]
+  open func decode64(_ value: Swift.String) -> [Swift.Int64]
+  open func decode64(_ value: [AntiAddictionKit.Hashids_<T>.Char]) -> [Swift.Int64]
+  @objc deinit
+}
+public class SwiftTimer {
+  final public let repeats: Swift.Bool
+  public typealias SwiftTimerHandler = (AntiAddictionKit.SwiftTimer) -> Swift.Void
+  public init(interval: Dispatch.DispatchTimeInterval, repeats: Swift.Bool = false, leeway: Dispatch.DispatchTimeInterval = .seconds(0), queue: Dispatch.DispatchQueue = .main, handler: @escaping AntiAddictionKit.SwiftTimer.SwiftTimerHandler)
+  public static func repeaticTimer(interval: Dispatch.DispatchTimeInterval, leeway: Dispatch.DispatchTimeInterval = .seconds(0), queue: Dispatch.DispatchQueue = .main, handler: @escaping AntiAddictionKit.SwiftTimer.SwiftTimerHandler) -> AntiAddictionKit.SwiftTimer
+  @objc deinit
+  public func fire()
+  public func start(fireOnceWhenStart: Swift.Bool = false)
+  public func suspend()
+  public func rescheduleRepeating(interval: Dispatch.DispatchTimeInterval)
+  public func rescheduleHandler(handler: @escaping AntiAddictionKit.SwiftTimer.SwiftTimerHandler)
+}
+extension SwiftTimer {
+  public static func debounce(interval: Dispatch.DispatchTimeInterval, identifier: Swift.String, queue: Dispatch.DispatchQueue = .main, handler: @escaping () -> Swift.Void)
+  public static func throttle(interval: Dispatch.DispatchTimeInterval, identifier: Swift.String, queue: Dispatch.DispatchQueue = .main, handler: @escaping () -> Swift.Void)
+  public static func cancelThrottlingTimer(identifier: Swift.String)
+}
+public class SwiftCountDownTimer {
+  public init(interval: Dispatch.DispatchTimeInterval, times: Swift.Int, queue: Dispatch.DispatchQueue = .main, handler: @escaping (AntiAddictionKit.SwiftCountDownTimer, Swift.Int, Swift.Int) -> Swift.Void)
+  public func start()
+  public func suspend()
+  public func reCountDown()
+  @objc deinit
+}
+extension DispatchTimeInterval {
+  public static func fromSeconds(_ seconds: Swift.Double) -> Dispatch.DispatchTimeInterval
+}

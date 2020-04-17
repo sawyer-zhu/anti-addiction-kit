@@ -54,7 +54,10 @@ public class AntiAddictionPlatform {
     private static WeakReference<Activity> activityWeakReference;
     private static WeakReference<AccountLimitTip> accountLimitTipWeakReference;
     private static WeakReference<RealNameAndPhoneDialog> realNameAndPhoneDialogWeakReference;
-
+    //当倒计时结束时会弹一次窗口，并且会向后端发一次倒计时的时长，这时后端会返回为0，会再次弹窗口，为避免这种情况，
+    // 记录倒计时是否结束为0。并且用户类型不变情况下，当已经倒计时为0时，服务端返回0不再弹窗
+    private static boolean timerHasEnd = false;
+    private static int lastTimeEndUserType = 0;
     static void setActivity(Activity activity){
         AntiAddictionPlatform.activityWeakReference = new WeakReference<>(activity);
     }
@@ -80,6 +83,7 @@ public class AntiAddictionPlatform {
             return;
         }
         if(seconds > 0) {
+            timerHasEnd = false;
             Message message = alert_mHandler.obtainMessage();
             message.arg1 = seconds;
             message.arg2 = strict;
@@ -118,12 +122,19 @@ public class AntiAddictionPlatform {
             message.what = SHOW_COUNT_TIME_POP;
             alert_mHandler.sendMessage(message);
         }else{
-            currentTimerTime = seconds;
-            dismissCountTimePop( title, desc);
+            //倒计时结束时
+            if(!timerHasEnd || lastTimeEndUserType != AntiAddictionCore.getCurrentUser().getAccountType()) {
+                currentTimerTime = seconds;
+                dismissCountTimePop(title, desc);
+            }
         }
     }
     //onStop或logout或者重复登录
     public static void dismissCountTimePop(boolean isLogout){
+        timerHasEnd = false;
+        if (mCountTimePop != null && mCountTimePop.isShowing()) {
+            mCountTimePop.dismiss();
+        }
         LogUtil.logd(" dismissCountTimePop isLogout= " + isLogout);
         Message message = alert_mHandler.obtainMessage();
         message.arg2 = isLogout ? 1 :0;
@@ -221,6 +232,8 @@ public class AntiAddictionPlatform {
                             message.arg1 = currentTimerTime;
                             alert_mHandler.sendMessage(message);
                         } else{
+                            timerHasEnd = true;
+                            lastTimeEndUserType = AntiAddictionCore.getCurrentUser().getAccountType();
                             countTimeTimer.purge();
                             countTimeTimer.cancel();
                             countTimeTimer = null;
@@ -344,8 +357,9 @@ public class AntiAddictionPlatform {
                             AccountLimitTip.forceClose();
                         }
                             //将60s倒计时结果发送给后端
+                        if(AntiAddictionCore.getCurrentUser().getAccountType() < AntiAddictionKit.USER_TYPE_ADULT) {
                             CountTimeService.sendGameEndTimeToServer(currentTimerTime, isBind, isLogout);
-
+                        }
 
                         if(msg.obj == null){
                             return;

@@ -8,7 +8,11 @@ public class SwiftTimer {
     
     private let internalTimer: DispatchSourceTimer
     
+    #if DEBUG
     private var isRunning = false
+    #else
+    public var isRunning = false
+    #endif
     
     public let repeats: Bool
     
@@ -54,8 +58,20 @@ public class SwiftTimer {
         }
     }
     
-    public func start() {
+//    public func startAndFire() {
+//        if !isRunning {
+//            //开始的时候就执行一次
+//            handler(self)
+//            internalTimer.resume()
+//            isRunning = true
+//        }
+//    }
+    
+    public func start(fireOnceWhenStart: Bool = false) {
         if !isRunning {
+            if fireOnceWhenStart {
+                handler(self)
+            }
             internalTimer.resume()
             isRunning = true
         }
@@ -143,11 +159,15 @@ public class SwiftCountDownTimer {
     
     private var leftTimes: Int
     
+    #if DEBUG
     private let originalTimes: Int
+    #else
+    public let originalTimes: Int
+    #endif
     
-    private let handler: (SwiftCountDownTimer, _ leftTimes: Int) -> Void
+    private let handler: (SwiftCountDownTimer, _ costTimes: Int, _ leftTimes: Int) -> Void
     
-    public init(interval: DispatchTimeInterval, times: Int,queue: DispatchQueue = .main , handler:  @escaping (SwiftCountDownTimer, _ leftTimes: Int) -> Void ) {
+    public init(interval: DispatchTimeInterval, times: Int,queue: DispatchQueue = .main , handler:  @escaping (SwiftCountDownTimer, _ costTimes: Int, _ leftTimes: Int) -> Void ) {
         
         self.leftTimes = times
         self.originalTimes = times
@@ -158,7 +178,7 @@ public class SwiftCountDownTimer {
             if let strongSelf = self {
                 if strongSelf.leftTimes > 0 {
                     strongSelf.leftTimes = strongSelf.leftTimes - 1
-                    strongSelf.handler(strongSelf, strongSelf.leftTimes)
+                    strongSelf.handler(strongSelf, strongSelf.originalTimes - strongSelf.leftTimes, strongSelf.leftTimes)
                 } else {
                     strongSelf.internalTimer.suspend()
                 }
