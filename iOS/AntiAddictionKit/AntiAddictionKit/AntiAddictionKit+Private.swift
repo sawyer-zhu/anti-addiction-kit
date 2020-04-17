@@ -60,27 +60,27 @@ extension AntiAddictionKit {
         // MARK: - App 生命周期
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { (notification) in
-            Logger.debug("游戏开始活跃")
+            Logger.info("游戏开始活跃")
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.start()
             TimeManager.activate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { (notification) in
-            Logger.debug("游戏开始不活跃")
+            Logger.info("游戏开始不活跃")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
             TimeManager.inactivate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { (notification) in
-            Logger.debug("游戏进入后台")
+            Logger.info("游戏进入后台")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()
             TimeManager.inactivate()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { (notification) in
-            Logger.debug("游戏即将关闭")
+            Logger.info("游戏即将关闭")
             AlertTip.userTappedToDismiss = false
             guard let _ = AntiAddictionKit.sharedDelegate else { return }
             TimeService.stop()

@@ -21,6 +21,38 @@ class AlertController: BaseController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var versionLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.textColor = .lightGray
+        label.font = UIFont.systemFont(ofSize: 11)
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.showVersion))
+        tapGesture.numberOfTapsRequired = 5
+        tapGesture.numberOfTouchesRequired = 1
+        label.addGestureRecognizer(tapGesture)
+        label.text = ""
+        return label
+    }()
+    
+    @objc private func showVersion() {
+        var version: String = "unknown"
+        if let bundle = Bundle(identifier: "ios.aakit.AntiAddictionKit"), let v = bundle.infoDictionary?["CFBundleShortVersionString" as String] as? String {
+            version = v
+        }
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.35) {
+                self.versionLabel.text = version
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+10) {
+            UIView.animate(withDuration: 0.35) {
+                self.versionLabel.text = ""
+            }
+        }
+    }
+    
     private lazy var textView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
@@ -104,6 +136,7 @@ class AlertController: BaseController {
         view.addSubview(authButton)
         view.addSubview(quitGameButton)
         view.addSubview(backGameButton)
+        view.addSubview(versionLabel)
         
         setupUI()
     }
@@ -153,6 +186,9 @@ class AlertController: BaseController {
             switchButton.isHidden = true
         }
         
+        versionLabel.addLeftConstraint(toView: view)
+        versionLabel.addTopConstraint(toView: view)
+        versionLabel.addWidthAndHeightConstraint(width: 60, height: 50)
         
         textView.addTopConstraint(toView: view, constant: 48)
         textView.addLeftConstraint(toView: view, constant: 12)

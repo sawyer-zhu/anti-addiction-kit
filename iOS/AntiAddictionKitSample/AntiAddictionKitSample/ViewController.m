@@ -101,6 +101,7 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 // MARK: - Notification
 - (void)addNotificationListener {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(showUserOnlineTimeWithNote:) name:onlineTimeNotificationName object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(showUserRegion) name:NSUserDefaultsDidChangeNotification object:nil];
 }
 
 - (void)showUserOnlineTimeWithNote:(NSNotification *)note {
@@ -111,6 +112,19 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
             self.timeLabel.text = [NSString stringWithFormat:@"用户[%@]游戏时长 %ld 秒", userId, (long)[time integerValue]];
         });
     }
+}
+
+- (void)showUserRegion {
+    NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
+     NSString *appBuildVersion = [infoDic objectForKey:@"CFBundleVersion"];
+    NSString *versionText = [NSString stringWithFormat:@"DEMO %@(%@)", appVersion, appBuildVersion];
+    
+     BOOL isMainland = [NSUserDefaults.standardUserDefaults boolForKey:@"isMainlandUser"];
+    NSString *region = isMainland ? @"[大陆地区]" : @"[非大陆地区]";
+     dispatch_async(dispatch_get_main_queue(), ^{
+         self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", versionText, region];
+     });
 }
 
 

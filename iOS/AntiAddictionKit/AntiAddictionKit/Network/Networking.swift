@@ -277,7 +277,7 @@ struct Networking {
         let r = Just.post(baseUrl+setPaymentUrl, data: formData, headers: header)
         
         guard let data = r.content, let httpCode = r.statusCode, httpCode == Int(200) else {
-            Logger.debug("付费金额保存失败")
+            Logger.debug("联网版付费金额保存失败")
             Logger.debug(baseUrl+setPaymentUrl+networkRequestError)
             return
         }
@@ -286,12 +286,12 @@ struct Networking {
             if let code = json["code"].int, code == Int(200) {
                 //提交成功
                 Logger.debug(baseUrl+setPaymentUrl+networkRequestSuccess)
-                Logger.debug("付费金额保存成功")
+                Logger.debug("联网版付费金额保存成功")
                 return
             }
         } catch {}
         
-        Logger.debug("付费金额保存失败")
+        Logger.debug("联网版付费金额保存失败")
         Logger.debug(baseUrl+setPaymentUrl+dataFormatError)
         return
     }

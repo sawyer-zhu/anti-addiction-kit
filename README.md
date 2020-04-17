@@ -15,9 +15,11 @@ AntiAddictionKit 是为了遵循最新防沉迷政策而编写的一个集实名
 
 ## 文档
 
+[Server](/Server/README.md)
+
 [iOS](/iOS/README.md)
 
-[Android](/Android/AntiAddictionSdk.md)
+[Android](/Android/README.md)
 
 [Unity](/Unity/README.md)
 

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00B19AED23C86F0600816611"
-               BuildableName = "&#x9632;&#x6c89;&#x8ff7;demo.app"
+               BuildableName = "&#x9632;&#x6c89;&#x8ff7;DEMO.app"
                BlueprintName = "AntiAddictionKitSample"
                ReferencedContainer = "container:AntiAddictionKitSample.xcodeproj">
             </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00B19AED23C86F0600816611"
-            BuildableName = "&#x9632;&#x6c89;&#x8ff7;demo.app"
+            BuildableName = "&#x9632;&#x6c89;&#x8ff7;DEMO.app"
             BlueprintName = "AntiAddictionKitSample"
             ReferencedContainer = "container:AntiAddictionKitSample.xcodeproj">
          </BuildableReference>
@@ -82,7 +82,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00B19AED23C86F0600816611"
-            BuildableName = "&#x9632;&#x6c89;&#x8ff7;demo.app"
+            BuildableName = "&#x9632;&#x6c89;&#x8ff7;DEMO.app"
             BlueprintName = "AntiAddictionKitSample"
             ReferencedContainer = "container:AntiAddictionKitSample.xcodeproj">
          </BuildableReference>

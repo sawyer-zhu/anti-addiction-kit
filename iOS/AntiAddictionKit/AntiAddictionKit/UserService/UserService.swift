@@ -78,6 +78,7 @@ extension UserService {
         
         // 非大陆用户，不开启防沉迷系统
         if !RegionDetector.isMainlandUser {
+            Logger.info("非大陆地区不开启防沉迷")
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             return
         }
@@ -89,8 +90,11 @@ extension UserService {
         }
         
         //如果最后一次存储的日期 与 现在不是同一天，则清空 在线时长
-        if DateHelper.isSameDay(theUser.timestamp, Date()) == false {
-            theUser.clearOnlineTime()
+        // 如果不是游客，才清空
+        if theUser.type != .unknown {
+            if DateHelper.isSameDay(theUser.timestamp, Date()) == false {
+                theUser.clearOnlineTime()
+            }
         }
         
         //如果最后一次存储的日期 与 现在不是同一月，则清空 支付金额
@@ -119,12 +123,10 @@ extension UserService {
             
             if (remainSeconds <= 0) {
                 //没有时间
-                Logger.info("游客用户，没时间了，弹窗")
                 User.shared!.resetOnlineTime(guestTotalTime)
                 let minutes = guestTotalTime / kSecondsPerMinute
                 content = AlertType.TimeLimitAlertContent.guestGameOver(minutes: minutes)
             } else {
-                Logger.info("游客用户，还有时间，弹窗")
                 let minutes = Int(ceilf(Float(remainSeconds) / Float(kSecondsPerMinute)))
                 content = AlertType.TimeLimitAlertContent.guestLogin(minutes: minutes, isFirstLogin: isFirstLogin)
             }

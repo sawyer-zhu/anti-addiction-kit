@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antiaddiction.debug.R;
 import com.antiaddiction.sdk.AntiAddictionKit;
 import com.antiaddiction.sdk.AntiAddictionPlatform;
 import com.antiaddiction.sdk.net.HttpUtil;

@@ -452,7 +452,7 @@ public class AntiAddictionCore {
     }
 
     static String getSdkVersion() {
-        return "1.1.0";
+        return "1.1.1";
     }
 
     /**
@@ -482,16 +482,9 @@ public class AntiAddictionCore {
                             if(getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_UNKNOWN) {
                                 getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
                             }else{
-                                //处理游客登录提示
-                                String tip = AntiAddictionKit.getCommonConfig().getUnIdentifyFirstLogin();
-                                if(remainTime < AntiAddictionKit.getCommonConfig().getGuestTime()){
-                                    tip = AntiAddictionKit.getCommonConfig().getUnIdentifyRemain();
-                                }
-                                int min = remainTime / 60;
-                                StringBuilder stringBuilder = new StringBuilder(tip);
-                                stringBuilder.insert(stringBuilder.indexOf("#")+1,min);
+                                String tip = PlayLogService.generateGuestLoginTip(remainTime);
                                 AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_ENTER_NO_LIMIT, title,
-                                        stringBuilder.toString(), 2, new OnResultListener() {
+                                        tip, 2, new OnResultListener() {
                                             @Override
                                             public void onResult(int type, String msg) {
                                                 if (type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT) {
@@ -561,8 +554,9 @@ public class AntiAddictionCore {
                                         AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_ENTER_LIMIT, title,
                                                 content, 1, onResultListener, needShowRealName);
                                     } else {
+                                        String tip = PlayLogService.generateGuestLoginTip(remainTime);
                                         AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_ENTER_NO_LIMIT, title,
-                                                content, 2, new OnResultListener() {
+                                                tip, 2, new OnResultListener() {
                                                     @Override
                                                     public void onResult(int type, String msg) {
                                                         if (type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT) {
