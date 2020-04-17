@@ -14,6 +14,11 @@ struct TimeManager {
     /// 启动时长统计服务
     static func activate(isLogin: Bool = false) {
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            return
+        }
+        
         if AntiAddictionKit.configuration.useSdkOnlineTimeLimit == false {
             Logger.debug("游戏未开启防沉迷时长统计")
             return

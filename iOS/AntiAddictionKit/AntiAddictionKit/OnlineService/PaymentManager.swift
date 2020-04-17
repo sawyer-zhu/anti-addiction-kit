@@ -6,6 +6,12 @@ struct PaymentManager {
     
     static func check(amount: Int) {
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.sendCallback(result: .noPayLimit, message: "无支付限制")
+            return
+        }
+        
         //如果未开启 付费限制，直接发送无限制回调
         if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
             AntiAddictionKit.sendCallback(result: .noPayLimit, message: "无支付限制")

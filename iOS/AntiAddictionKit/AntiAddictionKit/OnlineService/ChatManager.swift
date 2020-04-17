@@ -6,6 +6,13 @@ struct ChatManager {
     /// 联网版
     /// 检测是否可以聊天
     static func check() {
+        
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.sendCallback(result: .noChatLimit, message: "海外用户，不开启防沉迷系统")
+            return
+        }
+        
         if let _ = AntiAddictionKit.configuration.host {
             guard let account = AccountManager.currentAccount, let _ = account.token else {
                 AntiAddictionKit.sendCallback(result: .hasChatLimit, message: "当前无已登录用户，无法聊天")

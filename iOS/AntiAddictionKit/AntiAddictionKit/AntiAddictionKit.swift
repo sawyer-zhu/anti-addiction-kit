@@ -50,6 +50,12 @@ public final class AntiAddictionKit: NSObject {
         if (AntiAddictionKit.sharedDelegate != nil) {
             Logger.release("请勿重复初始化！")
         } else {
+            
+            /// 用户地区节奏只会检测一次，除非删包
+            if !RegionDetector.isDetected {
+                RegionDetector.detect()
+            }
+            
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
             
@@ -59,6 +65,13 @@ public final class AntiAddictionKit: NSObject {
             }
             
             Logger.release("初始化成功！")
+        }
+        
+        // 如果非大陆用户，关闭所有防沉迷措施
+        if RegionDetector.isMainlandUser {
+            AntiAddictionKit.configuration.useSdkPaymentLimit = false
+            AntiAddictionKit.configuration.useSdkOnlineTimeLimit = false
+            AntiAddictionKit.configuration.useSdkRealName = false
         }
     }
     
