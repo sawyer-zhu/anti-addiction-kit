@@ -21,7 +21,7 @@ internal class RegionDetector {
     static func detect() {
         var isMainlandUser: Bool = false
         
-        // 检测结果保存在本地，保证最后执行
+        // 将检测结果保存在本地，保证最后执行
         defer {
             let userKey = Key<Bool>(self.mainlandUserKey)
             Defaults.shared.set(isMainlandUser, for: userKey)
@@ -30,16 +30,16 @@ internal class RegionDetector {
             Defaults.shared.set(true, for: markKey)
         }
         
-        if isMainlandCarrier() {
-            isMainlandUser = true
-        } else {
-            if isMainlandIPAddress() {
-                isMainlandUser = true
-            } else {
-                if isMainlandLocale() {
-                    isMainlandUser = true
-                }
-            }
+        let carrier: Int = isMainlandCarrier ? 1 : 0
+        
+        checkRegionFromServer(carrier: carrier, successHandler: { (region) in
+            // 服务端拿到的 region
+            isMainlandUser = (region == 1)
+            return
+        }) {
+            // 拿不到 region, 通过运营商和设备地区判断，有一个满足条件则判断为大陆用户
+            isMainlandUser = (carrier == 1 || self.isMainlandDeviceLocale)
+            return
         }
         
     }
@@ -49,8 +49,8 @@ internal class RegionDetector {
     private static let detectMarkKey: String = "detectMark"
     private static let mainlandUserKey: String = "isMainlandUser"
     
-    /// 判断是否中国大陆运营商（判断条件 MobileCountryCode == 460/461）
-    private static func isMainlandCarrier() -> Bool {
+    /// 是否中国大陆运营商（判断条件 MobileCountryCode == 460/461）
+    private static var isMainlandCarrier: Bool {
         
         let telephony = CTTelephonyNetworkInfo()
         
@@ -70,48 +70,45 @@ internal class RegionDetector {
         }
         
         return false
-        
     }
     
-    /// 判断地区是否中国大陆（判断条件 regionCode == "CN"）
-    private static func isMainlandLocale() -> Bool {
+    /// 设备地区是否中国大陆（判断条件 regionCode == "CN"）
+    private static var isMainlandDeviceLocale: Bool {
         let locale = Locale.current
-        if let regionCode = locale.regionCode, regionCode.uppercased() == "CN" {
+        if let regionCode = locale.regionCode, regionCode == "CN" {
             return true
         }
-        if locale.identifier.lowercased().contains("cn") {
+        if String(locale.identifier.suffix(2)) == "CN" {
             return true
         }
         return false
-    }
-    
-    
-    /// IP查询接口返回值 Model
-    private struct DeviceIPModel: Decodable {
-        let region: Int // 0: 非中国大陆，1：中国大陆
-        
-        enum CodingKeys: String, CodingKey {
-            case region = "region"
-        }
     }
     
     /// 判断出口IP是否中国大陆
-    private static func isMainlandIPAddress() -> Bool {
-        var bundle: String = "antiaddictionkit"
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            bundle = bundleIdentifier
-        }
-        let urlString: String = "https://api.xd.com/v3/sdk/check_ip?bundle=\(bundle)"
-        let reponse = Just.get(urlString)
-        if reponse.ok, let data = reponse.content {
+    private static func checkRegionFromServer(carrier: Int,
+                                              successHandler: ((_ region: Int) -> Void)? = nil,
+                                              failureHandler: (() -> Void)? = nil) {
+        let bundle: String = Bundle.main.bundleIdentifier ?? "antiaddictionkit"
+        let urlString = "https://api.xd.com/v3/sdk/check_ip?bundle=\(bundle)&carrier=\(carrier)"
+        let r = Just.get(urlString)
+
+        if let data = r.content,
+            let httpCode = r.statusCode,
+            httpCode == Int(200) {
             do {
-                let model = try JSONDecoder().decode(DeviceIPModel.self, from: data)
-                if model.region == 1 {
-                    return true
+                let json = try JSON(data: data)
+                if let code = json["code"].int, code == Int(200),
+                    let region = json["region"].int {
+                    // 拿到数据
+                    successHandler?(region)
+                    return
                 }
             } catch {}
         }
-        return false
+        
+        // 未拿到数据
+        failureHandler?()
+        return
     }
     
 }
