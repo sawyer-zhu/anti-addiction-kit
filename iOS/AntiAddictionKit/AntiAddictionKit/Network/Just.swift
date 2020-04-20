@@ -25,10 +25,6 @@ import Foundation
 import FoundationNetworking
 #endif
 
-#if os(Linux)
-import Dispatch
-#endif
-
 // stolen from python-requests
 let statusCodeDescriptions = [
   // Informational.
@@ -106,14 +102,14 @@ let statusCodeDescriptions = [
   510: "not extended",
 ]
 
-public enum HTTPFile {
+enum HTTPFile {
   case url(URL, String?) // URL to a file, mimetype
   case data(String, Foundation.Data, String?) // filename, data, mimetype
   case text(String, String, String?) // filename, text, mimetype
 }
 
 // Supported request types
-public enum HTTPMethod: String {
+enum HTTPMethod: String {
   case delete = "DELETE"
   case get = "GET"
   case head = "HEAD"
@@ -130,7 +126,7 @@ extension URLResponse {
   }
 }
 
-public protocol URLComponentsConvertible {
+protocol URLComponentsConvertible {
   var urlComponents: URLComponents? { get }
 }
 
@@ -150,7 +146,7 @@ extension URL: URLComponentsConvertible {
 /// lazy evaluation of `headers` and `cookies`, which is mutating the
 /// struct. This would make those properties unusable with `HTTPResult`s
 /// declared with `let`
-public final class HTTPResult : NSObject {
+final class HTTPResult : NSObject {
   public final var content: Data?
   public var response: URLResponse?
   public var error: Error?
@@ -285,7 +281,7 @@ public final class HTTPResult : NSObject {
   }
 }
 
-public struct CaseInsensitiveDictionary<Key: Hashable, Value>: Collection,
+struct CaseInsensitiveDictionary<Key: Hashable, Value>: Collection,
   ExpressibleByDictionaryLiteral
 {
   private var _data: [Key: Value] = [:]
@@ -359,8 +355,8 @@ public struct CaseInsensitiveDictionary<Key: Hashable, Value>: Collection,
 }
 
 typealias TaskID = Int
-public typealias Credentials = (username: String, password: String)
-public typealias TaskProgressHandler = (HTTPProgress) -> Void
+typealias Credentials = (username: String, password: String)
+typealias TaskProgressHandler = (HTTPProgress) -> Void
 typealias TaskCompletionHandler = (HTTPResult) -> Void
 
 struct TaskConfiguration {
@@ -372,7 +368,7 @@ struct TaskConfiguration {
   let completionHandler: TaskCompletionHandler?
 }
 
-public struct JustSessionDefaults {
+struct JustSessionDefaults {
   public var JSONReadingOptions: JSONSerialization.ReadingOptions
   public var JSONWritingOptions: JSONSerialization.WritingOptions
   public var headers: [String: String]
@@ -402,7 +398,7 @@ public struct JustSessionDefaults {
 }
 
 
-public struct HTTPProgress {
+struct HTTPProgress {
   public enum `Type` {
     case upload
     case download
@@ -419,7 +415,7 @@ public struct HTTPProgress {
 
 let errorDomain = "net.justhttp.Just"
 
-public protocol JustAdaptor {
+protocol JustAdaptor {
   func request(
     _ method: HTTPMethod,
     url: URLComponentsConvertible,
@@ -441,7 +437,7 @@ public protocol JustAdaptor {
   init(session: URLSession?, defaults: JustSessionDefaults?)
 }
 
-public struct JustOf<Adaptor: JustAdaptor> {
+struct JustOf<Adaptor: JustAdaptor> {
   let adaptor: Adaptor
   public init(session: URLSession? = nil,
               defaults: JustSessionDefaults? = nil)
@@ -453,7 +449,7 @@ public struct JustOf<Adaptor: JustAdaptor> {
 extension JustOf {
 
   @discardableResult
-  public func request(
+  func request(
     _ method: HTTPMethod,
     url: URLComponentsConvertible,
     params: [String: Any] = [:],
@@ -490,7 +486,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func delete(
+  func delete(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -527,7 +523,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func get(
+  func get(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -564,7 +560,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func head(
+  func head(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -601,7 +597,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func options(
+  func options(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -637,7 +633,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func patch(
+  func patch(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -674,7 +670,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func post(
+  func post(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -711,7 +707,7 @@ extension JustOf {
   }
 
   @discardableResult
-  public func put(
+  func put(
     _ url: URLComponentsConvertible,
     params: [String: Any] = [:],
     data: [String: Any] = [:],
@@ -748,7 +744,7 @@ extension JustOf {
   }
 }
 
-public final class HTTP: NSObject, URLSessionDelegate, JustAdaptor {
+final class HTTP: NSObject, URLSessionDelegate, JustAdaptor {
 
   public init(session: URLSession? = nil,
     defaults: JustSessionDefaults? = nil)
@@ -1057,7 +1053,7 @@ public final class HTTP: NSObject, URLSessionDelegate, JustAdaptor {
 }
 
 extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
-  public func urlSession(_ session: URLSession, task: URLSessionTask,
+  func urlSession(_ session: URLSession, task: URLSessionTask,
     didReceive challenge: URLAuthenticationChallenge,
     completionHandler: @escaping (URLSession.AuthChallengeDisposition,
       URLCredential?) -> Void)
@@ -1079,7 +1075,7 @@ extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
     completionHandler(.useCredential, endCredential)
   }
 
-  public func urlSession(_ session: URLSession, task: URLSessionTask,
+  func urlSession(_ session: URLSession, task: URLSessionTask,
     willPerformHTTPRedirection response: HTTPURLResponse,
     newRequest request: URLRequest,
     completionHandler: @escaping (URLRequest?) -> Void)
@@ -1095,7 +1091,7 @@ extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
     }
   }
 
-  public func urlSession(_ session: URLSession, task: URLSessionTask,
+  func urlSession(_ session: URLSession, task: URLSessionTask,
     didSendBodyData bytesSent: Int64, totalBytesSent: Int64,
     totalBytesExpectedToSend: Int64)
   {
@@ -1111,7 +1107,7 @@ extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
     }
   }
 
-  public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask,
+  func urlSession(_ session: URLSession, dataTask: URLSessionDataTask,
     didReceive data: Data)
   {
     if let handler = taskConfigs[dataTask.taskIdentifier]?.progressHandler {
@@ -1129,7 +1125,7 @@ extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
     }
   }
 
-  public func urlSession(_ session: URLSession, task: URLSessionTask,
+  func urlSession(_ session: URLSession, task: URLSessionTask,
     didCompleteWithError error: Error?)
   {
     if let config = taskConfigs[task.taskIdentifier],
@@ -1149,4 +1145,4 @@ extension HTTP: URLSessionTaskDelegate, URLSessionDataDelegate {
   }
 }
 
-public let Just = JustOf<HTTP>()
+let Just = JustOf<HTTP>()
