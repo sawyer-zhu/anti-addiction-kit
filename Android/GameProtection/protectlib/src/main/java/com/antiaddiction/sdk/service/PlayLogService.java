@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ public class PlayLogService {
 
     private static JSONObject checkUserStateByLocal(User user,boolean isLogin){
         LogUtil.logd("checkUserStateByLocal");
+        long currentTime = new Date().getTime();
         JSONObject response = new JSONObject();
         int restrictType = 0; //1 宵禁 2 在线时长限制
         int remainTime = 0;
@@ -81,7 +83,7 @@ public class PlayLogService {
                             description = "您的游戏体验时长已达 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟。" +
                                     "登记实名信息后可深度体验。";
                         }else{
-                            if(remainTime == AntiAddictionKit.getCommonConfig().getGuestTime() && user.getSaveTimeStamp() <= 0){
+                            if(remainTime == AntiAddictionKit.getCommonConfig().getGuestTime() && (user.getSaveTimeStamp() <= 0 || (currentTime - user.getSaveTimeStamp() < 1000))){
                                 description = "您当前为游客账号，根据国家相关规定，游客账号享有 " +
                                         AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。登记实名信息后可深度体验。";
                             }else {
@@ -173,6 +175,19 @@ public class PlayLogService {
       }
     }
 
+    //游客登录时，生成对应提示文案，因为最后3分钟时，文案会改为已达时长文案
+    public static String generateGuestLoginTip(int remainTime){
+        //处理游客登录提示
+        String tip = AntiAddictionKit.getCommonConfig().getUnIdentifyFirstLogin();
+        if(remainTime < AntiAddictionKit.getCommonConfig().getGuestTime()){
+            tip = AntiAddictionKit.getCommonConfig().getUnIdentifyRemain();
+        }
+        int min = remainTime / 60;
+        min = min <= 0 ? 1 : min;
+        StringBuilder stringBuilder = new StringBuilder(tip);
+        stringBuilder.insert(stringBuilder.indexOf("#")+1,min);
+        return stringBuilder.toString();
+    }
 
 
 }

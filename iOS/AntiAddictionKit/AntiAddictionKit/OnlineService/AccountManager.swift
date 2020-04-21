@@ -23,7 +23,7 @@ struct AccountManager {
     static func updateAccountType(type: Int) {
         
         guard let account = AccountManager.currentAccount, let token = account.token else {
-            Logger.debug("当前无登录用户，无法更新用户类型")
+            Logger.info("联网版当前无登录用户，无法更新用户类型")
             return
         }
         let newAccountType = AccountType.type(rawValue: type)
