@@ -51,7 +51,7 @@ public final class AntiAddictionKit: NSObject {
             Logger.info("请勿重复初始化！")
         } else {
             
-            /// 用户地区节奏只会检测一次，除非删包
+            /// 只会在游戏安装后首次初始化时检测一次用户地区，之后按第一次检测的值判定用户地区，除非删包
             if !RegionDetector.isDetected {
                 RegionDetector.detect()
             }
