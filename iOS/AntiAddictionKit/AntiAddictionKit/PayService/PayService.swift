@@ -80,19 +80,19 @@ fileprivate enum PayLimitType {
     func paymentLimitAlertBody() -> String {
         switch self {
         case .unAuthed(_):
-            Logger.info("用户没实名登记，无法充值")
+            Logger.debug("用户没实名登记，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .tooYoung:
-            Logger.info("用户低于8岁，无法充值")
+            Logger.debug("用户低于8岁，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .singleAmountLimit:
-            Logger.info("超过单价限制，无法充值")
+            Logger.debug("超过单价限制，无法充值")
             return "根据国家相关规定，您本次付费金额超过规定上限，无法购买。请适度娱乐，理性消费。"
         case .monthTotalAmountLimit:
-             Logger.info("超过总额限制，无法充值")
+             Logger.debug("超过总额限制，无法充值")
             return "根据国家相关规定，您当月的剩余可用充值额度不足，无法购买此商品。请适度娱乐，理性消费。"
         case .unlimited:
-             Logger.info("充值没限制")
+             Logger.debug("充值没限制")
             return "请适度娱乐，理性消费。"
         }
     }

@@ -41,7 +41,7 @@ final class TimeService {
             User.shared!.clearOnlineTime()
         }
         
-        Logger.info("本地防沉迷时长统计开始")
+        Logger.info("单机版防沉迷时长统计开始")
         
         mainTimer.start()
     }
@@ -57,7 +57,7 @@ final class TimeService {
     private static var mainTimer: SwiftTimer = SwiftTimer(interval: .seconds(Int(kTimerInterval)), repeats: true, queue: .global()) { (mTimer) in
         
         guard User.shared != nil else {
-            Logger.info("当前无登录用户，Timer 已暂停！")
+            Logger.debug("单机版当前无登录用户")
             mTimer.suspend()
             return
         }

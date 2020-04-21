@@ -49,7 +49,7 @@ struct PaymentManager {
         if let account = AccountManager.currentAccount, let token = account.token {
             Networking.setPayment(token: token, amount: amount)
         }
-        Logger.debug("无token，无法提交付费金额。")
+        Logger.debug("联网版无token，无法提交付费金额。")
     }
     
 }

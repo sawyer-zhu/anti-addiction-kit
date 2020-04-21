@@ -20,12 +20,12 @@ struct TimeManager {
         }
         
         if AntiAddictionKit.configuration.useSdkOnlineTimeLimit == false {
-            Logger.debug("游戏未开启防沉迷时长统计")
+            Logger.debug("联网版未开启防沉迷时长统计")
             return
         }
         
         guard let account = AccountManager.currentAccount, let _ = account.token else {
-            Logger.debug("无用户 token，无法启动防沉迷时长统计")
+            Logger.debug("联网版无用户 token，无法启动防沉迷时长统计")
             return
         }
         
@@ -35,11 +35,11 @@ struct TimeManager {
         }
         
         if account.type == .adult {
-            Logger.debug("成年用户，无需统计时长")
+            Logger.debug("联网版成年用户，无需统计时长")
             return
         }
         
-        Logger.debug("网络版防沉迷时长统计开始")
+        Logger.debug("联网版防沉迷时长统计开始")
         
         
         //常规计时 定时器
@@ -61,8 +61,6 @@ struct TimeManager {
     
     // 常规计时 定时器
     static var commonTimer = SwiftTimer(interval: .seconds(commonTimerInterval), repeats: true, queue: .global()) { (aTimer) in
-        
-        Logger.debug("timer setPlayLog 执行一次")
         
         guard let account = AccountManager.currentAccount, let token = account.token else {
             Logger.debug("当前无登录用户，timer 停止")
@@ -279,14 +277,14 @@ struct TimeManager {
                 }
                 
                 if account.type == .unknown {
-                    Logger.info("游客倒计时提示")
+                    Logger.debug("游客倒计时提示")
                     Router.openAlertTip(.lessThan60seconds(.guest, leftTimes))
                     return
                 }
                 else if account.type == .adult {
                     countdownTimer?.suspend()
                 } else {
-                    Logger.info("未成年倒计时提示")
+                    Logger.debug("未成年倒计时提示")
                     Router.openAlertTip(.lessThan60seconds(.minor, leftTimes, isCurfew: isCurfew))
                     return
                 }
@@ -312,7 +310,7 @@ struct TimeManager {
                 })
                 
                 if account.type == .unknown {
-                    Logger.info("游客时间结束弹窗")
+                    Logger.debug("游客时间结束弹窗")
                     AntiAddictionKit.sendCallback(result: .noRemainTime, message: "游客每日游戏时长限制")
                     Router.closeAlertTip()
                     Router.openAlertController(AlertData(type: .timeLimitAlert,
@@ -325,7 +323,7 @@ struct TimeManager {
                 else if account.type == .adult {
                     countdownTimer?.suspend()
                 } else {
-                    Logger.info("未成年结束弹窗")
+                    Logger.debug("未成年结束弹窗")
                     AntiAddictionKit.sendCallback(result: .noRemainTime, message: "未成年每日游戏时长限制")
                     Router.closeAlertTip()
                     let body: String = isCurfew ? Notice.nightStrictLimit.content : Notice.childLimit(isHoliday: DateHelper.isHoliday(Date())).content

@@ -141,7 +141,7 @@ struct LoginManager {
             }) {
                 //获取账号的防沉迷限制失败
                 AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
-                Logger.release("获取用户防沉迷数据失败")
+                Logger.info("获取用户防沉迷数据失败")
                 return
             }
             
@@ -152,7 +152,7 @@ struct LoginManager {
             AccountManager.currentAccount = account
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             
-            Logger.release("获取服务器 Token 失败，防沉迷功能关闭！")
+            Logger.info("获取服务器 Token 失败，防沉迷功能关闭！")
             return
         }
         

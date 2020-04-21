@@ -119,12 +119,10 @@ extension UserService {
             
             if (remainSeconds <= 0) {
                 //没有时间
-                Logger.info("游客用户，没时间了，弹窗")
                 User.shared!.resetOnlineTime(guestTotalTime)
                 let minutes = guestTotalTime / kSecondsPerMinute
                 content = AlertType.TimeLimitAlertContent.guestGameOver(minutes: minutes)
             } else {
-                Logger.info("游客用户，还有时间，弹窗")
                 let minutes = Int(ceilf(Float(remainSeconds) / Float(kSecondsPerMinute)))
                 content = AlertType.TimeLimitAlertContent.guestLogin(minutes: minutes, isFirstLogin: isFirstLogin)
             }
