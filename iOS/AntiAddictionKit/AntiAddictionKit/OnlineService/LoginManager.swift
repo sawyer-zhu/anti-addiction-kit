@@ -45,6 +45,7 @@ struct LoginManager {
         
         // 非大陆用户，不开启防沉迷系统
         if !RegionDetector.isMainlandUser {
+            Logger.info("非大陆地区不开启防沉迷")
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             return
         }
