@@ -43,6 +43,13 @@ struct LoginManager {
         // 设置当前已登录用户
         AccountManager.currentAccount = account
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            Logger.info("非大陆地区不开启防沉迷")
+            AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
+            return
+        }
+        
         // 如果在线时长控制未开启，则直接登录成功
         if !AntiAddictionKit.configuration.useSdkOnlineTimeLimit {
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
@@ -135,7 +142,7 @@ struct LoginManager {
             }) {
                 //获取账号的防沉迷限制失败
                 AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
-                Logger.release("获取用户防沉迷数据失败")
+                Logger.info("获取用户防沉迷数据失败")
                 return
             }
             
@@ -146,7 +153,7 @@ struct LoginManager {
             AccountManager.currentAccount = account
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
             
-            Logger.release("获取服务器 Token 失败，防沉迷功能关闭！")
+            Logger.info("获取服务器 Token 失败，防沉迷功能关闭！")
             return
         }
         

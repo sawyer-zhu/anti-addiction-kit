@@ -76,6 +76,13 @@ extension UserService {
         // 更新当前用户
         User.shared = theUser
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            Logger.info("非大陆地区不开启防沉迷")
+            AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
+            return
+        }
+        
         // 如果在线时长控制未开启，则直接登录成功
         if !AntiAddictionKit.configuration.useSdkOnlineTimeLimit {
             AntiAddictionKit.sendCallback(result: .loginSuccess, message: "用户登录成功")
@@ -113,12 +120,10 @@ extension UserService {
             
             if (remainSeconds <= 0) {
                 //没有时间
-                Logger.info("游客用户，没时间了，弹窗")
                 User.shared!.resetOnlineTime(guestTotalTime)
                 let minutes = guestTotalTime / kSecondsPerMinute
                 content = AlertType.TimeLimitAlertContent.guestGameOver(minutes: minutes)
             } else {
-                Logger.info("游客用户，还有时间，弹窗")
                 let minutes = Int(ceilf(Float(remainSeconds) / Float(kSecondsPerMinute)))
                 content = AlertType.TimeLimitAlertContent.guestLogin(minutes: minutes, isFirstLogin: isFirstLogin)
             }

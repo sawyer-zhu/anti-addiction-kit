@@ -9,6 +9,12 @@ final class PayService {
     /// - Parameter price: 道具价格
     public class func canPurchase(_ price: Int) {
         
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.sendCallback(result: .noPayLimit, message: "无支付限制")
+            return
+        }
+        
         if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
             let limitType = PayLimitType.unlimited
             limitType.notify()
@@ -74,19 +80,19 @@ fileprivate enum PayLimitType {
     func paymentLimitAlertBody() -> String {
         switch self {
         case .unAuthed(_):
-            Logger.info("用户没实名登记，无法充值")
+            Logger.debug("用户没实名登记，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .tooYoung:
-            Logger.info("用户低于8岁，无法充值")
+            Logger.debug("用户低于8岁，无法充值")
             return "根据国家相关规定，当前您无法使用充值相关功能。"
         case .singleAmountLimit:
-            Logger.info("超过单价限制，无法充值")
+            Logger.debug("超过单价限制，无法充值")
             return "根据国家相关规定，您本次付费金额超过规定上限，无法购买。请适度娱乐，理性消费。"
         case .monthTotalAmountLimit:
-             Logger.info("超过总额限制，无法充值")
+             Logger.debug("超过总额限制，无法充值")
             return "根据国家相关规定，您当月的剩余可用充值额度不足，无法购买此商品。请适度娱乐，理性消费。"
         case .unlimited:
-             Logger.info("充值没限制")
+             Logger.debug("充值没限制")
             return "请适度娱乐，理性消费。"
         }
     }
@@ -117,6 +123,57 @@ fileprivate enum PayLimitType {
             }
         }
     }
+}
+
+
+extension PayService {
+    
+    /// 查询能否购买道具，直接返回支付限制相关的回调类型 raw value, 特殊情况使用。
+    /// - Parameter price: 道具价格
+    public class func checkCurrentPayLimit(_ price: Int) -> Int {
+        
+        // 非大陆用户，不开启防沉迷系统
+        if !RegionDetector.isMainlandUser {
+            return AntiAddictionResult.noPayLimit.intValue()
+        }
+        
+        //如果未开启 付费限制，直接发送无限制回调
+        if AntiAddictionKit.configuration.useSdkPaymentLimit == false {
+            return AntiAddictionResult.noPayLimit.intValue()
+        }
+        
+        if User.shared == nil { return AntiAddictionResult.hasPayLimit.intValue() }
+        let payLimitType = PayService.getPayLimitType(price)
+        switch payLimitType {
+
+        case .unlimited:
+            //无限制
+            return AntiAddictionResult.noPayLimit.intValue()
+        case .unAuthed(_):
+            //未实名，有限制，打开实名窗口
+            if AntiAddictionKit.configuration.useSdkRealName {
+                Router.openRealNameController(backButtonEnabled: false, forceOpen: false, cancelled: {
+                    Logger.debug("用户取消实名")
+                }) {
+                    Logger.debug("用户实名成功")
+                }
+            } else {
+                AntiAddictionKit.sendCallback(result: .realNameRequest, message: "用户支付，请求实名")
+            }
+
+            return AntiAddictionResult.hasPayLimit.intValue()
+
+        case .tooYoung, .singleAmountLimit, .monthTotalAmountLimit:
+
+            // 打开付费限制提示，此页面中只有返回游戏按钮，点击后不会发送回调
+            let alertData = AlertData(type: .payLimitAlert, title: kPaymentLimitAlertTitle, body: payLimitType.paymentLimitAlertBody())
+            Router.openAlertController(alertData)
+
+            return AntiAddictionResult.hasPayLimit.intValue()
+        }
+    }
+
+    
 }
 
 

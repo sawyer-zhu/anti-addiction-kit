@@ -53,6 +53,7 @@
 		007622AB23BDADC400DC3AF8 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AA23BDADC400DC3AF8 /* Date+.swift */; };
 		007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AC23BDB22A00DC3AF8 /* DateHelper.swift */; };
 		007622B523BF6F9E00DC3AF8 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622B423BF6F9E00DC3AF8 /* NoticeView.swift */; };
+		0095261B243C7087000534A8 /* RegionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095261A243C7087000534A8 /* RegionDetector.swift */; };
 		00952620243C9C28000534A8 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095261F243C9C28000534A8 /* Networking.swift */; };
 		00952627243D9BCC000534A8 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00952626243D9BCC000534A8 /* SwiftyJSON.swift */; };
 		00E3AA4B23D012D400B6F39E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00E3AA4A23D012D400B6F39E /* Assets.xcassets */; };
@@ -120,6 +121,8 @@
 		0095260E243C27F1000534A8 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		0095260F243C2801000534A8 /* Common.Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Release.xcconfig; sourceTree = "<group>"; };
 		00952610243C280D000534A8 /* Common.Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.Debug.xcconfig; sourceTree = "<group>"; };
+		00952618243C6E92000534A8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		0095261A243C7087000534A8 /* RegionDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionDetector.swift; sourceTree = "<group>"; };
 		0095261E243C81F3000534A8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0095261F243C9C28000534A8 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		00952621243D7BE9000534A8 /* APIDocs.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = APIDocs.md; sourceTree = "<group>"; };
@@ -176,7 +179,7 @@
 		0058C80023BB29C100491E6D = {
 			isa = PBXGroup;
 			children = (
-				0095261E243C81F3000534A8 /* README.md */,
+				00952618243C6E92000534A8 /* README.md */,
 				0058C80C23BB29C100491E6D /* AntiAddictionKit */,
 				0058C80B23BB29C100491E6D /* Products */,
 				C161D09123D06DC2005B43F4 /* Frameworks */,
@@ -209,6 +212,8 @@
 				0058C82423BB29DA00491E6D /* Router */,
 				305A383323BCF2D0006AD644 /* Alert */,
 				305A383423BCF2D9006AD644 /* RealName */,
+				00952619243C7022000534A8 /* RegionDetector */,
+				30C4FDE823BCFAEF00060CE7 /* AntiAddictionKit+Private.swift */,
 				00048BA0242CADC600813723 /* Network */,
 				307AC380243E5D9A00A1AA3F /* OnlineService */,
 				0058C82823BB2B0100491E6D /* Appearance.swift */,
@@ -277,6 +282,14 @@
 				0095260F243C2801000534A8 /* Common.Release.xcconfig */,
 			);
 			path = BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		00952619243C7022000534A8 /* RegionDetector */ = {
+			isa = PBXGroup;
+			children = (
+				0095261A243C7087000534A8 /* RegionDetector.swift */,
+			);
+			path = RegionDetector;
 			sourceTree = "<group>";
 		};
 		305A382923BCE92A006AD644 /* UserService */ = {
@@ -534,6 +547,7 @@
 				0058C83C23BB455B00491E6D /* AlertController.swift in Sources */,
 				30FE578A23BCA43B00E1E5B4 /* AlertTip.swift in Sources */,
 				30FE578C23BCAAD200E1E5B4 /* DispatchTime+.swift in Sources */,
+				0095261B243C7087000534A8 /* RegionDetector.swift in Sources */,
 				0032999323C5D379004EF389 /* Data+Crypto.swift in Sources */,
 				00048BA2242CADE500813723 /* Just.swift in Sources */,
 				0058C82C23BB2B6600491E6D /* UIColor+.swift in Sources */,

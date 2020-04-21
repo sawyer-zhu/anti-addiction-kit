@@ -5,12 +5,12 @@ struct Logger {
     
     /// debug log
     static func debug(_ items: Any...) {
-        #if DEBUG
-        let s = items.reduce("") { result, next in
-            return result + String(describing: next)
-        }
-        Swift.print("[Debug] \(s)")
-        #endif
+//        #if DEBUG
+//        let s = items.reduce("") { result, next in
+//            return result + String(describing: next)
+//        }
+//        Swift.print("[Debug] \(s)")
+//        #endif
     }
     
     /// 业务流程 log
@@ -21,14 +21,6 @@ struct Logger {
         }
         Swift.print("[AntiAddictionKit] \(s)")
         #endif
-    }
-    
-    /// 输出日志
-    static func release(_ items: Any...) {
-        let s = items.reduce("") { result, next in
-            return result + String(describing: next)
-        }
-        Swift.print("[AntiAddictionKit] \(s)")
     }
     
 }

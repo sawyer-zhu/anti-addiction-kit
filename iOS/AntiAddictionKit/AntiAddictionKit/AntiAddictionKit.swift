@@ -40,7 +40,7 @@ public final class AntiAddictionKit: NSObject {
     public class func setHost(_ host: String) {
         AntiAddictionKit.configuration.host = host
         
-        Logger.debug("服务器Host已设置: \(host)")
+        Logger.info("服务器Host已设置: \(host)")
     }
     
     /// AAKit 初始化方法
@@ -48,8 +48,14 @@ public final class AntiAddictionKit: NSObject {
     public class func `init`(_ delegate: AntiAddictionCallback) {
         
         if (AntiAddictionKit.sharedDelegate != nil) {
-            Logger.release("请勿重复初始化！")
+            Logger.info("请勿重复初始化！")
         } else {
+            
+            /// 只会在游戏安装后首次初始化时检测一次用户地区，之后按第一次检测的值判定用户地区，除非删包
+            if !RegionDetector.isDetected {
+                RegionDetector.detect()
+            }
+            
             AntiAddictionKit.sharedDelegate = delegate
             AntiAddictionKit.addNotificationListener()
             
@@ -58,7 +64,14 @@ public final class AntiAddictionKit: NSObject {
                 Networking.getSdkConfig()
             }
             
-            Logger.release("初始化成功！")
+            Logger.info("初始化成功！")
+        }
+        
+        // 如果非大陆用户，关闭所有防沉迷措施
+        if !RegionDetector.isMainlandUser {
+            AntiAddictionKit.configuration.useSdkPaymentLimit = false
+            AntiAddictionKit.configuration.useSdkOnlineTimeLimit = false
+            AntiAddictionKit.configuration.useSdkRealName = false
         }
     }
     
@@ -116,6 +129,15 @@ public final class AntiAddictionKit: NSObject {
         }
     }
     
+    /// 查询能否支付，直接返回支付限制相关回调类型 raw value，特殊情况使用
+    /// - Parameter amount: 支付金额，单位分
+    public class func checkCurrentPayLimit(_ amount: Int) -> Int {
+        if isServerEnabled {
+            return PaymentManager.checkCurrentPayLimit(amount)
+        } else {
+            return PayService.checkCurrentPayLimit(amount)
+        }
+    }
     
     /// 查询能否支付
     /// - Parameter amount: 支付金额，单位分
