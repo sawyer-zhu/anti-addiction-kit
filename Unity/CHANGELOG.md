@@ -1,10 +1,20 @@
 
-### 2020-04-16  1.1.0 (iOS-1.1.0 & Android-1.1.0)
+### 2020-04-21  1.1.1(iOS-1.1.1 & Android-1.1.1)
+
+1. iOS Bug 修复
+2. Android 提示文案更新
+#### iOS 文件变更
+- `AntiAddictionKit.framework` 变动
+
+#### Android 文件变更
+- `antiLib.aar` 变动
+
+### 2020-04-16  1.1.0(iOS-1.1.0 & Android-1.1.0)
 
 1. 新增接口 `setHost` 开启联网版（详见文档）
 2. 文件变更：`AntiAddiction.cs`
 #### iOS 文件变更
-更新 `AntiAddictionKit.framework`
+`AntiAddictionKit.framework`
 
 #### Android 文件变更
 新增
