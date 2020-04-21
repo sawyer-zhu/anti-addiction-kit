@@ -284,8 +284,8 @@ public class AntiAddictionKit {
         //aes 密匙
         private String encodeString = "test";
         private String version = "0.0.1";
-        private String unIdentifyFirstLogin ="您的游戏体验时间还剩余#分钟#，登记实名信息后可深度体验。";
-        private String unIdentifyRemain = "您当前未提交实名信息，根据国家相关规定，享有#分钟#游戏体验时间。登记实名信息后可深度体验。";
+        private String unIdentifyFirstLogin ="您当前为游客账号，根据国家相关规定，游客账号享有#分钟#游戏体验时间。登记实名信息后可深度体验。";
+        private String unIdentifyRemain = "您当前为游客账号，游戏体验时间还剩余#分钟#。登记实名信息后可深度体验。";
         private String unIdentifyLimit = "您的游戏体验时长已达#分钟#。登记实名信息后可深度体验。";
         private String identifyLimit = "您今日游戏时间已达#分钟#。根据国家相关规定，今日无法再进行游戏。请注意适当休息。";
         private String identifyRemain = "您今日游戏时间还剩余#分钟#，请注意适当休息。";
