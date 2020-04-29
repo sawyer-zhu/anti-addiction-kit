@@ -1,4 +1,15 @@
 
+### Unity v1.1.3 (iOS v1.1.3 & Android v1.1.2) 2020-04-29
+
+1. 修复游客时间bug
+2. Unity 文档更新，Unity SDK 初始化确保在 Unity 引擎生命周期启动 onStart 之后，如果在 onAwake 时调用，可能会出现 init 调用失效，影响用户地区判定。
+###### iOS 文件变更
+- `AntiAddictionKit.framework` 变动，版本号升级为v1.1.3
+
+##### Android 文件无变更
+- `antiLib.aar` 无变更，版本号依然为 v1.1.2
+
+
 ### Unity v1.1.2 (iOS v1.1.2 & Android v1.1.2) 2020-04-28
 
 1. 单机版同设备上的同一游客时间改为永久60分钟（删包即刷新）
