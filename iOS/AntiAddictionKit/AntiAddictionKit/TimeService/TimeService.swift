@@ -38,7 +38,10 @@ final class TimeService {
         
         //如果最后一次存储的日期 与 现在不是同一天，则清空在线时长
         if (DateHelper.isSameDay(User.shared!.timestamp, Date()) == false) {
-            User.shared!.clearOnlineTime()
+            // 如果不是游客，才清空，游客同一设备时长固定，不刷新
+            if User.shared!.type != .unknown {
+                User.shared!.clearOnlineTime()
+            }
         }
         
         Logger.info("单机版防沉迷时长统计开始")

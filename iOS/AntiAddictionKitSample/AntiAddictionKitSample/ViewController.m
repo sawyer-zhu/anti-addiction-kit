@@ -51,8 +51,12 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     //显示切换账号按钮
 //    AntiAddictionKit.configuration.showSwitchAccountButton = NO;
     
-    // 900s(15分钟) 提醒
-//    AntiAddictionKit.configuration.firstAlertTipRemainTime = 900;
+//    // 游客总时长（默认3600）
+//    AntiAddictionKit.configuration.guestTotalTime = 120;
+//    // 第一次时间浮窗展示时的剩余时间（默认900）
+//    AntiAddictionKit.configuration.firstAlertTipRemainTime = 115;
+//    // 倒计时浮窗开始展示时的剩余时间（默认60）
+//    AntiAddictionKit.configuration.countdownAlertTipRemainTime = 110;
 }
 
 - (void)dealloc {

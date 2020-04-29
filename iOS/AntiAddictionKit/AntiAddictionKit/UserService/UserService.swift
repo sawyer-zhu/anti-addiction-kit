@@ -89,15 +89,15 @@ extension UserService {
             return
         }
         
-        //如果最后一次存储的日期 与 现在不是同一天，则清空 在线时长
-        // 如果不是游客，才清空
-        if theUser.type != .unknown {
-            if DateHelper.isSameDay(theUser.timestamp, Date()) == false {
+        //如果最后一次存储的日期 与 现在不是同一天，则清空在线时长
+        if DateHelper.isSameDay(theUser.timestamp, Date()) == false {
+            // 如果不是游客，才清空，游客同一设备时长固定，不刷新
+            if theUser.type != .unknown {
                 theUser.clearOnlineTime()
             }
         }
         
-        //如果最后一次存储的日期 与 现在不是同一月，则清空 支付金额
+        //如果最后一次存储的日期 与 现在不是同一月，则清空支付金额
         if DateHelper.isSameMonth(theUser.timestamp, Date()) == false {
             theUser.clearPaymentAmount()
         }
