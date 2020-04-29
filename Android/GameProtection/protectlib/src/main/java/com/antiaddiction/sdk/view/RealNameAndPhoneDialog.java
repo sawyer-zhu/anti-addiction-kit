@@ -146,7 +146,7 @@ public class RealNameAndPhoneDialog extends BaseDialog {
 
 
         et_name = (EditText) findViewById("et_name");
-        et_name.addTextChangedListener(new TextWatcher() {
+       /* et_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -170,7 +170,7 @@ public class RealNameAndPhoneDialog extends BaseDialog {
             public void afterTextChanged(Editable s) {
 
             }
-        });
+        });*/
 
         et_identify = (EditText) findViewById("et_identify");
         et_phone = (EditText) findViewById("et_phone");
@@ -184,7 +184,8 @@ public class RealNameAndPhoneDialog extends BaseDialog {
                 String name = et_name.getText().toString().trim();
                 String identify = et_identify.getText().toString().trim();
                 String phone = et_phone.getText().toString().trim();
-                if (name.length() < 2) {
+                String valid = Pattern.compile("[^\u4e00-\u9fa5·]").matcher(name).replaceAll("").trim();
+                if (valid.length() < 2 || valid.length() != name.length()) {
                     Toast.makeText(getContext(), "请输入有效姓名信息！", Toast.LENGTH_SHORT).show();
                     return;
                 }

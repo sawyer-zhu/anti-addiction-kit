@@ -45,7 +45,9 @@ public class UserService {
         String time1 = simpleDateFormat.format(date1);
         String time2 = simpleDateFormat.format(new Date(saveTimeStamp));
         if(!time1.equals(time2)) {
-            onlineTime = 0;
+            if(user.getAccountType() != AntiAddictionKit.USER_TYPE_UNKNOWN) {
+                onlineTime = 0;
+            }
             saveTimeStamp = date1.getTime();
             if (!time1.substring(4, 6).equals(time2.substring(4, 6))) {
                 payMonthNum = 0;

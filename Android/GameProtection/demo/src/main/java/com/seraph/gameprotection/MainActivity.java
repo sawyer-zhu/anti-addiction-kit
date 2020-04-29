@@ -189,12 +189,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                          break;
                     case AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS:
                         toast("realName success");
+                       Log.d("antiAddiction","------real name success-----");
                          break;
                     case AntiAddictionKit.CALLBACK_CODE_REAL_NAME_FAIL:
                         toast("realName fail");
                         break;
                     case AntiAddictionKit.CALLBACK_CODE_TIME_LIMIT:
                         toast("time limit ");
+                        Log.d("antiAddiction","------time limit-----");
                         break;
                     case AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME:
                        toast("open realName");
@@ -222,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS:
                         toast("login success msg = " + msg);
+                        Log.d("antiAddiction","-----login success----");
                         break;
                 }
             }

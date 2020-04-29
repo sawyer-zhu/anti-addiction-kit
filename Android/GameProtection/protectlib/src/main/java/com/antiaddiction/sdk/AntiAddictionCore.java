@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 
 
+import com.antiaddiction.sdk.dao.RegionDao;
 import com.antiaddiction.sdk.dao.UserDao;
 import com.antiaddiction.sdk.entity.User;
 import com.antiaddiction.sdk.service.ConfigService;
@@ -18,6 +19,7 @@ import com.antiaddiction.sdk.service.PlayLogService;
 import com.antiaddiction.sdk.service.UserService;
 import com.antiaddiction.sdk.utils.AesUtil;
 import com.antiaddiction.sdk.utils.LogUtil;
+import com.antiaddiction.sdk.utils.RegionUtil;
 import com.antiaddiction.sdk.utils.RexCheckUtil;
 import com.antiaddiction.sdk.view.AccountLimitTip;
 import com.antiaddiction.sdk.view.RealNameAndPhoneDialog;
@@ -31,6 +33,8 @@ public class AntiAddictionCore {
     static AntiAddictionKit.AntiAddictionCallback protectCallBack;
     private static Activity activity;
     private static boolean inited = false;
+    private static boolean hasLogin = false;
+    private static boolean isForeign = false;
 
     private static Handler mainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -38,14 +42,16 @@ public class AntiAddictionCore {
             int what = msg.what;
             switch (what) {
                 case AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS:
+                    hasLogin = true;
                     if (null != protectCallBack) {
                         protectCallBack.onAntiAddictionResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
                     }
-                    if (getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
+                    if (!isForeign && getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
                         startCountTimeService();
                     }
                     break;
                 case AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT:
+                    hasLogin = false;
                     if (null != protectCallBack) {
                         protectCallBack.onAntiAddictionResult(AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT, "");
                     }
@@ -59,7 +65,9 @@ public class AntiAddictionCore {
                     }
                     break;
                 case AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS:
-                    AntiAddictionPlatform.dismissCountTimePopByLoginStateChange();
+                    if(hasLogin) {
+                        AntiAddictionPlatform.dismissCountTimePopByLoginStateChange();
+                    }
                     if (null != protectCallBack) {
                         protectCallBack.onAntiAddictionResult(AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS, "");
                     }
@@ -144,9 +152,40 @@ public class AntiAddictionCore {
     }
 
     //现在只有登录用
-    static void setCurrentUser(String userId, int userType) {
+    static void setCurrentUser(final String userId, final int userType) {
         LogUtil.logd(" setCurrentUser = " + userId + " type = " + userType);
         checkInited();
+        //判断是否是国内地区
+        int region = RegionDao.getLocalRegion(AntiAddictionPlatform.getActivity());
+        if(region >= 0){
+            if(region == 0){
+                isForeign = true;
+                LogUtil.logd(" --------------login user is foreign ------------");
+                getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS,"");
+            }else{
+                setCurrentUserWithAnti(userId, userType);
+            }
+        }else{
+            RegionUtil.isMonthLand(AntiAddictionPlatform.getActivity(), new Callback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    setCurrentUserWithAnti(userId, userType);
+                    RegionDao.setLocalRegion(AntiAddictionPlatform.getActivity(),1);
+                }
+
+                @Override
+                public void onFail(String msg) {
+                    isForeign = true;
+                    LogUtil.logd(" --------------login user is foreign ------------");
+                    RegionDao.setLocalRegion(AntiAddictionPlatform.getActivity(),0);
+                    getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS,"");
+                }
+            });
+
+        }
+    }
+
+    private static void setCurrentUserWithAnti(String userId,int userType){
         if (null != userId) {
             //登录
             if (currentUser == null) {
@@ -174,7 +213,7 @@ public class AntiAddictionCore {
                                 if(accountType == 0){
                                     accountType = UserService.getUserTypeByAge(response.optInt("age",0));
                                 }
-                               // currentUser.setBirthday(response.getString("birthday"));
+                                // currentUser.setBirthday(response.getString("birthday"));
                                 currentUser.setAccountType(accountType);
                                 checkUser();
                             }catch (Exception e){
@@ -207,6 +246,9 @@ public class AntiAddictionCore {
 
     static void updateUserType(int userType) {
         checkInited();
+        if(isForeign){
+            return;
+        }
         if (null != currentUser) {
             if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
                 if (getCurrentUser().getAccountType() != userType) {
@@ -222,6 +264,9 @@ public class AntiAddictionCore {
     static void onResume() {
         //checkInited();
         LogUtil.logd("onResume");
+        if(isForeign){
+            return;
+        }
         if(AntiAddictionKit.getFunctionConfig().getUseSdkOnlineTimeLimit()) {
             if (getCurrentUser() != null && getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
                 CountTimeService.onResume();
@@ -232,6 +277,9 @@ public class AntiAddictionCore {
     static void onStop() {
         //checkInited();
         LogUtil.logd("onStop");
+        if(isForeign){
+            return;
+        }
         if (getCurrentUser() != null && getCurrentUser().getAccountType() != AntiAddictionKit.USER_TYPE_ADULT) {
             CountTimeService.onStop();
             AntiAddictionPlatform.dismissCountTimePop(false);
@@ -241,6 +289,9 @@ public class AntiAddictionCore {
     static void onPaySuccess(int num) {
         checkInited();
         LogUtil.logd("PaySuccess");
+        if(isForeign){
+            return;
+        }
         if (getCurrentUser() != null) {
             if(AntiAddictionKit.getFunctionConfig().getSupportSubmitToServer()){
                 PayStrictService.submitPaySuccess(currentUser.getUserId(),num);
@@ -262,6 +313,10 @@ public class AntiAddictionCore {
      */
     static void checkPayLimit(final int num) {
         checkInited();
+        if(isForeign){
+            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT, "");
+            return;
+        }
         if (!AntiAddictionKit.getFunctionConfig().getUseSdkPaymentLimit()) {
             getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT, "");
             return;
@@ -297,7 +352,7 @@ public class AntiAddictionCore {
 
     static int checkCurrentPayLimit(int num) {
         checkInited();
-        if (!AntiAddictionKit.getFunctionConfig().getUseSdkPaymentLimit()) {
+        if (!AntiAddictionKit.getFunctionConfig().getUseSdkPaymentLimit() || isForeign) {
             return AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT;
         } else {
             if (getCurrentUser() != null) {
@@ -331,6 +386,10 @@ public class AntiAddictionCore {
 
     static void checkChatLimit() {
         checkInited();
+        if(isForeign){
+            getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_CHAT_NO_LIMIT, "");
+            return;
+        }
         if (getCurrentUser() != null) {
             if (getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN) {
                 if (AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
@@ -400,6 +459,9 @@ public class AntiAddictionCore {
 
     static void logout() {
         checkInited();
+        if(isForeign){
+            return;
+        }
         saveUserInfo();
         AntiAddictionPlatform.dismissCountTimePop(true);
 //        if(needCallback) {
@@ -413,6 +475,9 @@ public class AntiAddictionCore {
 
     static int getUserType(String userId) {
         checkInited();
+        if(isForeign){
+            return -1;
+        }
         if (currentUser == null) {
             User user = UserDao.getUser(activity, userId);
             if (user == null) {
@@ -426,7 +491,7 @@ public class AntiAddictionCore {
     }
 
     static void openRealNameDialog() {
-        if (currentUser == null) {
+        if (currentUser == null || isForeign) {
             return;
         }
         if (!AntiAddictionKit.getFunctionConfig().getUseSdkRealName()) {
@@ -452,7 +517,7 @@ public class AntiAddictionCore {
     }
 
     static String getSdkVersion() {
-        return "1.1.1";
+        return "1.1.2";
     }
 
     /**
@@ -563,7 +628,11 @@ public class AntiAddictionCore {
                                                             logout();
                                                         } else {
                                                             if (type != 0) {
-                                                                getCallBack().onResult(type, msg);
+                                                                if(type == AntiAddictionKit.CALLBACK_CODE_REAL_NAME_SUCCESS){
+                                                                    getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_USER_TYPE_CHANGED,"");
+                                                                }else {
+                                                                    getCallBack().onResult(type, msg);
+                                                                }
                                                             }
                                                             getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
                                                         }
@@ -677,16 +746,18 @@ public class AntiAddictionCore {
     private static void resetGameLimitInfo() {
         if (getCurrentUser() != null) {
             resetUserState();
-            CountTimeService.changeLoginState(false);
-            if (getCurrentUser().getAccountType() < AntiAddictionKit.USER_TYPE_ADULT) {
-                startCountTimeService();
+            if(hasLogin) {
+                CountTimeService.changeLoginState(false);
+                if (getCurrentUser().getAccountType() < AntiAddictionKit.USER_TYPE_ADULT) {
+                    startCountTimeService();
+                }
             }
 
         }
     }
 
     private static void startCountTimeService() {
-        if (!AntiAddictionKit.getFunctionConfig().getUseSdkOnlineTimeLimit()) {
+        if (!AntiAddictionKit.getFunctionConfig().getUseSdkOnlineTimeLimit() || isForeign) {
             return;
         }
         CountTimeService.changeLoginState(true);
