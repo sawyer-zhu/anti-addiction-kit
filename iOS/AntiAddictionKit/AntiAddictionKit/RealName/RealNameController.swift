@@ -1,6 +1,17 @@
 
 import UIKit
 
+enum RealNameFailedToastError: String {
+    case unknownError                  = ""
+    
+    case localMissingUser              = "1"
+    case localInvalidIDCard            = "2"
+    
+    case serverMissingUserToken        = "11"
+    case serverIDCardRealNameFailed    = "12"
+    case serverPromoCodeRealNameFailed = "13"
+}
+
 class RealNameController: BaseController {
     
     // MARK: - Public
@@ -297,14 +308,10 @@ extension RealNameController {
         
         //联网版
         if let _ = AntiAddictionKit.configuration.host {
-            
-            //如果兑换码有效则直接传成年人
-            //判断是否联网版
-            if isGeneratedCode {
-                assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
-                assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
-                //联网版直接传 成年人类型
-                if let account = AccountManager.currentAccount, let token = account.token {
+            // 判断用户是否有效
+            if let account = AccountManager.currentAccount, let token = account.token {
+                // 联网版 如果兑换码有效则直接传成年人
+                if isGeneratedCode {
                     account.type = .adult
                     AccountManager.currentAccount = account
                     Networking.setUserInfo(token: token, name: name, identify: "", phone: phone, accountType: .adult, successHandler: { (newType) in
@@ -312,69 +319,65 @@ extension RealNameController {
                         AccountManager.currentAccount = account
                         self.authSucceed()
                     }) {
-                        self.authFailed()
+                        self.authFailed(.serverPromoCodeRealNameFailed)
                     }
+                    return
+                } else {
+                    // 身份证
+                    Networking.setUserInfo(token: token, name: name, identify: idCard, phone: phone, accountType: account.type, successHandler: { (newType) in
+                        account.type = newType
+                        AccountManager.currentAccount = account
+                        self.authSucceed()
+                    }) {
+                        self.authFailed(.serverIDCardRealNameFailed)
+                    }
+                    return
                 }
+            } else {
+                self.authFailed(.serverMissingUserToken)
                 return
             }
-            
-            assert(AccountManager.currentAccount != nil, "currentAccount 不能为空")
-            assert(AccountManager.currentAccount!.token != nil, "currentAccount.token 不能为空")
-            if let account = AccountManager.currentAccount, let token = account.token {
-                Networking.setUserInfo(token: token, name: name, identify: idCard, phone: phone, accountType: account.type, successHandler: { (newType) in
-                    account.type = newType
-                    AccountManager.currentAccount = account
-                    self.authSucceed()
-                }) {
-                    self.authFailed()
-                }
-            }
-            return
         }
 
         // 单机版
-        if let _ = User.shared {
-            
-            //根据身份证生日更新用户信息
-            if let yearStr = idCard.yyyyMMdd() {
-                let age = DateHelper.getAge(yearStr)
-                
-                if age < 0 {
-                    authFailed()
-                    return
-                }
-                //登记成功
-                
-                let type = UserType.typeByAge(age)
-                
-                User.shared?.updateUserType(type)
-                User.shared?.updateUserRealName(name: name.encrypt(),
-                                                idCardNumber: idCard.encrypt(),
-                                                phone: phone.encrypt())
+        // 判断用户是否有效
+        if User.shared != nil {
+            //判断身份证是不是兑换码
+            if isGeneratedCode {
+                //如果兑换码有效,直接更新用户为成人
+                //单机版
+                User.shared!.updateUserType(.adult)
                 UserService.saveCurrentUserInfo()
                 authSucceed()
-                
                 return
-                
             } else {
-                //判断身份证是不是兑换码
-                if isGeneratedCode {
-                    //如果兑换码有效,直接更新用户为成人
-                    //单机版
-                    User.shared?.updateUserType(.adult)
+                //根据身份证生日更新用户信息
+                if let yearStr = idCard.yyyyMMdd() {
+                    let age = DateHelper.getAge(yearStr)
+                    
+                    if age < 0 {
+                        authFailed(.localInvalidIDCard)
+                        return
+                    }
+                    //登记成功
+                    let type = UserType.typeByAge(age)
+                    
+                    User.shared!.updateUserType(type)
+                    User.shared!.updateUserRealName(name: name.encrypt(),
+                                                    idCardNumber: idCard.encrypt(),
+                                                    phone: phone.encrypt())
                     UserService.saveCurrentUserInfo()
                     authSucceed()
                     return
-                    
                 } else {
-                    //兑换码无效
-                    authFailed()
+                    //身份证拿不到日期
+                    authFailed(.localInvalidIDCard)
                     return
                 }
             }
             
         } else {
-            authFailed()
+            authFailed(.localMissingUser)
             return
         }
         
@@ -408,9 +411,9 @@ extension RealNameController {
     }
     
     /// 实名登记失败
-    private func authFailed() {
+    private func authFailed(_ error: RealNameFailedToastError = .unknownError) {
         self.view.hideToastActivity()
-        makeToast("实名登记失败")
+        makeToast("实名登记失败" + error.rawValue)
     }
     
     
