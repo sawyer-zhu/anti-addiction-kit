@@ -3,6 +3,22 @@ import Foundation
 
 final class DateHelper {
     
+    static var commonDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = .init(identifier: .gregorian)
+        formatter.locale = Locale.current
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyyMMdd"
+        return formatter
+    }()
+    
+    static var gregorianCalendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale.current
+        calendar.timeZone = TimeZone.current
+        return calendar
+    }()
+    
     //禁用初始化方法
     @available(*, unavailable)
     init() {
@@ -10,37 +26,42 @@ final class DateHelper {
     }
     
     
-    /// get Date? (instance or nil) from yyyyMMdd style string
+    /// Return `Date?` from given yyyyMMdd style string
     /// - Parameter from: yyyyMMdd style string
-    class func dateFromyyyMMdd(_ from: String) -> Date? {
-        return Date(fromString: from, format: .custom("yyyyMMdd"))
+    class func dateFromyyyMMdd(_ dateString: String) -> Date? {
+        commonDateFormatter.dateFormat = "yyyyMMdd"
+        let date = commonDateFormatter.date(from: dateString)
+        return date
     }
-    
     
     /// 是否同一天
     class func isSameDay(_ lhs: Date, _ rhs: Date) -> Bool {
-        return lhs.compare(.isSameDay(as: rhs))
+        let comparisonResult = gregorianCalendar.compare(lhs, to: rhs, toGranularity: .day)
+        return comparisonResult == .orderedSame
     }
     
     /// 是否同一月
     class func isSameMonth(_ lhs: Date, _ rhs: Date) -> Bool {
-        return lhs.compare(.isSameMonth(as: rhs))
+        let comparisonResult = gregorianCalendar.compare(lhs, to: rhs, toGranularity: .month)
+        return comparisonResult == .orderedSame
     }
     
     
     /// get age from yyyyMMdd
     class func getAge(_ dateString: String) -> Int {
-        guard let date = self.dateFromyyyMMdd(dateString) else { return -1 }
-        
+        guard let date = self.dateFromyyyMMdd(dateString) else {
+            Logger.debug("无法通过 \(dateString) 获取 Date 实例。")
+            return -1
+        }
         // 出生时间 年月日
-        let birthYear = Calendar.current.component(.year, from: date)
-        let birthMouth = Calendar.current.component(.month, from: date)
-        let birthDay = Calendar.current.component(.day, from: date)
+        let birthYear = gregorianCalendar.component(.year, from: date)
+        let birthMouth = gregorianCalendar.component(.month, from: date)
+        let birthDay = gregorianCalendar.component(.day, from: date)
         
         // 当前时间 年月日
-        let currentYear = Calendar.current.component(.year, from: Date())
-        let currentMouth = Calendar.current.component(.month, from: Date())
-        let currentDay = Calendar.current.component(.day, from: Date())
+        let currentYear = gregorianCalendar.component(.year, from: Date())
+        let currentMouth = gregorianCalendar.component(.month, from: Date())
+        let currentDay = gregorianCalendar.component(.day, from: Date())
         
         var age: Int = currentYear - birthYear
         //如果当前日月<出生日月
@@ -57,27 +78,41 @@ extension DateHelper {
     
     /// 判断是否宵禁时间
     class func isCurfew(_ date: Date) -> Bool {
-        let date = Date()
-        if let hour = date.component(.hour), let minute = date.component(.minute) {
-            let curfewStart = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart)
-            let curfewEnd = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictEnd)
-            if (curfewStart.hour <= hour) || (hour < curfewEnd.hour) || (curfewStart.hour == hour && minute < curfewStart.minute) || (curfewEnd.hour == hour && minute < curfewEnd.minute) {
-                return true
-            }
+        let hour = gregorianCalendar.component(.hour, from: date)
+        let minute = gregorianCalendar.component(.minute, from: date)
+        
+        let curfewStart = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart)
+        let curfewEnd = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictEnd)
+        
+        if (curfewStart.hour <= hour) || (hour < curfewEnd.hour) || (curfewStart.hour == hour && minute < curfewStart.minute) || (curfewEnd.hour == hour && minute < curfewEnd.minute) {
+            return true
         }
+        
         return false
     }
     
     /// 获取距离下一次宵禁的时间间隔
     /// - Returns: 单位为秒( return >= 0)
     class func intervalForNextCurfew() -> Int {
+        let now = Date()
+        
         //晚上22点的时间 = 24点-2小时
         let startHour = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart).hour
         let startMinute = DateHelper.timeSetFromNightStrictTimeString(AntiAddictionKit.configuration.nightStrictStart).minute
-        //宵禁时间与24点的时间查 单位秒
-        let curfewStartTo24HourInterval: Int = 24*60*60 - startHour*60*60 - startMinute*60
-        let nowTo24HourInterval: Int = Int(Date().dateFor(.endOfDay).timeIntervalSinceNow)
-        let interval: Int = max(nowTo24HourInterval - curfewStartTo24HourInterval, 0)
+        
+        //宵禁时间
+//        let startOfDay = gregorianCalendar.startOfDay(for: now)
+//        var curfewStartDateComponents = gregorianCalendar.dateComponents([.year,.day, .hour, .minute, .second], from: now)
+//        curfewStartDateComponents.setValue(startHour, for: .hour)
+//        curfewStartDateComponents.setValue(startMinute, for: .minute)
+//        curfewStartDateComponents.setValue(0, for: .second)
+//        gregorianCalendar.date(from: curfewStartDateComponents)
+        guard let curfewStartDate = gregorianCalendar.date(bySettingHour: startHour, minute: startMinute, second: 0, of: now) else {
+            // 无法生成宵禁时间，默认返回与宵禁很大的间隔
+            return Int.max
+        }
+        // 宵禁时间与now的时间差，如果是负数，则在宵禁时间内，返回为0。
+        let interval = Int(max(0, curfewStartDate.timeIntervalSince(now)))
         return interval
     }
     
@@ -119,9 +154,10 @@ extension DateHelper {
 //        }
         
         // 是否节日
-        // TODO: 目前只能确定 2020 年法定节假日，之后时间需及时更新
-        let yyyy = date.toString(format: .isoYear)
-        let MMdd = date.toString(format: .custom("MMdd"))
+        // - TODO: 目前只有 2020 年法定节假日，新的一年节假日时间需要更新！
+        let yyyy = String(gregorianCalendar.component(.year, from: date))
+        commonDateFormatter.dateFormat = "MMdd"
+        let MMdd = commonDateFormatter.string(from: date)
         let holiday2020: [String] = ["0101", //元旦1天
                                     "0124", "0125", "0126", "0127", "0128", "0129", "0130", //春节7天
                                     "0404", "0405", "0406", //清明3天

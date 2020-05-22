@@ -50,7 +50,6 @@
 		0058C84223BB4CC500491E6D /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C84123BB4CC500491E6D /* String+Crypto.swift */; };
 		0058C84423BB4CD700491E6D /* HashIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0058C84323BB4CD700491E6D /* HashIds.swift */; };
 		006291FB23F12B50000AD39E /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006291FA23F12B50000AD39E /* Configuration.swift */; };
-		007622AB23BDADC400DC3AF8 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AA23BDADC400DC3AF8 /* Date+.swift */; };
 		007622AD23BDB22A00DC3AF8 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622AC23BDB22A00DC3AF8 /* DateHelper.swift */; };
 		007622B523BF6F9E00DC3AF8 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007622B423BF6F9E00DC3AF8 /* NoticeView.swift */; };
 		0095261B243C7087000534A8 /* RegionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095261A243C7087000534A8 /* RegionDetector.swift */; };
@@ -114,7 +113,6 @@
 		0058C84123BB4CC500491E6D /* String+Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Crypto.swift"; sourceTree = "<group>"; };
 		0058C84323BB4CD700491E6D /* HashIds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashIds.swift; sourceTree = "<group>"; };
 		006291FA23F12B50000AD39E /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		007622AA23BDADC400DC3AF8 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		007622AC23BDB22A00DC3AF8 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		007622B423BF6F9E00DC3AF8 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
 		0095260C243C2713000534A8 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
@@ -124,7 +122,6 @@
 		00952618243C6E92000534A8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0095261A243C7087000534A8 /* RegionDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionDetector.swift; sourceTree = "<group>"; };
 		0095261F243C9C28000534A8 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
-		00952621243D7BE9000534A8 /* APIDocs.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = APIDocs.md; sourceTree = "<group>"; };
 		00952626243D9BCC000534A8 /* SwiftyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		00E3AA4A23D012D400B6F39E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		305A382A23BCE942006AD644 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -167,7 +164,6 @@
 		00048BA0242CADC600813723 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				00952621243D7BE9000534A8 /* APIDocs.md */,
 				00048BA1242CADE500813723 /* Just.swift */,
 				00952626243D9BCC000534A8 /* SwiftyJSON.swift */,
 				0095261F243C9C28000534A8 /* Networking.swift */,
@@ -382,7 +378,6 @@
 			children = (
 				30FE578E23BCC07000E1E5B4 /* SwiftTimer.swift */,
 				30EF76B523BD032C00157DA0 /* TimeService.swift */,
-				007622AA23BDADC400DC3AF8 /* Date+.swift */,
 				007622AC23BDB22A00DC3AF8 /* DateHelper.swift */,
 			);
 			path = TimeService;
@@ -539,7 +534,6 @@
 				0058C83623BB3DF900491E6D /* Navigator.swift in Sources */,
 				0032999123C5D0F6004EF389 /* Crypto.swift in Sources */,
 				00347EBD23CC6F4200F00192 /* User.swift in Sources */,
-				007622AB23BDADC400DC3AF8 /* Date+.swift in Sources */,
 				0058C82E23BB2DE300491E6D /* String+RealName.swift in Sources */,
 				00952620243C9C28000534A8 /* Networking.swift in Sources */,
 				0058C83C23BB455B00491E6D /* AlertController.swift in Sources */,
