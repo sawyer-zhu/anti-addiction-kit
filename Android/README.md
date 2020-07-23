@@ -73,7 +73,7 @@ nightStrictEnd | int | 8 * 60 * 60 | 未成年宵禁截止时间，默认次日8
 childCommonTime | int | 90 * 60 | 未成年人非节假日每日游戏时长，默认1.5小时，单位 秒
 childHolidayTime | int | 3 * 60 * 60 | 未成年人节假日每日游戏时长，默认3小时，单位 秒
 teenPayLimit | int | 50 * 10 * 10 | 未成年人（8-15岁）单次充值限额，默认50元，单位 分
-teenMonthPayLimit | int | 300 * 10 * 10 | 未成年人（8-15岁）每月充值限额，默认300元，单位 分
+teenMonthPayLimit | int | 300 * 10 * 10 | 未成年人（8-15岁）每月充值限额，默认200元，单位 分
 youngPayLimit | int | 100 * 10 * 10 | 未成年人（16-17岁）单次充值限额，默认100元，单位 分
 youngMonthPayLimit | int | 400 * 10 * 10 | 未成年人（16-17岁）每月充值限额，默认400元， 单位 分
 dialogBackground | String | #ffffff | sdk弹窗背景颜色
