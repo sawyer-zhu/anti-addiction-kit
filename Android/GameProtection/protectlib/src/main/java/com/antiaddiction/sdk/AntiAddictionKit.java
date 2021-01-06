@@ -284,13 +284,22 @@ public class AntiAddictionKit {
         //aes 密匙
         private String encodeString = "test";
         private String version = "0.0.1";
-        private String unIdentifyFirstLogin ="您当前为游客账号，根据国家相关规定，游客账号享有#分钟#游戏体验时间。登记实名信息后可深度体验。";
-        private String unIdentifyRemain = "您当前为游客账号，游戏体验时间还剩余#分钟#。登记实名信息后可深度体验。";
-        private String unIdentifyLimit = "您的游戏体验时长已达#分钟#。登记实名信息后可深度体验。";
-        private String identifyLimit = "您今日游戏时间已达#分钟#。根据国家相关规定，今日无法再进行游戏。请注意适当休息。";
+
+        //重新定义提示文案
+        public String strLogin = "为了保护未成年人身心健康，国家新闻出版署颁布了《关于防止未成年人沉迷网络游戏的通知》，部分规则如下：\n一、所有玩家账号均需使用有效身份证信息进行实名注册，否则将无法享受游戏服务。未实名注册的账号最多只能体验1小时游戏，不能充值付费，且同一台手机设备15天内不得重复体验。 \n二、未满18周岁的用户非法定节假日每日累计游戏时间不得超过1.5小时。 \n三、未满18周岁的用户法定节假日每日累计游戏时间不得超过3小时。 \n四、未满18周岁的用户每日22时至次日8时将无法进行游戏。";
+        public String strLoginFailForTimeOut = "根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》，您的当天在线时长已满。";
+        public String strLoginFailForTimeLimit = "由于您的账号已被纳入防止未成年人沉迷网络游戏系统，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》，每日22时至次日8时，无法为您提供游戏服务";
+        public String strKickOut = "根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》，未满18周岁的用户非法定节假日每日累计游戏时间不得超过1.5小时，您的游戏时长已到。";
+        public String strKickOutHoliday = "根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》，未满18周岁的用户法定节假日每日累计游戏时间不得超过3小时，您的游戏时长已到。";
+        public String strIdentify = "根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》,请您完成实名认证";
+
+//        private String unIdentifyFirstLogin ="您当前为游客账号，根据国家相关规定，游客账号享有#分钟#游戏体验时间。登记实名信息后可深度体验。";
+//        private String unIdentifyRemain = "您当前为游客账号，游戏体验时间还剩余#分钟#。登记实名信息后可深度体验。";
+//        private String unIdentifyLimit = "您的游戏体验时长已达#分钟#。登记实名信息后可深度体验。";
+//        private String identifyLimit = "您今日游戏时间已达#分钟#。根据国家相关规定，今日无法再进行游戏。请注意适当休息。";
         private String identifyRemain = "您今日游戏时间还剩余#分钟#，请注意适当休息。";
         private String nightStrictRemain = "距离健康保护时间还剩余#分钟#，请注意适当休息。";
-        private String nightStrictLimit = "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。";
+//        private String nightStrictLimit = "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。";
 
         private CommonConfig(){
         }
@@ -472,13 +481,13 @@ public class AntiAddictionKit {
             return INSTANCE.encodeString;
         }
 
-        public String getUnIdentifyFirstLogin(){
-            return INSTANCE.unIdentifyFirstLogin;
-        }
+//        public String getUnIdentifyFirstLogin(){
+//            return INSTANCE.unIdentifyFirstLogin;
+//        }
 
-        public String getUnIdentifyRemain(){
-            return INSTANCE.unIdentifyRemain;
-        }
+//        public String getUnIdentifyRemain(){
+//            return INSTANCE.unIdentifyRemain;
+//        }
 
         public void praseJson(JSONObject config) {
             if (config != null) {
@@ -497,13 +506,13 @@ public class AntiAddictionKit {
                         INSTANCE.youngPayLimit = data.optInt("youngPayLimit",100 *10 * 10);
                         INSTANCE.youngMonthPayLimit = data.optInt("youngMonthPayLimit",400 * 10 * 10);
                         JSONObject description = data.getJSONObject("description");
-                        INSTANCE.unIdentifyRemain = description.getString("unIdentifyRemain");
-                        INSTANCE.unIdentifyFirstLogin = description.getString("unIdentifyFirstLogin");
-                        INSTANCE.unIdentifyLimit = description.getString("unIdentifyLimit");
-                        INSTANCE.identifyLimit = description.getString("identifyLimit");
+//                        INSTANCE.unIdentifyRemain = description.getString("unIdentifyRemain");
+//                        INSTANCE.unIdentifyFirstLogin = description.getString("unIdentifyFirstLogin");
+//                        INSTANCE.unIdentifyLimit = description.getString("unIdentifyLimit");
+//                        INSTANCE.identifyLimit = description.getString("identifyLimit");
                         INSTANCE.identifyRemain = description.getString("identifyRemain");
                         INSTANCE.nightStrictRemain = description.getString("nightStrictRemain");
-                        INSTANCE.nightStrictLimit = description.getString("nightStrictLimit");
+//                        INSTANCE.nightStrictLimit = description.getString("nightStrictLimit");
                   //  }
                 } catch (Exception e) {
                     e.printStackTrace();

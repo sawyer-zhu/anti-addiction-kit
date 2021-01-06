@@ -8,8 +8,8 @@
 
     <LinearLayout
         android:id="@+id/ll_real_container"
-        android:layout_width="300dp"
-        android:layout_height="278dp"
+        android:layout_width="500dp"
+        android:layout_height="300dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:ignore="MissingDefaultResource">

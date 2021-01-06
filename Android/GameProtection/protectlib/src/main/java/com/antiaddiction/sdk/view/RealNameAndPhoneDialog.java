@@ -225,7 +225,7 @@ public class RealNameAndPhoneDialog extends BaseDialog {
                         height = UnitUtils.dpToPx(getContext(), 122);
                     }
                     BubbleLayout bubbleLayout = new BubbleLayout(getContext());
-                    textView.setText("根据国家相关要求，所有游戏用户须如实登记本人有效实名信息。如使用其他身份证件，可联系客服协助登记。");
+                    textView.setText(AntiAddictionKit.getCommonConfig().strIdentify);
                     textView.setTextColor(Color.parseColor(AntiAddictionKit.getCommonConfig().getTipTextColor()));
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {

@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:id="@+id/ll_real_container"
-        android:layout_width="290dp"
-        android:layout_height="278dp"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:ignore="MissingDefaultResource">
@@ -60,9 +60,9 @@
             android:background="@null"
             android:drawableBottom="@drawable/bottom_line"
             android:hint="真实姓名"
+            android:imeOptions="flagNoFullscreen|flagNavigateNext"
             android:textColorHint="#bbbbbb"
             android:textCursorDrawable="@null"
-            android:imeOptions="flagNoFullscreen|flagNavigateNext"
             android:textSize="14sp" />
 
         <EditText
@@ -84,10 +84,10 @@
             android:layout_width="225dp"
             android:layout_height="32dp"
             android:layout_marginTop="8dp"
-            android:imeOptions="flagNoFullscreen|flagNavigateNext"
             android:background="@null"
             android:drawableBottom="@drawable/bottom_line"
             android:hint="手机号"
+            android:imeOptions="flagNoFullscreen|flagNavigateNext"
             android:textColorHint="#bbbbbb"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
