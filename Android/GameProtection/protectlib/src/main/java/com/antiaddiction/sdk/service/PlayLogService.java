@@ -83,9 +83,9 @@ public class PlayLogService {
                             description = AntiAddictionKit.getCommonConfig().strLoginFailForTimeOut;
                         }else{
                             if(remainTime == AntiAddictionKit.getCommonConfig().getGuestTime() && (user.getSaveTimeStamp() <= 0 || (currentTime - user.getSaveTimeStamp() < 1000))){
-                                description = AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，游客账号享有 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。登记实名信息后可深度体验。";
+                                description = AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，游客账号享有 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。";
                             }else {
-                                description = AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，体验时间还剩余 " + (remainTime / 60 > 0 ? (remainTime / 60) : 1) + " 分钟。" + "登记实名信息后可深度体验。";
+                                description = AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，体验时间还剩余 " + (remainTime / 60 > 0 ? (remainTime / 60) : 1) + " 分钟。";
                             }
                         }
                     }else{
@@ -179,7 +179,7 @@ public class PlayLogService {
 
     //游客登录时，生成对应提示文案，因为最后3分钟时，文案会改为已达时长文案
     public static String generateGuestLoginTip(int remainTime){
-        return AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，游客账号享有 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。登记实名信息后可深度体验。";
+        return AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，游客账号享有 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。";
 
         //处理游客登录提示
 //        String tip = AntiAddictionKit.getCommonConfig().getUnIdentifyFirstLogin();

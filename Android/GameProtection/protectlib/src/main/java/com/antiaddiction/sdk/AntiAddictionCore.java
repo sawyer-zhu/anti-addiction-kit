@@ -21,6 +21,7 @@ import com.antiaddiction.sdk.utils.AesUtil;
 import com.antiaddiction.sdk.utils.LogUtil;
 import com.antiaddiction.sdk.utils.RegionUtil;
 import com.antiaddiction.sdk.utils.RexCheckUtil;
+import com.antiaddiction.sdk.utils.TimeUtil;
 import com.antiaddiction.sdk.view.AccountLimitTip;
 import com.antiaddiction.sdk.view.RealNameAndPhoneDialog;
 
@@ -593,7 +594,16 @@ public class AntiAddictionCore {
                                                 });
                                     } else {
 //                                AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_CHILD_ENTER_NO_LIMIT,
-//                                        title, content, 1);
+//                                        title, "remain :" + remainTime +
+//                                                "\nholiday:"+ TimeUtil.isHoliday()+
+//                                                "\nrestriction:"+AntiAddictionKit.getCommonConfig().getChildCommonTime() + "/"+AntiAddictionKit.getCommonConfig().getChildHolidayTime(),1,new OnResultListener() {
+//                                            @Override
+//                                            public void onResult(int type, String msg) {
+//                                                if (type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT) {
+//                                                    logout();
+//                                                }
+//                                            }
+//                                        });
                                         getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS, "");
                                     }
                                 } else { //游客
