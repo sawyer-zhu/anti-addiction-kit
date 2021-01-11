@@ -80,7 +80,7 @@ public class PlayLogService {
                     title = "健康游戏提示";
                     if(user.getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
                         if((!isLogin && remainTime <= 3 * 60) || remainTime <= 0 ) {
-                            description = AntiAddictionKit.getCommonConfig().strLoginFailForTimeOut;
+                            description = AntiAddictionKit.getCommonConfig().strKickOutTry;
                         }else{
                             if(remainTime == AntiAddictionKit.getCommonConfig().getGuestTime() && (user.getSaveTimeStamp() <= 0 || (currentTime - user.getSaveTimeStamp() < 1000))){
                                 description = AntiAddictionKit.getCommonConfig().strLogin + "\n您当前为游客账号，游客账号享有 " + AntiAddictionKit.getCommonConfig().getGuestTime() / 60 + " 分钟游戏体验时间。";
@@ -97,7 +97,6 @@ public class PlayLogService {
                                 int min = AntiAddictionKit.getCommonConfig().getChildCommonTime();
                                 description = AntiAddictionKit.getCommonConfig().strKickOut;
                             }
-                            
                         }
                     }
                 }else {
